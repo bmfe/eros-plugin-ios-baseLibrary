@@ -1,0 +1,29 @@
+//
+//  NSDictionary+Util.m
+//  BM-JYT
+//
+//  Created by XHY on 2017/2/21.
+//  Copyright © 2017年 XHY. All rights reserved.
+//
+
+#import "NSDictionary+Util.h"
+
+@implementation NSDictionary (Util)
+
++ (NSDictionary *)configCallbackDataWithResCode:(NSInteger)resCode msg:(NSString *)msg data:(id)data
+{
+    NSMutableDictionary *resultDic = [[NSMutableDictionary alloc] init];
+    
+    msg = msg ? msg : @"";
+    data = data ? data : @{};
+    
+    if ([data isKindOfClass:[NSString class]]) data = @{@"value": data};
+    
+    [resultDic setValue:[NSNumber numberWithInteger:resCode] forKey:@"resCode"];
+    [resultDic setValue:msg forKey:@"msg"];
+    [resultDic setValue:data forKey:@"data"];
+    
+    return resultDic;
+}
+
+@end

@@ -17,9 +17,9 @@
 
 #define BM_FONT_SIZE @"bmFontSize"
 
-#define BM_UPDATE_URL @"updateUrl"
+#define BM_REQUEST_URL @"requestUrl"
 
-#define BM_BASE_URL @"baseUrl"
+#define BM_LOCAL_URL @"baseUrl"
 
 #define BM_FONT_SCALE @"bmFontScale"
 
@@ -93,14 +93,14 @@
     }
     
     //添加当前更新接口URL
-    if ([BMConfigManager shareInstance].platform.url.baseUrl.length) {
+    if ([BMConfigManager shareInstance].platform.url.request.length) {
         
-        [bmData setObject:[BMConfigManager shareInstance].platform.url.baseUrl forKey:BM_UPDATE_URL];
+        [bmData setObject:[BMConfigManager shareInstance].platform.url.request forKey:BM_REQUEST_URL];
     }
     
     //添加当前入口      
-    if([BMConfigManager shareInstance].platform.url.serverUrl.length){
-        [bmData setObject:[BMConfigManager shareInstance].platform.url.serverUrl forKey:BM_BASE_URL];
+    if([BMConfigManager shareInstance].platform.url.local.length){
+        [bmData setObject:[BMConfigManager shareInstance].platform.url.local forKey:BM_LOCAL_URL];
     }
     
     // 添加 deviceId

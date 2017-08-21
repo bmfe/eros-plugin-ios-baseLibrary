@@ -15,11 +15,11 @@
 @end
 
 @interface BMPlatformModelUrl : NSObject
-@property (nonatomic, copy) NSString *baseUrl;          /**< 数据请求url */
-@property (nonatomic, copy) NSString *serverUrl;        /**< js文件服务器url */
-@property (nonatomic, copy) NSString *cdnUrl;           /**< 图片服务器url */
+@property (nonatomic, copy) NSString *request;              /**< 数据请求url */
+@property (nonatomic, copy) NSString *local;                /**< js文件服务器url */
+@property (nonatomic, copy) NSString *image;                /**< 图片服务器url */
 @property (nonatomic, copy) NSString *checkJsVersionApi;    /**< 检查js版本接口 注：不需要请求的域名 */
-@property (nonatomic, copy) NSString *uploadImageApi;   /**< 上传图片的地址 */
+@property (nonatomic, copy) NSString *uploadImageApi;       /**< 上传图片的地址 */
 @end
 
 @interface BMPlatformModelGetui : NSObject

@@ -89,8 +89,8 @@
     
     
     /** 设置统一请求url */
-    [[YTKNetworkConfig sharedConfig] setBaseUrl:platformInfo.url.baseUrl];
-    [[YTKNetworkConfig sharedConfig] setCdnUrl:platformInfo.url.cdnUrl];
+    [[YTKNetworkConfig sharedConfig] setBaseUrl:platformInfo.url.request];
+    [[YTKNetworkConfig sharedConfig] setCdnUrl:platformInfo.url.image];
     
     /** 应用最新js资源文件 */
     [[BMResourceManager sharedInstance] compareVersion];

@@ -101,7 +101,7 @@
     _weexHeight = [self weexViewHeight];
     
     /* 设置title */
-    self.navigationItem.title = self.routerModel.navigationInfo.title ? self.routerModel.navigationInfo.title : @"";
+    self.navigationItem.title = self.routerModel.navigationInfo.title ?: @"";
     
     /* 判断是否需要隐藏导航栏 并设置weex页面高度
        注：使用FDFullscreenPopGesture方法设置，自定义pop返回动画

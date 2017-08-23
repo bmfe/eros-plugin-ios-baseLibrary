@@ -19,7 +19,7 @@
 
 #define BM_REQUEST_URL @"requestUrl"
 
-#define BM_LOCAL_URL @"baseUrl"
+#define BM_LOCAL_URL @"localUrl"
 
 #define BM_FONT_SCALE @"bmFontScale"
 

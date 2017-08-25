@@ -39,7 +39,7 @@ static NSString * networkKey = @"network";
 
 WX_EXPORT_METHOD(@selector(open:callback:))
 
-WX_EXPORT_METHOD(@selector(close:callback:))
+WX_EXPORT_METHOD(@selector(close))
 
 -(void)open:(NSDictionary*)info callback:(WXModuleCallback)callback
 {
@@ -96,16 +96,12 @@ WX_EXPORT_METHOD(@selector(close:callback:))
         }
     }
 }
--(void)close:(NSDictionary*)info callback:(WXModuleCallback)callback
+-(void)close
 {
     if (_photoBrowser) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_photoBrowser dismissViewControllerAnimated:YES completion:^{
-                if (callback) {
-                    callback([NSDictionary dictionary]);
-                }
-            }];
+            [_photoBrowser dismissViewControllerAnimated:YES completion:nil];
         });
     }
 }

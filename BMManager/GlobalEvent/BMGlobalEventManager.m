@@ -39,12 +39,12 @@
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-    [self _sendGlobalEvent:@"appWillResignActive" params:nil];
+    [self _sendGlobalEvent:@"appDeactive" params:nil];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self _sendGlobalEvent:@"appDidBecomeActive" params:nil];
+    [self _sendGlobalEvent:@"appActive" params:nil];
 }
 
 - (void)sendGlobalEventwithInstance:(WXSDKInstance *)instance event:(NSString *)event params:(NSDictionary *)params

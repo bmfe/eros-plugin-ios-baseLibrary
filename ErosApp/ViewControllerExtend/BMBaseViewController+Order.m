@@ -19,7 +19,7 @@
 /* 判断是否隐藏导航栏 */
 - (BOOL)isHideNavbar
 {
-    if (self.routerModel.navigationInfo.hideNavbar ||
+    if (!self.routerModel.navShow ||
         [self currentVcIs:[BMConfigManager shareInstance].platform.page.homePage]) {
         
         return YES;
@@ -32,7 +32,7 @@
 - (void)bmSetStatusBarStyle
 {
     /* 设置状态栏 字体颜色 */
-    if ([self.routerModel.navigationInfo.statusBarStyle isEqualToString:@"Default"]) {
+    if ([self.routerModel.statusBarStyle isEqualToString:@"Default"]) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
         
     } else {

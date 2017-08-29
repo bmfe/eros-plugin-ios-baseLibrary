@@ -21,8 +21,7 @@
 
 - (void)addBackBarbuttonItem
 {
-    /* 首页不需要返回按钮 */
-    if (self.routerModel.navigationInfo.hideNavbar ) {
+    if (!self.routerModel.navShow ) {
         return;
     }
     
@@ -33,13 +32,13 @@
 - (void)dismissVC
 {
     /* 如果存在 backCallback 则回调 callback方法*/
-    if (self.routerModel.needBackCallback && self.routerModel.backCallback) {
+    if (self.routerModel.isRunBackCallback && self.routerModel.backCallback) {
         self.routerModel.backCallback(nil);
         return;
     }
     
-    if ([self.routerModel.animateType isEqualToString:K_ANIMATE_PRESENT] ||
-        [self.routerModel.animateType isEqualToString:K_ANIMATE_TRANSLATION]) {
+    if ([self.routerModel.type isEqualToString:K_ANIMATE_PRESENT] ||
+        [self.routerModel.type isEqualToString:K_ANIMATE_TRANSLATION]) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         [self.navigationController popViewControllerAnimated:YES];
@@ -49,7 +48,7 @@
 #pragma mark - UIViewControllerTransitioningDelegate
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    if ([self.routerModel.animateType isEqualToString:K_ANIMATE_TRANSLATION]) {
+    if ([self.routerModel.type isEqualToString:K_ANIMATE_TRANSLATION]) {
         return [BMPresentTranslationTransition transitionWithTransitionType:BMPresentTranslationTransitionTypePresent];
 //        return [BMPresentLikeQQTransition transitionWithTransitionType:BMPresentLikeQQTransitionTypePresent];
     }
@@ -58,7 +57,7 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    if ([self.routerModel.animateType isEqualToString:K_ANIMATE_TRANSLATION]) {
+    if ([self.routerModel.type isEqualToString:K_ANIMATE_TRANSLATION]) {
         return [BMPresentTranslationTransition transitionWithTransitionType:BMPresentTranslationTransitionTypeDismiss];
 //        return [BMPresentLikeQQTransition transitionWithTransitionType:BMPresentLikeQQTransitionTypeDismiss];
     }

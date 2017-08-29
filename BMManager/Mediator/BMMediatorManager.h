@@ -12,10 +12,6 @@
 #import <WeexSDK/WeexSDK.h>
 #import "BMRouterModel.h"
 
-#define K_ANIMATE_PRESENT @"PRESENT"
-#define K_ANIMATE_PUSH @"PUSH"
-#define K_ANIMATE_TRANSLATION @"TRANSLATION"
-
 @class BMWebViewRouterModel;
 
 @interface BMMediatorManager : NSObject

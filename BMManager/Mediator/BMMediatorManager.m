@@ -54,19 +54,15 @@
 
 #pragma mark - Private Method
 
-- (BMRouterModel *)_routerModelWithURLPath:(NSString *)url navTitle:(NSString *)navTitle params:(NSDictionary *)params animateType:(NSString *)animateType hideNavbar:(BOOL)hideNavbar
+- (BMRouterModel *)_routerModelWithURLPath:(NSString *)url navTitle:(NSString *)navTitle params:(NSDictionary *)params animateType:(NSString *)animateType navBarShow:(BOOL)navBarShow
 {
     BMRouterModel *routerModel = [[BMRouterModel alloc] init];
-    NavigationInfo *navInfo = [[NavigationInfo alloc] init];
-    
-    routerModel.navigationInfo = navInfo;
     routerModel.url = url;
     routerModel.params = params;
-    routerModel.animateType = animateType;
-    
-    navInfo.hideNavbar = hideNavbar;
-    navInfo.title = navTitle;
-    
+    routerModel.type = animateType;
+    routerModel.navShow = navBarShow;
+    routerModel.navTitle = navTitle;
+
     return routerModel;
 }
 
@@ -79,16 +75,16 @@
     controller.hidesBottomBarWhenPushed = YES;
     
     /* 页面展现方式 */
-    if (!routerModel.animateType || [routerModel.animateType isEqualToString:K_ANIMATE_PUSH])
+    if (!routerModel.type || [routerModel.type isEqualToString:K_ANIMATE_PUSH])
     {
         [self pushViewController:controller weexInstance:weexInstance];
     }
-    else if ([routerModel.animateType isEqualToString:K_ANIMATE_PRESENT])
+    else if ([routerModel.type isEqualToString:K_ANIMATE_PRESENT])
     {
         BMNavigationController *navc = [[BMNavigationController alloc] initWithRootViewController:controller];
         [self presentViewController:navc weexInstance:weexInstance];
     }
-    else if ([routerModel.animateType isEqualToString:K_ANIMATE_TRANSLATION])
+    else if ([routerModel.type isEqualToString:K_ANIMATE_TRANSLATION])
     {
         BMNavigationController *navc = [[BMNavigationController alloc] initWithRootViewController:controller];
 //        controller.transitioningDelegate = controller;
@@ -97,7 +93,7 @@
         [self presentViewController:navc weexInstance:weexInstance];
     }
     else {
-        WXLogError(@" 【JS ERROR】 animateType 拼写错误：%@",routerModel.animateType);
+        WXLogError(@" 【JS ERROR】 animateType 拼写错误：%@",routerModel.type);
     }
 }
 
@@ -168,8 +164,8 @@
 
 - (void)backVcWithRouterModel:(BMRouterModel *)routerModel weexInstance:(WXSDKInstance *)weexInstance
 {
-    if ([routerModel.animateType isEqualToString:K_ANIMATE_PRESENT] ||
-        [routerModel.animateType isEqualToString:K_ANIMATE_TRANSLATION]) {
+    if ([routerModel.type isEqualToString:K_ANIMATE_PRESENT] ||
+        [routerModel.type isEqualToString:K_ANIMATE_TRANSLATION]) {
         [weexInstance.viewController dismissViewControllerAnimated:YES completion:nil];
     } else {
         if (routerModel.vLength == 1) {

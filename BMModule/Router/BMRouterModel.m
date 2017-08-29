@@ -15,9 +15,20 @@
 
 @implementation BMRouterModel
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _canBack = YES;
+        _navShow = YES;
+    }
+    return self;
+}
+
 + (NSDictionary *)modelCustomPropertyMapper
 {
     return @{@"vLength" : @"length"};
 }
+
+
 
 @end

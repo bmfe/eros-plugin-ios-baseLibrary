@@ -216,7 +216,7 @@
                               @"bmPay":             NSStringFromClass([BMPayModule class]),
                               @"bmStorage":         NSStringFromClass([BMStorageModule class]),
                               @"bmShare":           NSStringFromClass([BMShareModule class]),
-                              @"bmAppConfig":       NSStringFromClass([BMAppConfigModule class]),
+                              @"bmFont":       NSStringFromClass([BMAppConfigModule class]),
                               @"bmEvents":          NSStringFromClass([BMEventsModule class]),
                               @"bmBrowserImg":      NSStringFromClass([BMBrowserImgModule class]),
                               @"bmTool":            NSStringFromClass([BMToolsModule class]),

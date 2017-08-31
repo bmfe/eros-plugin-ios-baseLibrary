@@ -24,14 +24,14 @@
     return YTKRequestMethodPOST;
 }
 
-- (BOOL)useCDN
+- (NSString *)baseUrl
 {
-    return YES;
+    return nil;
 }
 
 - (NSString *)requestUrl
 {
-    return TK_PlatformInfo().url.uploadImageApi;
+    return TK_PlatformInfo().url.image;
 }
 
 - (AFConstructingBlock)constructingBodyBlock {

@@ -101,14 +101,10 @@ const char * fontStorageKey = "_fontStorage";
                 if (NO == [WXUtility isFileExist:fontfile]) {
                     NSError * error = nil;
         
-                    
-            #if (AppStoreVersion == 1 || TestVersion == 1)
                     BOOL copyIconfontSuccess = [[NSFileManager defaultManager] copyItemAtPath:ttfPath toPath:fontfile error:nil];
                     if(copyIconfontSuccess && nil == error){
                         WXLogInfo(@"拷贝Iconfont成功");
                     }
-
-            #endif
                     
                 }
             }

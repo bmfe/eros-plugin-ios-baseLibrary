@@ -42,7 +42,7 @@
 
 - (NSString *)requestUrl
 {
-    return [BMConfigManager shareInstance].platform.url.checkJsVersionApi;
+    return [BMConfigManager shareInstance].platform.url.updateVersion;
 }
 
 - (id)requestArgument

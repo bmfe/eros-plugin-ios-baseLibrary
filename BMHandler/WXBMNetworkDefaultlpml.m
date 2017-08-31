@@ -44,6 +44,7 @@ const NSString * md5Key = @"md5";
     self = [super init];
     if (self) {
         _mimeTypes = @[@"js"];
+        _interceptor = YES;
     }
     return self;
 }

@@ -251,7 +251,7 @@ s.subspec 'BMManager' do |ss|
     ss.source_files  = "BMComponent/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "BMComponent/**/*.h"
     ss.requires_arc  = true
-
+    ss.resources = 'BMComponent/Calendar/Resources/*.png'
     ss.dependency 'FSCalendar','2.7.8'
     ss.dependency 'YYText', '1.0.7'
   end

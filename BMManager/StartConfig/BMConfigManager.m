@@ -192,6 +192,7 @@
 
 + (void)registerBmComponents
 {
+    
     NSDictionary *components = @{
                                 @"bmmask":          NSStringFromClass([BMMaskComponent class]),
                                 @"bmpop":           NSStringFromClass([BMPopupComponent class]),

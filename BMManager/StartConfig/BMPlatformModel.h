@@ -16,7 +16,7 @@
 
 @interface BMPlatformModelUrl : NSObject
 @property (nonatomic, copy) NSString *request;              /**< 数据请求url */
-@property (nonatomic, copy) NSString *local;                /**< js文件服务器url */
+@property (nonatomic, copy) NSString *jsServer;                /**< js文件服务器url */
 @property (nonatomic, copy) NSString *image;                /**< 图片上传接口url */
 @property (nonatomic, copy) NSString *updateVersion;        /**< 检查js版本接口 注：不需要请求的域名 */
 @end

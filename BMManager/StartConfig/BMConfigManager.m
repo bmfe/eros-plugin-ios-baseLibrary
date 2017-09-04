@@ -65,6 +65,17 @@
 
 @implementation BMConfigManager
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"config" ofType:@"json"]];
+        NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:jData options:NSJSONReadingAllowFragments error:nil];
+        _platform = [BMPlatformModel yy_modelWithJSON:jDic];
+    }
+    return self;
+}
+
+
 #pragma mark - Public Func
 
 + (instancetype)shareInstance
@@ -125,17 +136,6 @@
 //    [[BMScreenshotEventManager shareInstance] monitorScreenshotEvent];
     
 }
-
-- (instancetype)init
-{
-    if (self = [super init]) {
-        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"config" ofType:@"json"]];
-        NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:jData options:NSJSONReadingAllowFragments error:nil];
-        _platform = [BMPlatformModel yy_modelWithJSON:jDic];
-    }
-    return self;
-}
-
 
 + (void)configUmeng
 {

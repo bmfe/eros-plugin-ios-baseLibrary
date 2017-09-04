@@ -16,7 +16,7 @@
 + (NSURL *)configJSFullURLWithPath:(NSString *)path
 {
     /* 拼接完整的路径 */
-    NSString *urlPath = [NSString stringWithFormat:@"%@%@",[[BMConfigManager shareInstance].platform.url.local stringByAppendingString:K_JS_ADD_PATH],path];
+    NSString *urlPath = [NSString stringWithFormat:@"%@%@",[[BMConfigManager shareInstance].platform.url.jsServer stringByAppendingString:K_JS_ADD_PATH],path];
     return [NSURL URLWithString:urlPath];
 }
 

@@ -19,7 +19,7 @@
 
 #define BM_REQUEST_URL @"requestUrl"
 
-#define BM_LOCAL_URL @"localUrl"
+#define BM_JS_SERVER @"jsServer"
 
 #define BM_FONT_SCALE @"bmFontScale"
 
@@ -99,8 +99,8 @@
     }
     
     //添加当前入口      
-    if([BMConfigManager shareInstance].platform.url.local.length){
-        [bmData setObject:[BMConfigManager shareInstance].platform.url.local forKey:BM_LOCAL_URL];
+    if([BMConfigManager shareInstance].platform.url.jsServer.length){
+        [bmData setObject:[BMConfigManager shareInstance].platform.url.jsServer forKey:BM_JS_SERVER];
     }
     
     // 添加 deviceId

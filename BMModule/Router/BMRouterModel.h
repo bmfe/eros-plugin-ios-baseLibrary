@@ -27,5 +27,5 @@
 @property (nonatomic, copy) NSString *navTitle;                 // 导航栏title
 @property (nonatomic, copy) NSString *statusBarStyle;           // Default:黑色 LightContent:白色
 
-@property (nonatomic,copy) NSString * pageName;                  //页面名 可以用作Router 更易读
+@property (nonatomic,copy) NSString * pageName;                 //页面名 可以用作Router 更易读
 @end

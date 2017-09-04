@@ -17,7 +17,7 @@
 
 #define BM_FONT_SIZE @"bmFontSize"
 
-#define BM_REQUEST_URL @"requestUrl"
+#define BM_REQUEST_URL @"request"
 
 #define BM_JS_SERVER @"jsServer"
 

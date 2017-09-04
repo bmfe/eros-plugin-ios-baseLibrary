@@ -10,4 +10,14 @@
 
 @implementation BMWebViewRouterModel
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        
+        _navShow = YES;
+    }
+    
+    return self;
+}
+
 @end

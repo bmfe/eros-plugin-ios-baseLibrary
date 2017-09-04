@@ -74,7 +74,7 @@ typedef void(^BMNativeHandle)(void);
     if (!_webView) {
         
         CGFloat height = K_SCREEN_HEIGHT - 64;
-        if (self.routerInfo.hideNavbar) {
+        if (!self.routerInfo.navShow) {
             height = K_SCREEN_HEIGHT;
         }
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
@@ -155,7 +155,7 @@ typedef void(^BMNativeHandle)(void);
     /* 判断是否需要隐藏导航栏 并设置weex页面高度
      注：使用FDFullscreenPopGesture方法设置，自定义pop返回动画
      */
-    if (self.routerInfo.hideNavbar) {
+    if (!self.routerInfo.navShow) {
         self.fd_prefersNavigationBarHidden = YES;
     } else {
         self.fd_prefersNavigationBarHidden = NO;
@@ -254,32 +254,11 @@ typedef void(^BMNativeHandle)(void);
 - (void)reloadURL
 {
     
-    //
-    //  判断url本身有没有参数 如果有 直接拼接没有的话需要 加?
-    //
     if ([self.urlStr isHasChinese]) {
         self.urlStr = [self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    
     NSString *loadURL = [NSString stringWithFormat:@"%@",self.urlStr];
-    
-    
-    
-    // 判断是否需要token 并且存在token
-    if (self.routerInfo.authorize && [BMUserInfoModel shareInstance].token){
-        NSRange range = [loadURL rangeOfString:@"?"];
-        if (range.location != NSNotFound) {
-            
-            // 如果之前已经拼接过则不在拼接
-            if ([loadURL rangeOfString:@"fonttype"].location == NSNotFound) {
-                loadURL = [NSString stringWithFormat:@"%@&token=%@",loadURL,[BMUserInfoModel shareInstance].token];
-            }
-        } else {
-            loadURL = [NSString stringWithFormat:@"%@?token=%@",loadURL,[BMUserInfoModel shareInstance].token];
-        }
-    }
-    
     NSURL *url = [NSURL URLWithString:loadURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];

@@ -130,7 +130,7 @@
     
     BMPlatformModel *platformInfo = [BMConfigManager shareInstance].platform;
     
-    /* 加载一个页面常驻内存作为js端的中介者 */
+    /* 加载js端的中介者 */
     [self loadJSMediator:platformInfo.page.mediatorPage];
 
     
@@ -143,11 +143,7 @@
     
     /* 引导页面 */
 //    [HYGuideView showInView:_window];
-    
-    /** 不显示网络请求标志 */
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    });
+
 }
 
 - (void)openViewControllerWithRouterModel:(BMRouterModel *)routerModel weexInstance:(WXSDKInstance *)weexInstance

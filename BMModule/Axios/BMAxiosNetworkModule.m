@@ -18,6 +18,7 @@
 
 WX_EXPORT_METHOD(@selector(fetch:callback:))
 
+
 - (void)fetch:(NSDictionary *)info callback:(WXModuleCallback)callback
 {
     /* 添加判断 */

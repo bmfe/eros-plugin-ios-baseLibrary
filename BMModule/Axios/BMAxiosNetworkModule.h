@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "BMModuleProtocol.h"
 
-@interface BMAxiosNetworkModule : NSObject <WXModuleProtocol, BMModuleProtocol>
-
+@interface BMAxiosNetworkModule : NSObject <WXModuleProtocol>
 
 @end

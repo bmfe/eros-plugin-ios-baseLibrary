@@ -20,12 +20,6 @@ const NSString * pageKey = @"page";
 
 const NSString * md5Key = @"md5";
 
-
-#ifdef DEBUG
-#define BM_Weex_Interceptor @"BM_Weex_Interceptor"
-#endif
-
-
 @interface WXBMNetworkDefaultlpml () <NSURLSessionDataDelegate>
 {
     NSArray * _mimeTypes;   /**< 指定拦截器拦截的请求数据类型 */
@@ -53,15 +47,7 @@ const NSString * md5Key = @"md5";
 {
     NSString* const requestFiletype = [[[request URL] pathExtension] lowercaseString];
     
-#ifdef DEBUG
-    id value = [[NSUserDefaults standardUserDefaults] objectForKey:BM_Weex_Interceptor];
-    if (nil == value) {
-        value = [NSNumber numberWithBool:YES];
-        [[NSUserDefaults standardUserDefaults] setObject:value forKey:BM_Weex_Interceptor];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    _interceptor = [(NSNumber*)value boolValue];
-#endif
+    _interceptor = BM_InterceptorOn();
     
     // 如果拦截器
     if (_interceptor && [_mimeTypes containsObject:requestFiletype]) {

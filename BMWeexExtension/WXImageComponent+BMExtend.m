@@ -252,7 +252,7 @@ static NSString * defaultKey = @"default";
         WXLogDebug(@"Updating image:%@, component:%@", imageSrc, self.ref);
         NSDictionary *userInfo = @{@"imageQuality":imageQualityValue, @"imageSharp":imageSharpValue, @"blurRadius":blurRadiusValue};
         NSMutableString * newURL = [imageSrc mutableCopy];
-        WX_REWRITE_URL(imageSrc, WXResourceTypeImage, self.weexInstance)
+//        WX_REWRITE_URL(imageSrc, WXResourceTypeImage, self.weexInstance)
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             

@@ -14,10 +14,6 @@
 #import "UINavigationBar+NavigationBarExtend.h"
 #import <BMBaseViewController.h>
 
-static NSString * BM_Weex_Interceptor = @"BM_Weex_Interceptor";
-
-
-
 @interface DebugSettingVC ()<UITableViewDelegate,UITableViewDataSource>
 {
     UITableView * _tableView;
@@ -32,13 +28,6 @@ static NSString * BM_Weex_Interceptor = @"BM_Weex_Interceptor";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"本木医疗Debug";
-    
-    id value = [[NSUserDefaults standardUserDefaults] objectForKey:BM_Weex_Interceptor];
-    if (nil == value) {
-        NSNumber * number = [[NSNumber alloc] initWithBool:YES];
-        [[NSUserDefaults standardUserDefaults] setObject:number forKey:BM_Weex_Interceptor];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
     
     NSDictionary * userInfo = [[BMResourceManager sharedInstance] loadConfigData:K_JS_VERSION_PATH];
     if ([userInfo isKindOfClass:[NSDictionary class]]) {
@@ -120,13 +109,9 @@ static NSString * BM_Weex_Interceptor = @"BM_Weex_Interceptor";
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellSwitchId];
             
             UISwitch * switchOpen = [[UISwitch alloc] init];
-            switchOpen.on = NO;
             switchOpen.tag = 1000 + indexPath.row;
             
-            id value = [[NSUserDefaults standardUserDefaults] objectForKey:BM_Weex_Interceptor];
-            if ([value isKindOfClass:[NSNumber class]]) {
-                switchOpen.on = [(NSNumber*)value boolValue];
-            }
+            switchOpen.on = BM_InterceptorOn();
             
             [switchOpen addTarget:self action:@selector(switchChange:) forControlEvents:UIControlEventValueChanged];
             

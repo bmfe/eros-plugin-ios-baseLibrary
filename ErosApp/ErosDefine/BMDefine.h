@@ -63,4 +63,20 @@ CG_INLINE UIViewController* TK_CurrentVC() {
     return [BMMediatorManager shareInstance].currentViewController;
 }
 
+#define BM_Weex_Interceptor @"BM_Weex_Interceptor"
+/** 获取当前拦截器开关状态 */
+CG_INLINE BOOL BM_InterceptorOn() {
+#ifdef DEBUG
+    id value = [[NSUserDefaults standardUserDefaults] objectForKey:BM_Weex_Interceptor];
+    if (nil == value) {
+        value = [NSNumber numberWithBool:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:value forKey:BM_Weex_Interceptor];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    return [value boolValue];
+#else
+    return YES;
+#endif
+}
+
 #endif /* BMDefine_h */

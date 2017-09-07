@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BMBaseLibrary"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "本木医疗 iOS App 所需基础库"
 
   # This description is used to generate tags and improve search results.

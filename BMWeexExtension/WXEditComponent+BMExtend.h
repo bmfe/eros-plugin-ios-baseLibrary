@@ -11,6 +11,10 @@
 
 @interface WXEditComponent (BMExtend)
 
+- (instancetype)bmEdit_initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance;
+
+- (void)bmEdit_viewDidLoad;
+
 - (void)setAutofocus:(BOOL)b;
 - (void)bmEdit_setAutofocus:(BOOL)b;
 

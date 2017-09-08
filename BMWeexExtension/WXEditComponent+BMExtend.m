@@ -12,7 +12,7 @@
 #import "WXTextInputComponent.h"
 #import "WXTextAreaComponent.h"
 
-
+const void *_tintColor = @"_tintColor";
 
 const char *  inputTypeKey = "_inputType";
 const char *  inputViewKey = "inputView";
@@ -31,6 +31,29 @@ const char *  _attrKey = "_attr";
 - (nullable id)valueForUndefinedKey:(NSString *)key
 {
     return nil;
+}
+
+- (instancetype)bmEdit_initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
+{
+    // 解析 tintColor
+    if (styles[@"tintColor"]) {
+        UIColor *tintColor = [WXConvert UIColor:styles[@"tintColor"]];
+        if (tintColor) objc_setAssociatedObject(self, _tintColor, tintColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    return [self bmEdit_initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
+}
+
+- (void)bmEdit_viewDidLoad
+{
+    // 获取 tintColor
+    id tintColor = objc_getAssociatedObject(self, _tintColor);
+    if (tintColor && [tintColor isKindOfClass:[UIColor class]]) {
+        UIView * view = self.view;
+        view.tintColor = tintColor;
+    }
+    
+    [self bmEdit_viewDidLoad];
 }
 
 - (void)bmEdit_setAutofocus:(BOOL)b

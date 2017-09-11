@@ -31,6 +31,9 @@
 /* 设置状态栏样式 */
 - (void)bmSetStatusBarStyle
 {
+    
+    if (!self.routerModel.statusBarStyle) return;
+    
     /* 设置状态栏 字体颜色 */
     if ([self.routerModel.statusBarStyle isEqualToString:@"Default"]) {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];

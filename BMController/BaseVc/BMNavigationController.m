@@ -31,9 +31,7 @@
     UIColor *setColor = [UIColor colorWithHexString:TK_PlatformInfo().page.navBarColor];
     [self.navigationBar ex_setBackgroundColor:setColor?:K_NAV_BAR_COLOR];
     
-    // 设置 title
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: UIColorFromValue(0xffffff)}];
-    [[UINavigationBar appearance] setTintColor:UIColorFromValue(0xffffff)];
+    
     
     [self setTitleFontSize];
     
@@ -52,24 +50,26 @@
 - (void)setTitleFontSize
 {
     NSString *fontSize = [[NSUserDefaults standardUserDefaults] objectForKey:K_FONT_SIZE_KEY];
+    UIColor *itemColor = [UIColor colorWithHexString:TK_PlatformInfo().page.navItemColor];
+    itemColor = itemColor ?: UIColorFromValue(0xffffff);
+    
+    [[UINavigationBar appearance] setTintColor:itemColor];
+    
     // 标准字体
     if (!fontSize || [fontSize isEqualToString:K_FONT_SIZE_NORM])
     {
         // 设置 title
-        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: UIColorFromValue(0xffffff)}];
-        //        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:18]}];
+        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: itemColor}];
     }
     else if ([fontSize isEqualToString:K_FONT_SIZE_BIG])
     {
         // 设置 title
-        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:22], NSForegroundColorAttributeName: UIColorFromValue(0xffffff)}];
-        //        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:22]}];
+        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:22], NSForegroundColorAttributeName: itemColor}];
     }
     else if ([fontSize isEqualToString:k_FONT_SIZE_EXTRALARGE])
     {
         // 设置 title
-        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:25], NSForegroundColorAttributeName: UIColorFromValue(0xffffff)}];
-        //        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:25]}];
+        [self.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:25], NSForegroundColorAttributeName: itemColor}];
     }
 }
 

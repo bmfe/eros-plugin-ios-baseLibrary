@@ -190,7 +190,7 @@ Pod::Spec.new do |s|
  s.subspec 'BMWeexExtension' do |ss|
     ss.source_files  = "BMWeexExtension/*.{c,h,m,mm,S}"
     ss.public_header_files = "BMWeexExtension/*.h"
-    ss.resources = 'BMWeexExtension/Resources/bm-base.js'
+    ss.resources = 'BMWeexExtension/Resources/bm-base.js','BMWeexExtension/Resources/arrowInKeyboard@2x.png'
     ss.requires_arc  = true
   end
 

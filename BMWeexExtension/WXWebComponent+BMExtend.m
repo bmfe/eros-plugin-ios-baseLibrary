@@ -31,7 +31,7 @@
     webview.opaque = NO;
     webview.backgroundColor = [UIColor clearColor];
     
-    if (NO == [self.attributes[@"scrollEnabled"] boolValue]) {
+    if (self.attributes[@"scrollEnabled"] && NO == [self.attributes[@"scrollEnabled"] boolValue]) {
         webview.scrollView.scrollEnabled = NO;
     }
 

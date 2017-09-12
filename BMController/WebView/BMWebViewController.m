@@ -169,12 +169,7 @@ typedef void(^BMNativeHandle)(void);
     UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"actionIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(share)];
     self.navigationItem.rightBarButtonItem = shareItem;
     
-    // 判断url是否可用
-    if ([self.urlStr isEqualToString:K_NO_CONTENT]) {
-        [self loadNoContentView];
-        return;
-    }
-    
+
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -187,32 +182,6 @@ typedef void(^BMNativeHandle)(void);
 - (void)share
 {
     [self.actionView showWebViewActionViewWithWebView:self.webView shareInfo:self.shareModel];
-}
-
-/**
- *  加载一个没有内容的视图
- */
-- (void)loadNoContentView
-{
-    UIImageView *imv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"web_no_contnet"]];
-    [self.view addSubview:imv];
-    
-    JYTTitleLabel *lbl = [[JYTTitleLabel alloc] init];
-    lbl.textColor = K_PLACEHOLDER_COLOR;
-    lbl.text = K_NO_CONTENT;
-    [self.view addSubview:lbl];
-    
-    @weakify(self);
-    [imv mas_makeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
-        make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.top.mas_equalTo(self.view.mas_top).offset(50);
-    }];
-    
-    [lbl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(imv.mas_bottom).offset(25);
-        make.centerX.mas_equalTo(imv.mas_centerX);
-    }];
 }
 
 - (void)didReceiveMemoryWarning {

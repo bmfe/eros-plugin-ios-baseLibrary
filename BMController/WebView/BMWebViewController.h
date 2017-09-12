@@ -10,8 +10,6 @@
 #import "BMShareModel.h"
 #import "BMWebViewRouterModel.h"
 
-#define K_NO_CONTENT @"暂无内容，详情请见官网"
-
 @interface BMWebViewController : UIViewController
 
 @property (nonatomic, strong) BMWebViewRouterModel *routerInfo;

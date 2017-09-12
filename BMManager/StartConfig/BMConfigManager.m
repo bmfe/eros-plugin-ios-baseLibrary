@@ -242,10 +242,6 @@
     [BMConfigManager registerBmComponents];
     [BMConfigManager registerBmModules];
     
-    /*加载WeexMarket Plugins*/
-    [WeexMarketPlugins registerWeexMarketPlugins];
-    
-    
 #ifdef DEBUG
 //    [BMConfigManager atAddPlugin];
     [WXDebugTool setDebug:YES];

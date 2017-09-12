@@ -117,7 +117,7 @@
     if (platformInfo.amap.enabled) {
         /*加载WeexMarket 地图组件*/
         [WeexMarketPlugins registerWeexMarketPlugins];
-        [[AMapServices sharedServices] setApiKey:platformInfo.amap.appKey];
+        [[AMapServices sharedServices] setApiKey:platformInfo.amap.iOSAppKey];
     }
     
     /** 配置友盟相关sdk */

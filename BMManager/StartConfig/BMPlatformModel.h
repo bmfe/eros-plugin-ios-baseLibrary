@@ -41,7 +41,7 @@
 
 @interface BMPlatformModelAmap : NSObject
 @property (nonatomic, assign) BOOL enabled;             /**< 是否启用高德地图 */
-@property (nonatomic, copy) NSString *appKey;
+@property (nonatomic, copy) NSString *iOSAppKey;        /**< appkey */
 @end
 
 

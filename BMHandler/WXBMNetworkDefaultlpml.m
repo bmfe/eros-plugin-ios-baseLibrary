@@ -233,6 +233,9 @@ didReceiveResponse:(NSURLResponse *)response
                     }
                     else{
                         if (loader.onFailed) {
+                            
+                            WXLogError(@"本地资源md5校验失败: %@",localPath);
+                            
                             NSError * error  = [NSError errorWithDomain:@"BMNetWorkIntercepet" code:-500 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"本地资源md5校验失败",@"reason", nil]];
                             loader.onFailed(error);
                         }

@@ -53,7 +53,7 @@
     UIColor *itemColor = [UIColor colorWithHexString:TK_PlatformInfo().page.navItemColor];
     itemColor = itemColor ?: UIColorFromValue(0xffffff);
     
-    [[UINavigationBar appearance] setTintColor:itemColor];
+//    [[UINavigationBar appearance] setTintColor:itemColor];
     
     // 标准字体
     if (!fontSize || [fontSize isEqualToString:K_FONT_SIZE_NORM])

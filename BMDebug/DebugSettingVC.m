@@ -14,6 +14,8 @@
 #import "UINavigationBar+NavigationBarExtend.h"
 #import <BMBaseViewController.h>
 
+#import "BMWebSocket.h"
+
 @interface DebugSettingVC ()<UITableViewDelegate,UITableViewDataSource>
 {
     UITableView * _tableView;
@@ -189,10 +191,6 @@
         }
     }
 
-    
-    
-    
-    
     return cell;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -210,6 +208,20 @@
     NSNumber * number = [[NSNumber alloc] initWithBool:on];
     [[NSUserDefaults standardUserDefaults] setObject:number forKey:BM_Weex_Interceptor];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if (!on) {
+        NSURL *url = [NSURL URLWithString:TK_PlatformInfo().url.jsServer];
+        if (!url) {
+            WXLogError(@"WebSocket Server URL Error");
+            return;
+        }
+        
+        NSString *portUrl = [NSString stringWithFormat:@"%@://%@:9999/eros-debug",url.scheme,url.host];
+        portUrl = @"http://192.168.15.163:8088/debugProxy/native";
+        url = [NSURL URLWithString:portUrl];
+        
+        [BMWebSocket connectServer:url];
+    }
     
 }
 

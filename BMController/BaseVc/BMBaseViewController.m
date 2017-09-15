@@ -113,15 +113,17 @@
         _weexHeight -= K_NAVBAR_HEIGHT;
     }
     
-    /* 是否禁用手势返回 */
+    /* 是否禁用返回 */
     if (!self.routerModel.canBack) {
         self.fd_interactivePopDisabled = YES;
+        UIBarButtonItem *leftBtnItem = [[UIBarButtonItem alloc] init];
+        leftBtnItem.title = @"";
+        self.navigationItem.leftBarButtonItem = leftBtnItem;
+    } else {
+        /* 添加BackItem */
+        [self addBackBarbuttonItem];
     }
 
-    /* 添加BackItem */
-    [self addBackBarbuttonItem];
-    
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated

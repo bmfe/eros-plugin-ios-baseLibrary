@@ -1699,8 +1699,6 @@ __webpack_require__(98);
 
 __webpack_require__(99);
 
-__webpack_require__(124);
-
 __webpack_require__(125);
 
 __webpack_require__(126);
@@ -1713,9 +1711,11 @@ __webpack_require__(129);
 
 __webpack_require__(130);
 
-__webpack_require__(132);
+__webpack_require__(131);
 
 __webpack_require__(133);
+
+__webpack_require__(134);
 
 /***/ }),
 /* 80 */
@@ -2535,7 +2535,11 @@ var _isFunction = __webpack_require__(0);
 
 var _isFunction2 = _interopRequireDefault(_isFunction);
 
-var _isPlainObject = __webpack_require__(122);
+var _isUndefined = __webpack_require__(122);
+
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
+var _isPlainObject = __webpack_require__(123);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
@@ -2639,12 +2643,13 @@ Router.install = function (Vue, options) {
             options = options || {};
             var currentPageInfo = this.getUrl(options.name);
             if (!currentPageInfo || !currentPageInfo.url) return;
+            options.canBack = (0, _isUndefined2.default)(options.canBack) ? true : options.canBack;
             return new _promise2.default(function (resolve, reject) {
                 router.open({
                     url: currentPageInfo.url,
                     type: options.type || DEFAULT_ANIMATETYPE,
                     params: options.params || {},
-                    canBack: !!options.canBack,
+                    canBack: options.canBack,
                     navShow: options.navShow || !!currentPageInfo.title,
                     navTitle: options.navTitle || currentPageInfo.title,
                     statusBarStyle: options.statusBarStyle || 'Default',
@@ -3368,10 +3373,38 @@ module.exports = nodeUtil;
 
 /***/ }),
 /* 122 */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is `undefined`.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is `undefined`, else `false`.
+ * @example
+ *
+ * _.isUndefined(void 0);
+ * // => true
+ *
+ * _.isUndefined(null);
+ * // => false
+ */
+function isUndefined(value) {
+  return value === undefined;
+}
+
+module.exports = isUndefined;
+
+
+/***/ }),
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(5),
-    getPrototype = __webpack_require__(123),
+    getPrototype = __webpack_require__(124),
     isObjectLike = __webpack_require__(47);
 
 /** `Object#toString` result references. */
@@ -3435,7 +3468,7 @@ module.exports = isPlainObject;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var overArg = __webpack_require__(74);
@@ -3447,7 +3480,7 @@ module.exports = getPrototype;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3493,7 +3526,7 @@ Axios.install = function (Vue, options) {
 Vue.use(Axios);
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3553,7 +3586,7 @@ Geolocation.install = function (Vue) {
 Vue.use(Geolocation);
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3684,7 +3717,7 @@ Vue.use(Camera);
 Vue.use(Image);
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3733,7 +3766,7 @@ Navigator.install = function (Vue, options) {
 Vue.use(Navigator);
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3789,7 +3822,7 @@ Pay.install = function (Vue, options) {
 Vue.use(Pay);
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3915,7 +3948,7 @@ Storage.install = function (Vue, options) {
 Vue.use(Storage);
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3929,7 +3962,7 @@ var _isArray2 = __webpack_require__(66);
 
 var _isArray3 = _interopRequireDefault(_isArray2);
 
-var _message = __webpack_require__(131);
+var _message = __webpack_require__(132);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3985,7 +4018,7 @@ GlobalEvent.install = function (Vue, options) {
 Vue.use(GlobalEvent);
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4048,7 +4081,7 @@ var commonMsg = function commonMsg(options, eventHandle) {
 };
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4090,7 +4123,7 @@ Share.install = function (Vue, options) {
 Vue.use(Share);
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

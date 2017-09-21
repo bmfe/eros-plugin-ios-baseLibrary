@@ -20,6 +20,23 @@
     if (!_model.method || [_model.method isEqualToString:@"GET"]) {
         return YTKRequestMethodGET;
     }
+    
+    if ([_model.method isEqualToString:@"HEAD"]) {
+        return YTKRequestMethodHEAD;
+    }
+    
+    if ([_model.method isEqualToString:@"PUT"]) {
+        return YTKRequestMethodPUT;
+    }
+    
+    if ([_model.method isEqualToString:@"DELETE"]) {
+        return YTKRequestMethodDELETE;
+    }
+    
+    if ([_model.method isEqualToString:@"PATCH"]) {
+        return YTKRequestMethodPATCH;
+    }
+    
     return YTKRequestMethodPOST;
 }
 

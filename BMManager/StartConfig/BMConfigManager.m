@@ -21,6 +21,7 @@
 
 #import "WXImgLoaderDefaultImpl.h"
 #import "BMMonitorHandler.h"
+#import "BMConfigCenterHandler.h"
 
 #import <BMMaskComponent.h>
 #import "BMTextComponent.h"
@@ -188,6 +189,7 @@
     [WXSDKEngine registerHandler:[WXImgLoaderDefaultImpl new] withProtocol:@protocol(WXImgLoaderProtocol)];
     [WXSDKEngine registerHandler:[WXBMNetworkDefaultlpml new] withProtocol:@protocol(WXResourceRequestHandler)];
     [WXSDKEngine registerHandler:[BMMonitorHandler new] withProtocol:@protocol(WXAppMonitorProtocol)];
+    [WXSDKEngine registerHandler:[BMConfigCenterHandler new] withProtocol:@protocol(WXConfigCenterProtocol)];
 }
 
 + (void)registerBmComponents

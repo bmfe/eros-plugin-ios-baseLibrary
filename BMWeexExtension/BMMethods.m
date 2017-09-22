@@ -17,6 +17,7 @@
 #import "WXTextComponent+BMExtend.h"
 #import "WXScrollerComponent+BMExtend.h"
 #import "WXListComponent+BMExtend.h"
+#import "WXRecyclerComponent+BMExtend.h"
 
 #import <WeexSDK/WXTextInputComponent.h>
 #import "WXImageComponent+BMExtend.h"
@@ -50,6 +51,7 @@
         [[self class] exchangeWeexTextComponent];
         [[self class] exchangeWeexScrollerComponent];
         [[self class] exchangeWXWebComponent];
+        [[self class] exchangeRecyclerComponent];
         
         [[self class] exchangeWeexPlaceholderImageComponent];
         [[self class] exchangeWeexContentImageComponent];
@@ -266,6 +268,14 @@
     Method exchangeMSetUrl = class_getInstanceMethod([WXWebComponent class], @selector(bm_setUrl:));
     method_exchangeImplementations(originalMSetUrl, exchangeMSetUrl);
     
+}
+
++ (void)exchangeRecyclerComponent
+{
+    /* 替换 WXRecyclerComponent 的loadView方法 */
+    Method originalM = class_getInstanceMethod([WXRecyclerComponent class], @selector(loadView));
+    Method exchangeM = class_getInstanceMethod([WXRecyclerComponent class], @selector(bmRecycler_loadView));
+    method_exchangeImplementations(originalM, exchangeM);
 }
 
 @end

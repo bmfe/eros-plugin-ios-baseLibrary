@@ -61,8 +61,11 @@ WX_EXPORT_METHOD(@selector(refreshEnd));
 - (void)checkNeedShowRefresh:(UIView *)view
 {
     UIScrollView *scrollView = (UIScrollView *)view;
-    if (K_SYSTEM_VERSION >= 11.0) {
-        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    
+    CGSize size = [[UIScreen mainScreen] currentMode].size;
+    
+    if (@available(iOS 11.0, *)) {
+        if (!isIphoneX) scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     NSNumber *showRefresh = objc_getAssociatedObject(self, "bm_showRefresh");
     if (showRefresh && [showRefresh boolValue]) {

@@ -14,7 +14,7 @@
     UIView *view = [self bmRecycler_loadView];
     UICollectionView *collectionView = (UICollectionView *)view;
     if (@available(iOS 11.0, *)) {
-        collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        if (!isIphoneX) collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     return view;
 }

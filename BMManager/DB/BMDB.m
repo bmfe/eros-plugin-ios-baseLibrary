@@ -147,6 +147,38 @@
 //    });
 }
 
+- (BOOL)addOrUpdateData:(NSString *)data primatyKey:(NSString *)key
+{
+    NSError *error = nil;
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    
+    /* 根据主键查询数据 */
+    BMDBBaseModel *model = [BMDBBaseModel objectForPrimaryKey:key];
+    
+    /* 数据不存在将 newModel 保存到数据库中 */
+    if (!model) {
+        model = [[BMDBBaseModel alloc] init];
+        model.key = key;
+        model.data = data;
+        [realm transactionWithBlock:^{
+            [realm addOrUpdateObject:model];
+        } error:&error];
+    }
+    /* 更新数据 */
+    else
+    {
+        [realm transactionWithBlock:^{
+            model.data = data;
+        } error:&error];
+    }
+    
+    if (error) {
+        WXLogError(@"【BMDB ERROR】:%@",error);
+        return NO;
+    }
+    return YES;
+}
+
 - (NSString *)queryWithPrimatyKey:(NSString *)key
 {
     BMDBBaseModel *dataModel = [BMDBBaseModel objectForPrimaryKey:key];
@@ -158,12 +190,6 @@
 
 - (void)deleteWithPrimatyKey:(NSString *)key success:(BMDBHandleBlock)result
 {
-    // 删除用户信息时也要清除本地的缓存
-    if ([key isEqualToString:@"userInfo"]) {
-        [BMMediatorManager shareInstance].isLogin = NO;
-       [[BMUserInfoModel shareInstance] clearData];
-    }
-    
 //    dispatch_async(_dbQueue, ^{
     
         BMDBBaseModel *model = [BMDBBaseModel objectForPrimaryKey:key];
@@ -192,6 +218,28 @@
 //    });
 }
 
+- (BOOL)deleteWithPrimatyKey:(NSString *)key
+{
+    BMDBBaseModel *model = [BMDBBaseModel objectForPrimaryKey:key];
+    if (!model) {
+//      WXLogInfo(@"【BMDB ERROR】: 主键为 %@ 的数据不存在",key);
+        return NO;
+    }
+    
+    NSError *error = nil;
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    
+    [realm transactionWithBlock:^{
+        [realm deleteObject:model];
+    } error:&error];
+    
+    if (error) {
+        WXLogError(@"【BMDB ERROR】:%@",error);
+        return NO;
+    }
+    return YES;
+}
+
 - (void)deleteAllSuccess:(BMDBHandleBlock)result
 {
 //    dispatch_async(_dbQueue, ^{
@@ -211,6 +259,22 @@
         }
         
 //    });
+}
+
+- (BOOL)deleteAll
+{
+    NSError *error = nil;
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    
+    [realm transactionWithBlock:^{
+        [realm deleteAllObjects];
+    } error:&error];
+    
+    if (error) {
+        WXLogError(@"【BMDB ERROR】:%@",error);
+        return NO;
+    }
+    return YES;
 }
 
 @end

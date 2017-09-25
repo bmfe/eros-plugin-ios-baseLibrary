@@ -23,10 +23,10 @@ WX_EXPORT_METHOD(@selector(getData:callback:))
 WX_EXPORT_METHOD(@selector(deleteData:callback:))
 WX_EXPORT_METHOD(@selector(removeData:))
 
-//WX_EXPORT_METHOD_SYNC(@selector(setData:forKey:))
-//WX_EXPORT_METHOD_SYNC(@selector(getData:))
-//WX_EXPORT_METHOD_SYNC(@selector(deleteData:))
-//WX_EXPORT_METHOD_SYNC(@selector(removeData))
+WX_EXPORT_METHOD_SYNC(@selector(setData:data:))
+WX_EXPORT_METHOD_SYNC(@selector(getData:))
+WX_EXPORT_METHOD_SYNC(@selector(deleteData:))
+WX_EXPORT_METHOD_SYNC(@selector(removeData))
 
 - (void)setData:(NSString *)key data:(id)data callback:(WXModuleCallback)callback
 {

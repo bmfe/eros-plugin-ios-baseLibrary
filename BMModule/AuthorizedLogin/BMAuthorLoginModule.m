@@ -9,6 +9,7 @@
 #import "BMAuthorLoginModule.h"
 #import <UMengUShare/WXApi.h>
 #import <UMSocialCore/UMSocialCore.h>
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @interface BMAuthorLoginModule()<WXApiDelegate>
 
@@ -19,6 +20,9 @@
 
 WX_EXPORT_METHOD(@selector(wechat:success:))
 
+WX_EXPORT_METHOD_SYNC(@selector(canUseTouchId))
+
+/** 调用微信登录 */
 - (void)wechat:(NSDictionary *)info success:(WXModuleCallback)success
 {
     [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:weexInstance.viewController completion:^(id result, NSError *error) {
@@ -43,6 +47,42 @@ WX_EXPORT_METHOD(@selector(wechat:success:))
         }
         
     }];
+}
+
+- (NSDictionary *)canUseTouchId
+{
+    LAContext *context = [[LAContext alloc] init];
+    NSError *error = nil;
+    
+    BMResCode code = BMResCodeSuccess;
+    NSString *msg = @"此设备支持使用 Touch ID";
+    
+    if (![context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+        
+        code = BMResCodeError;
+        //不支持指纹识别
+        switch (error.code) {
+            case LAErrorTouchIDNotEnrolled:
+            {
+                msg = @"TouchID is not enrolled";
+                break;
+            }
+            case LAErrorPasscodeNotSet:
+            {
+                msg = @"A passcode has not been set";
+                break;
+            }
+            default:
+            {
+                msg = @"TouchID not available";
+                break;
+            }
+        }
+    }
+    
+    WXLogInfo(@"%@",msg);
+    
+    return [NSDictionary configCallbackDataWithResCode:code msg:msg data:nil];
 }
 
 

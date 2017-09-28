@@ -18,12 +18,14 @@
 @implementation BMAuthorLoginModule
 @synthesize weexInstance;
 
-WX_EXPORT_METHOD(@selector(wechat:success:))
+WX_EXPORT_METHOD(@selector(wechat:callback:))
 
 WX_EXPORT_METHOD_SYNC(@selector(canUseTouchId))
 
+WX_EXPORT_METHOD(@selector(touchId:callback:))
+
 /** 调用微信登录 */
-- (void)wechat:(NSDictionary *)info success:(WXModuleCallback)success
+- (void)wechat:(NSDictionary *)info callback:(WXModuleCallback)success
 {
     [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:weexInstance.viewController completion:^(id result, NSError *error) {
        
@@ -83,6 +85,67 @@ WX_EXPORT_METHOD_SYNC(@selector(canUseTouchId))
     WXLogInfo(@"%@",msg);
     
     return [NSDictionary configCallbackDataWithResCode:code msg:msg data:nil];
+}
+
+- (void)touchId:(NSDictionary *)info callback:(WXModuleCallback)callback
+{
+    NSDictionary *resData = [self canUseTouchId];
+    if ([[resData objectForKey:@"resData"] integerValue] == 9) {
+        if (callback) {
+            callback(resData);
+        }
+        return;
+    }
+    
+    LAContext *context = [[LAContext alloc] init];
+    NSError *error = nil;
+    
+    NSString *title = [info objectForKey:@"title"];
+    
+    [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+            localizedReason: title?:@"指纹解锁" reply:^(BOOL success, NSError * _Nullable error) {
+                if (success) {
+                    if (callback) {
+                        NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:@"指纹验证成功" data:nil];
+                        callback(resData);
+                    }
+                }else{
+                    NSString *msg = @"";
+                    switch (error.code) {
+                        case LAErrorSystemCancel:
+                        {
+                            msg = @"系统取消授权";
+                            break;
+                        }
+                        case LAErrorUserCancel:
+                        {
+                            msg = @"用户取消验证";
+                            break;
+                        }
+                        case LAErrorAuthenticationFailed:
+                        {
+                            msg = @"授权失败";
+                            break;
+                        }
+                        case LAErrorPasscodeNotSet:
+                        {
+                            msg = @"系统未设置密码";
+                            break;
+                        }
+                        default:
+                        {
+                            msg = @"设备Touch ID不可用";
+                            break;
+                        }
+                    }
+                    if (callback) {
+                        NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:msg data:nil];
+                        callback(resData);
+                    }
+                }
+            }];
+    
+    
 }
 
 

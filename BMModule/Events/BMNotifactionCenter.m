@@ -46,7 +46,7 @@ const static NSString * instanceIDKey = @"instanceId";
     }
     return self;
 }
--(void)on:(NSString*)event callback:(WXModuleCallback)callback instance:(WXSDKInstance *)instance
+-(void)on:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
 {
     if (nil == callback) {
         return;
@@ -81,7 +81,7 @@ const static NSString * instanceIDKey = @"instanceId";
 }
 
 
--(void)once:(NSString*)event callback:(WXModuleCallback)callback instance:(WXSDKInstance *)instance
+-(void)once:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
 {
     if (nil == callback) {
         return;
@@ -162,16 +162,18 @@ const static NSString * instanceIDKey = @"instanceId";
         for (id callbackInfo in (NSArray*)callbacks) {
             if ([callbackInfo isKindOfClass:[NSDictionary class]]) {
                 NSNumber * once = [callbackInfo objectForKey:onceKey];
-                WXModuleCallback callback = [callbackInfo objectForKey:callbackKey];
+                WXKeepAliveCallback callback = [callbackInfo objectForKey:callbackKey];
                 NSString * instanceId = [callbackInfo objectForKey:instanceIDKey];
                 if ([instanceId isKindOfClass:[NSString class]]) {
                     if ([instanceArrays containsObject:instanceId]) {
                         if(callback){
+                            BOOL keep = YES;
                             if (YES == [once boolValue]) {
                                 [tmpCallbacks removeObject:callbackInfo];
+                                keep = NO;
                             }
                             
-                            callback(userinfo);
+                            callback(userinfo,keep);
                         }
                     }
                     else{

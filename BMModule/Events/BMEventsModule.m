@@ -22,12 +22,12 @@ WX_EXPORT_METHOD(@selector(off:callback:))
 WX_EXPORT_METHOD(@selector(emit:info:))
 WX_EXPORT_METHOD(@selector(offall))
 
--(void)on:(NSString*)event callback:(WXModuleCallback)callback
+-(void)on:(NSString*)event callback:(WXModuleKeepAliveCallback)callback
 {
     [[BMNotifactionCenter defaultCenter] on:event callback:callback instance:weexInstance];
 }
 
--(void)once:(NSString*)event callback:(WXModuleCallback)callback
+-(void)once:(NSString*)event callback:(WXModuleKeepAliveCallback)callback
 {
     [[BMNotifactionCenter defaultCenter] once:event callback:callback instance:weexInstance];
 }

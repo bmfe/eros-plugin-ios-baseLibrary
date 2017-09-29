@@ -223,7 +223,7 @@
                               @"bmEvents":          NSStringFromClass([BMEventsModule class]),
                               @"bmBrowserImg":      NSStringFromClass([BMBrowserImgModule class]),
                               @"bmTool":            NSStringFromClass([BMToolsModule class]),
-                              @"bmAuthorLogin":     NSStringFromClass([BMAuthorLoginModule class]),
+                              @"bmAuth":     NSStringFromClass([BMAuthorLoginModule class]),
                               @"bmNavigator":       NSStringFromClass([BMNavigatorModule class])
                               };
     

@@ -20,10 +20,10 @@
 +(instancetype)defaultCenter;
 
 
--(void)on:(NSString*)event callback:(WXModuleCallback)callback instance:(WXSDKInstance*)instance;
+-(void)on:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance*)instance;
 
 
--(void)once:(NSString*)event callback:(WXModuleCallback)callback instance:(WXSDKInstance*)instance;
+-(void)once:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance*)instance;
 
 
 -(void)off:(NSString*)event callback:(WXModuleCallback)callback;

@@ -7,20 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <SRWebSocket.h>
 #import "BMRouterModel.h"
 #import "BMCommonRequest.h"
 
-@interface BMBaseViewController : UIViewController<SRWebSocketDelegate>
+@interface BMBaseViewController : UIViewController
 
-@property (nonatomic, strong) NSString *script;
 @property (nonatomic, strong) NSURL *url;
 
 @property (nonatomic, strong) BMRouterModel *routerModel;   // 页面导航信息
-
-
-@property (nonatomic, strong) SRWebSocket *hotReloadSocket;
-@property (nonatomic, strong) NSString *source;
 
 /* 刷新weex页面 */
 - (void)refreshWeex;

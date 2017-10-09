@@ -23,10 +23,10 @@ WX_EXPORT_METHOD(@selector(getData:callback:))
 WX_EXPORT_METHOD(@selector(deleteData:callback:))
 WX_EXPORT_METHOD(@selector(removeData:))
 
-//WX_EXPORT_METHOD_SYNC(@selector(setData:forKey:))
-//WX_EXPORT_METHOD_SYNC(@selector(getData:))
-//WX_EXPORT_METHOD_SYNC(@selector(deleteData:))
-//WX_EXPORT_METHOD_SYNC(@selector(removeData))
+WX_EXPORT_METHOD_SYNC(@selector(setDataSync:data:))
+WX_EXPORT_METHOD_SYNC(@selector(getDataSync:))
+WX_EXPORT_METHOD_SYNC(@selector(deleteDataSync:))
+WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
 
 - (void)setData:(NSString *)key data:(id)data callback:(WXModuleCallback)callback
 {
@@ -50,7 +50,7 @@ WX_EXPORT_METHOD(@selector(removeData:))
 }
 
 /** 存储数据 同步方法 */
-- (NSDictionary *)setData:(NSString *)key data:(id)data
+- (NSDictionary *)setDataSync:(NSString *)key data:(id)data
 {
     if (![data isKindOfClass:[NSString class]]) {
         data = [data yy_modelToJSONString];
@@ -67,7 +67,7 @@ WX_EXPORT_METHOD(@selector(removeData:))
 - (void)getData:(NSString *)key callback:(WXModuleCallback)callback
 {
     if (!key) return;
-    
+
     id resData = [[BMDB DB] queryWithPrimatyKey:key];
     if (callback) {
         NSInteger resCode = resData ? BMResCodeSuccess : BMResCodeError;
@@ -77,7 +77,7 @@ WX_EXPORT_METHOD(@selector(removeData:))
 }
 
 /** 获取数据 同步方法 */
-- (NSDictionary *)getData:(NSString *)key
+- (NSDictionary *)getDataSync:(NSString *)key
 {
     id resData = [[BMDB DB] queryWithPrimatyKey:key];
     NSInteger resCode = resData ? BMResCodeSuccess : BMResCodeError;
@@ -101,7 +101,7 @@ WX_EXPORT_METHOD(@selector(removeData:))
 }
 
 /** 删除一条数据 同步方法 */
-- (NSDictionary *)deleteData:(NSString *)key
+- (NSDictionary *)deleteDataSync:(NSString *)key
 {
     if (!key) return nil;
     
@@ -125,7 +125,7 @@ WX_EXPORT_METHOD(@selector(removeData:))
 }
 
 /** 删除所有数据 同步方法 */
-- (NSDictionary *)removeData
+- (NSDictionary *)removeDataSync
 {
     BOOL success = [[BMDB DB] deleteAll];
     NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;

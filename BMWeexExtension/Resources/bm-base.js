@@ -4644,7 +4644,9 @@
                         Vue.prototype.eros.responseHandler(options, resData, resolve, reject);
                     });
                 });
-            }, Vue.prototype.$service = function(name, params, options) {
+            }, Vue.prototype.$service = function(name, params) {
+                var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
                 var AJAX_MAP = Vue.prototype.eros.ajaxMap;
                 // 不仅支持 success, error 的回调写法，还支持 promise 的写法
                 (0, _tools.assert)(AJAX_MAP[name], 'axios--->service层中并没有此命名的方法');

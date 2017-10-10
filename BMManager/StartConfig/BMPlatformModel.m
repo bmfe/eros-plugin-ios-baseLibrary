@@ -26,5 +26,9 @@
 @implementation BMPlatformModelAmap
 @end
 
+@implementation BMPlatformModelWidget
+@end
+
 @implementation BMPlatformModel
 @end
+

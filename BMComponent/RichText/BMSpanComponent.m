@@ -40,6 +40,11 @@
     return view;
 }
 
+//- (void)viewDidLoad
+//{
+//    [self updateRichText:self.supercomponent];
+//}
+
 #pragma mark - Add Event
 - (void)addEvent:(NSString *)eventName
 {

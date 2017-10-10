@@ -11,6 +11,7 @@
 
 #import <WeexSDK/WeexSDK.h>
 #import "BMRouterModel.h"
+#import "BMBaseViewController.h"
 
 @class BMWebViewRouterModel;
 

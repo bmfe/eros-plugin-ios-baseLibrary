@@ -40,6 +40,10 @@
 - (id<WXImageOperationProtocol>)downloadImageWithURL:(NSString *)url imageFrame:(CGRect)imageFrame userInfo:(NSDictionary *)userInfo completed:(void(^)(UIImage *image,  NSError *error, BOOL finished))completedBlock
 {
     if (!url) return nil;
+ 
+    if ([url hasPrefix:@"//"]) {
+        url = [@"https:" stringByAppendingString:url];
+    }
     
     NSURL *imgUrl = [NSURL URLWithString:url];
     

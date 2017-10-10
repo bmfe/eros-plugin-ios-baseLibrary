@@ -507,17 +507,16 @@ if (needLayout) {\
 /** 递归遍历子组件拿返回 bmspan 组件 */
 - (BMSpanComponent *)findSpanComponent:(WXComponent *)component
 {
-    if (!component) {
-        return nil;
+    if (component) {
+        if ([component isKindOfClass:[BMSpanComponent class]]) {
+            return (BMSpanComponent *)component;
+        }
+        
+        for (WXComponent *subComponent in component.subcomponents) {
+            return [self findSpanComponent:subComponent];
+        }
     }
-    
-    if ([component isKindOfClass:[BMSpanComponent class]]) {
-        return (BMSpanComponent *)component;
-    }
-    
-    for (WXComponent *subComponent in component.subcomponents) {
-        return [self findSpanComponent:subComponent];
-    }
+    return nil;
 }
 
 @end

@@ -49,7 +49,7 @@ const NSString * md5Key = @"md5";
     
     _interceptor = BM_InterceptorOn();
     
-    // 如果拦截器
+    // 如果拦截器打开
     if (_interceptor && [_mimeTypes containsObject:requestFiletype]) {
         [self fliterResourceFromLocal:request withDelegate:delegate];
     }
@@ -121,7 +121,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSString * path  =[url path];
     WXLogInfo(@" path %@",path);
     
-    NSString * replaceString = [NSString stringWithFormat:@"%@/pages/",K_JS_ADD_PATH];
+    NSString * replaceString = [NSString stringWithFormat:@"%@",K_JS_ADD_PATH];
     
     NSString * fileName = [path stringByReplacingOccurrencesOfString:replaceString withString:@""];
     WXLogInfo(@"fileName %@",fileName);
@@ -134,7 +134,6 @@ didReceiveResponse:(NSURLResponse *)response
     NSString * fileName = [self path:url];
     NSString * realFilePath = [NSString stringWithFormat:@"%@/%@",K_JS_PAGES_PATH,fileName];
     WXLogInfo(@"realFilePath is %@",realFilePath);
-    
     
     return realFilePath;
 }
@@ -219,8 +218,6 @@ didReceiveResponse:(NSURLResponse *)response
                     
                     
                     NSString * path = [self path:request.URL];
-                    path = [NSString stringWithFormat:@"/pages/%@",path];
-                    
                     
                     NSString * fileMD5 = [_md5Maps objectForKey:path];
                     

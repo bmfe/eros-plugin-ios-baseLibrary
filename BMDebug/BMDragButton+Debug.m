@@ -13,7 +13,7 @@
 #import "WXScannerVC.h"
 #import "BMMediatorManager.h"
 #import <UIKit/UIKit.h>
-
+#import "BMResourceManager.h"
 
 @interface BMDragButton()<UIActionSheetDelegate>
 
@@ -95,6 +95,11 @@
             break;
         case 1:
         {
+            /** 刷新widgetJs */
+            [BMResourceManager sharedInstance].bmWidgetJs = nil;
+            /** 刷新jsMediator */
+//            [[BMMediatorManager shareInstance].jsMediator refreshWeex];
+            
             UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
 
             if ([controller isKindOfClass:[BMBaseViewController class]]) {

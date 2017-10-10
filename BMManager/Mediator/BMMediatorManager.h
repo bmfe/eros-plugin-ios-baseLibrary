@@ -11,6 +11,7 @@
 
 #import <WeexSDK/WeexSDK.h>
 #import "BMRouterModel.h"
+#import "BMBaseViewController.h"
 
 @class BMWebViewRouterModel;
 
@@ -23,6 +24,8 @@
 @property (nonatomic, weak) WXSDKInstance *currentWXInstance;           // 当前栈顶的WXSDKInstance
 @property (nonatomic, weak) UIViewController *currentViewController;    // 当前栈顶的ViewController
 @property (nonatomic, weak) UITabBarController *baseTabBarController;
+
+@property (nonatomic, strong) BMBaseViewController *jsMediator;    // 此页面作为js端的中介者，常驻内存
 
 /* app启动后加载页面 */
 - (void)loadViewControllerWithWindow:(UIWindow *)_window;

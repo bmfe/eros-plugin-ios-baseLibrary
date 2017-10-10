@@ -26,13 +26,13 @@
 #define TIMESTAMP @"timestamp"
 
 
-static NSString * pages = @"pages";
+static NSString * bundle = @"bundle";
 
 static NSString * zip = @"zip";
 
-static NSString * configFileName = @"pages.config";
+static NSString * configFileName = @"bundle.config";
 
-static NSString * fileName = @"pages.zip";
+static NSString * fileName = @"bundle.zip";
 
 
 #define K_VERSION           @"version"
@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 
 @property (nonatomic,weak)BMUpdateBundlejsRequest * updateBundleRequest;
 @property (nonatomic, copy) NSString *updateBundleJsUrl;
+
 @end
 
 
@@ -296,7 +297,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 -(void)copyBundleResourceToLibrary
 {
      /* 读取当前工程包的js版本信息 */
-    NSString *zipFile = [[NSBundle mainBundle] pathForResource:pages ofType:zip];
+    NSString *zipFile = [[NSBundle mainBundle] pathForResource:bundle ofType:zip];
     NSString *configFile = [[NSBundle mainBundle] pathForResource:configFileName ofType:nil];
     BOOL copySuccess = [self copyZipAndConfigFiles:zipFile configPath:configFile];
     WXLogInfo(@"从bundle 拷贝到 Library下 成功 %d",copySuccess);
@@ -306,7 +307,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 {
  
     /* 读取当前工程包的js版本信息 */
-    NSString *zipFile = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",pages,zip];
+    NSString *zipFile = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",bundle,zip];
     NSString *configFile = K_JS_CACHE_VERSION_PATH;
 
     
@@ -394,7 +395,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         /* 标记js文件缓存成功 */
         //判断是否是diff文件 如果是 需要bsdiff 如果不是 直接校验
         if (isDiff) {
-            NSData * oldData = [NSData dataWithContentsOfFile:[K_JS_BUNDLE_PATH stringByAppendingFormat:@"/%@.%@",pages,zip]];
+            NSData * oldData = [NSData dataWithContentsOfFile:[K_JS_BUNDLE_PATH stringByAppendingFormat:@"/%@.%@",bundle,zip]];
             
             NSURL * url = [NSURL URLWithString:urlString];
             NSString * fileName = [url lastPathComponent];
@@ -416,7 +417,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
             }
             
             
-            NSString * newZipPath = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",pages,zip];
+            NSString * newZipPath = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",bundle,zip];
             
         
             if ([[NSFileManager defaultManager] fileExistsAtPath:newZipPath]) {
@@ -435,7 +436,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
             
             
             
-            NSString * newZipPath = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",pages,zip];
+            NSString * newZipPath = [K_JS_CACHE_PATH stringByAppendingFormat:@"/%@.%@",bundle,zip];
             
             NSURL * url = [NSURL URLWithString:urlString];
             NSString * fileName = [url lastPathComponent];
@@ -523,4 +524,26 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
             [weakSelf cleanAndSaveData:info zipPath:downloadPath pagesPath:zipPath check:check];
     }];
 }
+
+//- (void)setBmWidgetJs:(NSString *)bmWidgetJs
+//{
+//
+//}
+
+- (NSString *)bmWidgetJs
+{
+    if (!_bmWidgetJs) {
+        NSString *widgetJs = nil;
+        // 拦截器开启从本地读取widget 关闭从服务器读取
+        if (BM_InterceptorOn()) {
+            NSString *widgetFile = [K_JS_PAGES_PATH stringByAppendingPathComponent:TK_PlatformInfo().widget.path];
+            widgetJs = [NSString stringWithContentsOfFile:widgetFile encoding:NSUTF8StringEncoding error:nil];
+        } else {
+            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().widget.path] encoding:NSUTF8StringEncoding error:nil];
+        }
+        _bmWidgetJs = widgetJs;
+    }
+    return _bmWidgetJs;
+}
+
 @end

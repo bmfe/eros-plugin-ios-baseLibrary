@@ -26,9 +26,6 @@
 
 @property (nonatomic, strong) BMRouterModel *openVcRouterModel;    // 跳转页面时的routerModel
 @property (nonatomic, weak) WXSDKInstance *openVcWeexInstance;     // 跳转页面前的weexInstance
-
-@property (nonatomic, strong) UIViewController *jsMediator;        // 此页面作为js端的中介者，常驻内存
-
 @property (nonatomic, weak) UIViewController *loginViewController;  // 登录vc
 
 @property (nonatomic, assign) BOOL needToNextVc;    // 标记登录成功后是否需要自动跳转到下一个页面

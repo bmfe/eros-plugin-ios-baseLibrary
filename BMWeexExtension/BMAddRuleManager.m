@@ -92,7 +92,7 @@ const char * fontStorageKey = "_fontStorage";
             
             //先找本地是否有iconfont文件
             NSString * path = [fontURL lastPathComponent];
-            NSString * ttfPath = [K_JS_PAGES_PATH stringByAppendingPathComponent:path];
+            NSString * ttfPath = [K_JS_PAGES_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"iconfont/%@",path]];
             
             // remote font file
             NSString *fontfile = [NSString stringWithFormat:@"%@/%@",BM_FONT_DOWNLOAD_DIR,[WXUtility md5:[fontURL absoluteString]]];

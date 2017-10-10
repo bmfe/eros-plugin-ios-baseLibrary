@@ -32,13 +32,13 @@
 #define K_JS_CACHE_PATH [K_JS_BUNDLE_PATH stringByAppendingPathComponent:@"cache"]
 
 /* 当前本地缓存目录中js的版本 */
-#define K_JS_CACHE_VERSION_PATH [K_JS_CACHE_PATH stringByAppendingPathComponent:@"pages.config"]
+#define K_JS_CACHE_VERSION_PATH [K_JS_CACHE_PATH stringByAppendingPathComponent:@"bundle.config"]
 
 /* 存放解压后的js文件pages目录 */
-#define K_JS_PAGES_PATH [K_JS_BUNDLE_PATH stringByAppendingPathComponent:@"pages"]
+#define K_JS_PAGES_PATH [K_JS_BUNDLE_PATH stringByAppendingPathComponent:@"bundle"]
 
 /* 存放当前js版本号的路径 */
-#define K_JS_VERSION_PATH [K_JS_BUNDLE_PATH stringByAppendingPathComponent:@"pages.config"]
+#define K_JS_VERSION_PATH [K_JS_BUNDLE_PATH stringByAppendingPathComponent:@"bundle.config"]
 
 
 /**----------------------------- 字体大小key ------------------------------------*/

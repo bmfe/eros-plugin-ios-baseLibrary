@@ -321,7 +321,7 @@ if (needLayout) {\
 
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index
 {
-//    [super insertSubview:subcomponent atIndex:index];
+    [super insertSubview:subcomponent atIndex:index];
 }
 
 - (CGSize (^)(CGSize))measureBlock

@@ -26,10 +26,7 @@
 
 - (void)bm__renderWithMainBundleString:(NSString *)mainBundleString
 {
-    /** 注入本地的base js */
-//    NSString *filePath = [[NSBundle bundleForClass:self] pathForResource:@"bm-base" ofType:@"js"];
-//    NSString *baseScript = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    
+    /** 注入本地的base js */    
     NSString *baseScript = [BMResourceManager sharedInstance].bmWidgetJs;
     
     if (baseScript.length) {

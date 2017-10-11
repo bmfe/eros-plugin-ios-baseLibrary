@@ -525,23 +525,20 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
     }];
 }
 
-//- (void)setBmWidgetJs:(NSString *)bmWidgetJs
-//{
-//
-//}
-
 - (NSString *)bmWidgetJs
 {
     if (!_bmWidgetJs) {
-        NSString *widgetJs = nil;
-        // 拦截器开启从本地读取widget 关闭从服务器读取
-        if (BM_InterceptorOn()) {
-            NSString *widgetFile = [K_JS_PAGES_PATH stringByAppendingPathComponent:TK_PlatformInfo().widget.path];
-            widgetJs = [NSString stringWithContentsOfFile:widgetFile encoding:NSUTF8StringEncoding error:nil];
-        } else {
-            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().widget.path] encoding:NSUTF8StringEncoding error:nil];
-        }
-        _bmWidgetJs = widgetJs;
+//        NSString *widgetJs = nil;
+//        // 拦截器开启从本地读取widget 关闭从服务器读取
+//        if (BM_InterceptorOn()) {
+//            NSString *widgetFile = [K_JS_PAGES_PATH stringByAppendingPathComponent:TK_PlatformInfo().widget.path];
+//            widgetJs = [NSString stringWithContentsOfFile:widgetFile encoding:NSUTF8StringEncoding error:nil];
+//        } else {
+//            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().widget.path] encoding:NSUTF8StringEncoding error:nil];
+//        }
+        NSString *filePath = [[NSBundle bundleForClass:self] pathForResource:@"bm-base" ofType:@"js"];
+        NSString *baseScript = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        _bmWidgetJs = baseScript;
     }
     return _bmWidgetJs;
 }

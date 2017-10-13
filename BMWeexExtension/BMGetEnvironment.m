@@ -23,6 +23,8 @@
 
 #define BM_FONT_SCALE @"bmFontScale"
 
+#define BM_StatusBar_Height @"statusBarHeight"
+
 
 @implementation BMGetEnvironment
 
@@ -108,6 +110,8 @@
     if (deviceId) {
         [bmData setObject:deviceId forKey:@"deviceId"];
     }
+    
+    [bmData setObject:[NSNumber numberWithFloat:K_STATUSBAR_HEIGHT * 2.0] forKey:BM_StatusBar_Height];
     
     return bmData;
 }

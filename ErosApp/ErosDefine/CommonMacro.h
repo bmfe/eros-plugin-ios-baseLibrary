@@ -118,8 +118,9 @@ _Pragma("clang diagnostic pop")
 /** 获取屏幕物理高度 */
 #define K_SCREEN_HEIGHT             [[UIScreen mainScreen]bounds].size.height
 #define K_SCREEN_WIDTH              [[UIScreen mainScreen]bounds].size.width
-#define K_NAVBAR_HEIGHT 64.0 
-#define K_TABBAR_HEIGHT 55.0
+#define K_STATUSBAR_HEIGHT (isIphoneX ? 44 : 20)
+#define K_NAVBAR_HEIGHT (isIphoneX ? 88 : 64)
+#define K_TABBAR_HEIGHT (isIphoneX ? 89 : 55)
 
 /** 屏幕尺寸 */
 #define isRetina  [[UIScreen mainScreen] scale] == 2

@@ -8,11 +8,6 @@
 
 #import "BMRouterModel.h"
 
-@implementation NavigationInfo
-
-
-@end
-
 @implementation BMRouterModel
 
 - (instancetype)init

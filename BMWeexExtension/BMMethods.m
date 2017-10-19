@@ -45,7 +45,7 @@
 
         
         [[self class] exchangeWeexDefault];
-        [[self class] exchangeWeexAddRule];
+//        [[self class] exchangeWeexAddRule];
         [[self class] exchangeWeexInputComponent];
         [[self class] exchangeWeexEditComponent];
         [[self class] exchangeWeexTextComponent];

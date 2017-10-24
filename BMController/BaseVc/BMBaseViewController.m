@@ -20,6 +20,7 @@
 #import "CommonMacro.h"
 #import "UIImage+Util.h"
 #import "UIView+Util.h"
+#import "WXUtility.h"
 
 #import "BMBaseViewController+Extend.h"
 #import "BMBaseViewController+Order.h"
@@ -220,7 +221,7 @@
     } else {
         newURL = [NSString stringWithFormat:@"%@?random=%d", sourceURL.absoluteString, arc4random()];
     }
-    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL.absoluteString} data:nil];
+    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL.absoluteString, @"eros":[WXUtility getEnvironment]} data:nil];
     
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {

@@ -44,7 +44,7 @@
 #import "BMAuthorLoginModule.h"
 
 #import <WeexSDK/WeexSDK.h>
-#import <ATSDK/ATManager.h>
+#import "WXUtility.h"
 
 #import <UMSocialCore/UMSocialCore.h>
 #import <UMMobClick/MobClick.h>
@@ -77,6 +77,13 @@
     return self;
 }
 
+- (NSDictionary *)envInfo
+{
+    if (!_envInfo) {
+        _envInfo = [WXUtility getEnvironment];
+    }
+    return _envInfo;
+}
 
 #pragma mark - Public Func
 
@@ -247,7 +254,6 @@
     [BMConfigManager registerBmModules];
     
 #ifdef DEBUG
-//    [BMConfigManager atAddPlugin];
     [WXDebugTool setDebug:YES];
     [WXLog setLogLevel:WXLogLevelLog];
     [[BMDebugManager shareInstance] show];
@@ -257,15 +263,6 @@
     [WXDebugTool setDebug:NO];
     [WXLog setLogLevel:WXLogLevelError];
 #endif
-}
-
-+ (void)atAddPlugin {
-    
-    [[ATManager shareInstance] addPluginWithId:@"weex" andName:@"weex" andIconName:@"../weex" andEntry:@"" andArgs:@[@""]];
-    [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"logger" andName:@"logger" andIconName:@"log" andEntry:@"WXATLoggerPlugin" andArgs:@[@""]];
-    //    [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"viewHierarchy" andName:@"hierarchy" andIconName:@"log" andEntry:@"WXATViewHierarchyPlugin" andArgs:@[@""]];
-    [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test2" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
-    [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test3" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
 }
 
 - (BOOL)applicationOpenURL:(NSURL *)url

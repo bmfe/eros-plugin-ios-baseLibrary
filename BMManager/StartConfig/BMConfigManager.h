@@ -14,6 +14,8 @@
 
 @property (nonatomic, readonly) BMPlatformModel *platform;
 
+@property (nonatomic,strong) NSDictionary *envInfo; /**< 环境信息 */
+
 + (instancetype)shareInstance;
 
 /** app启动时候配置一些参数 */

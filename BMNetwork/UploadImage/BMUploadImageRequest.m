@@ -10,11 +10,15 @@
 #import <AFURLRequestSerialization.h>
 
 @implementation BMUploadImageRequest
+{
+    id _params;
+}
 
-- (instancetype)initWithImage:(UIImage *)image
+- (instancetype)initWithImage:(UIImage *)image params:(id)params
 {
     if (self = [super init]) {
         _image = image;
+        _params = params;
     }
     return self;
 }
@@ -42,6 +46,11 @@
         NSString *type = @"image/jpeg";
         [formData appendPartWithFileData:data name:formKey fileName:name mimeType:type];
     };
+}
+
+- (id)requestArgument
+{
+    return _params;
 }
 
 @end

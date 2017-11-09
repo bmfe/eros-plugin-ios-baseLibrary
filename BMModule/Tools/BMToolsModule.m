@@ -10,6 +10,7 @@
 #import <UMengUShare/WXApi.h>
 #import "BMPushMessageManager.h"
 #import "WatermarkView.h"
+#import "WXUtility.h"
 
 @implementation BMToolsModule
 
@@ -24,6 +25,8 @@ WX_EXPORT_METHOD(@selector(getCid:));
 WX_EXPORT_METHOD(@selector(copyString:callback:));
 
 WX_EXPORT_METHOD(@selector(addWatermark:));
+
+WX_EXPORT_METHOD(@selector(env:));
 
 /** 辞退键盘 */
 - (void)resignKeyboard:(WXModuleCallback)callback
@@ -76,6 +79,15 @@ WX_EXPORT_METHOD(@selector(addWatermark:));
 {
     if ([info isKindOfClass:[NSString class]] && info.length) {
         [WatermarkView addWatermarkWithText:info];
+    }
+}
+
+/** 获取环境信息 */
+- (void)env:(WXModuleCallback)callback
+{
+    NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:@"获取环境信息成功" data:[WXUtility getEnvironment]];
+    if (callback) {
+        callback(resDic);
     }
 }
 

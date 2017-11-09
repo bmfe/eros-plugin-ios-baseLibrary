@@ -20,6 +20,7 @@
 #import "CommonMacro.h"
 #import "UIImage+Util.h"
 #import "UIView+Util.h"
+#import "WXUtility.h"
 
 #import "BMBaseViewController+Extend.h"
 #import "BMBaseViewController+Order.h"
@@ -220,7 +221,7 @@
     } else {
         newURL = [NSString stringWithFormat:@"%@?random=%d", sourceURL.absoluteString, arc4random()];
     }
-    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL.absoluteString} data:nil];
+    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL.absoluteString, @"eros":[BMConfigManager shareInstance].envInfo} data:nil];
     
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {
@@ -234,9 +235,6 @@
             [oldWeexView removeFromSuperview];
             [oldInstance destroyInstance];
         }
-
-        // 通知 js 页面生命周期方法
-        [BMGlobalEventManager sendViewLifeCycleEventWithInstance:weakSelf.instance event:BMViewWillAppear controllerState:weakSelf.controllerState];
     };
     
     _instance.onFailed = ^(NSError *error) {
@@ -255,6 +253,10 @@
             [oldInstance destroyInstance];
         }
         
+        /* 在中介者中保留 instance 的引用 */
+        [[BMMediatorManager shareInstance] setCurrentWXInstance:weakSelf.instance];
+        // 通知 js 页面生命周期方法
+        [BMGlobalEventManager sendViewLifeCycleEventWithInstance:weakSelf.instance event:BMViewWillAppear controllerState:weakSelf.controllerState];
         [BMGlobalEventManager sendViewLifeCycleEventWithInstance:weakSelf.instance event:BMViewDidAppear controllerState:weakSelf.controllerState];
         [weakSelf _updateInstanceState:WeexInstanceAppear];
     };

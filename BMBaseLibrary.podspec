@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BMBaseLibrary"
-  s.version      = "0.0.2"
+  s.version      = "0.0.1"
   s.summary      = "本木医疗 iOS App 所需基础库"
 
   # This description is used to generate tags and improve search results.
@@ -251,7 +251,7 @@ s.subspec 'BMManager' do |ss|
     ss.source_files  = "BMComponent/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "BMComponent/**/*.h"
     ss.requires_arc  = true
-    ss.resources = 'BMComponent/Calendar/Resources/*.png'
+    ss.resources = 'BMComponent/Calendar/Resources/*.png','BMComponent/Chart/Resources/bm-chart.html','BMComponent/Chart/Resources/echarts.min.js'
     ss.dependency 'FSCalendar','2.7.8'
     ss.dependency 'YYText', '1.0.7'
   end

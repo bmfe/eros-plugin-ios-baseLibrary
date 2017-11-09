@@ -13,5 +13,6 @@
 @property (nonatomic, assign) NSInteger maxCount;   // 一次最多可选择图片数量
 @property (nonatomic, assign) CGFloat imageWidth;   // 图片宽度（根据宽度按比例裁剪）
 @property (nonatomic, assign) BOOL allowCrop;       // 是否允许编辑（只有当 maxCount == 1时 此参数才会生效）
+@property (nonatomic, strong) NSDictionary *params; /**< 请求参数 */
 
 @end

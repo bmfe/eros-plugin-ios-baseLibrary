@@ -94,7 +94,7 @@ typedef void(^BMNativeHandle)(void);
         [path addLineToPoint:CGPointMake(K_SCREEN_WIDTH, self.navigationController.navigationBar.height - 2)];
         _progressLayer = [CAShapeLayer layer];
         _progressLayer.path = path.CGPath;
-        _progressLayer.strokeColor = K_PROGRESSBAR_COLOR.CGColor;
+        _progressLayer.strokeColor = [UIColor lightGrayColor].CGColor;
         _progressLayer.fillColor = K_CLEAR_COLOR.CGColor;
         _progressLayer.lineWidth = 2;
         

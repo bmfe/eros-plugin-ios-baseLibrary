@@ -11,7 +11,7 @@
 
 @interface BMUploadImageRequest : BMBaseRequest
 
-- (instancetype)initWithImage:(UIImage *)image;
+- (instancetype)initWithImage:(UIImage *)image params:(id)params;
 
 @property (nonatomic,strong)UIImage * image;
 

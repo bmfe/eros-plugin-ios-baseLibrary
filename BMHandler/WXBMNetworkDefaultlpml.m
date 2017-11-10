@@ -206,14 +206,13 @@ didReceiveResponse:(NSURLResponse *)response
     
     WXLogInfo(@"本木拦截器 类型 is %@",request.URL.absoluteString);
     NSString * localPath =  [self convertRemoteURLToLocal:request.URL];
+    WXResourceLoader * loader = (WXResourceLoader*)delegate;
     if([WXUtility isFileExist:localPath]){
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSData *fileData = [NSData dataWithContentsOfFile:localPath];
             
             if ([delegate isKindOfClass:[WXResourceLoader class]]){
-                
-                WXResourceLoader * loader = (WXResourceLoader*)delegate;
                 
                 if (fileData.length > 0) {
                     
@@ -248,6 +247,14 @@ didReceiveResponse:(NSURLResponse *)response
                 }
             }
         });
+    } else {
+        
+        WXLogError(@"\n\n\n【error】本地资源不存在: %@\n\n\n",localPath);
+        
+        if (loader.onFailed) {
+            NSError * error  = [NSError errorWithDomain:@"BMNetWorkIntercepet" code:-400 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"本地资源没有匹配到",@"reason", nil]];
+            loader.onFailed(error);
+        }
     }
 }
 @end

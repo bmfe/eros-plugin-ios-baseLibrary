@@ -27,6 +27,7 @@
 + (instancetype)sharedInstance;
 
 @property (nonatomic,strong)BMJSVersionModel * model;
+@property (nonatomic,copy) NSString *bmWidgetJs; /**< 前端封装的widgets需要native端拼接到每个js文件之前 */
 
 -(void)checkNewVersion:(BOOL)isDiff;
 

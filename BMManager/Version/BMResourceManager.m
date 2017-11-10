@@ -530,10 +530,10 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         NSString *widgetJs = nil;
         // 拦截器开启从本地读取widget 关闭从服务器读取
         if (BM_InterceptorOn()) {
-            NSString *widgetFile = [K_JS_PAGES_PATH stringByAppendingPathComponent:K_JS_WIDGET_PATH];
+            NSString *widgetFile = [K_JS_PAGES_PATH stringByAppendingPathComponent:TK_PlatformInfo().appBoard];
             widgetJs = [NSString stringWithContentsOfFile:widgetFile encoding:NSUTF8StringEncoding error:nil];
         } else {
-            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:K_JS_WIDGET_PATH] encoding:NSUTF8StringEncoding error:nil];
+            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().appBoard] encoding:NSUTF8StringEncoding error:nil];
         }
         //        NSString *filePath = [[NSBundle bundleForClass:self] pathForResource:@"bm-base" ofType:@"js"];
         //        NSString *widgetJs = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];

@@ -121,7 +121,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSString * path  =[url path];
     WXLogInfo(@" path %@",path);
     
-    NSString * replaceString = [NSString stringWithFormat:@"%@/pages/",K_JS_ADD_PATH];
+    NSString * replaceString = [NSString stringWithFormat:@"%@",K_JS_ADD_PATH];
     
     NSString * fileName = [path stringByReplacingOccurrencesOfString:replaceString withString:@""];
     WXLogInfo(@"fileName %@",fileName);
@@ -132,7 +132,7 @@ didReceiveResponse:(NSURLResponse *)response
 -(NSString*)convertRemoteURLToLocal:(NSURL*)url
 {
     NSString * fileName = [self path:url];
-    NSString * realFilePath = [NSString stringWithFormat:@"%@/%@",K_JS_PAGES_PATH,fileName];
+    NSString * realFilePath = [NSString stringWithFormat:@"%@%@",K_JS_PAGES_PATH,fileName];
     WXLogInfo(@"realFilePath is %@",realFilePath);
     
     
@@ -219,9 +219,7 @@ didReceiveResponse:(NSURLResponse *)response
                     
                     
                     NSString * path = [self path:request.URL];
-                    path = [NSString stringWithFormat:@"/pages/%@",path];
-                    
-                    
+                
                     NSString * fileMD5 = [_md5Maps objectForKey:path];
                     
                     NSString * realMD5 = [self md5byData:[NSData dataWithContentsOfFile:localPath]];

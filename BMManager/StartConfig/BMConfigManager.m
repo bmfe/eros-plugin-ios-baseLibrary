@@ -70,7 +70,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"config" ofType:@"json"]];
+        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"]];
         NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:jData options:NSJSONReadingAllowFragments error:nil];
         _platform = [BMPlatformModel yy_modelWithJSON:jDic];
     }

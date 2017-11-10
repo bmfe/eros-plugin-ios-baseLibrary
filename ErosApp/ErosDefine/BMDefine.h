@@ -18,7 +18,7 @@
 #define K_JS_MEDIATOR_PATH @"/pages/mediator/index.js"
 
 // js 路径前面默认添加的路径
-#define K_JS_ADD_PATH @"/fe/dist/js"
+#define K_JS_ADD_PATH @"/dist/js"
 
 /**--------------------------------- 本地资源目录 -------------------------------------------------**/
 #define K_DOCUMENT_PATH [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]

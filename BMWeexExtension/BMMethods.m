@@ -126,6 +126,10 @@
     exchangeM1 = class_getInstanceMethod([WXEditComponent class], @selector(bmEdit_viewDidLoad));
     method_exchangeImplementations(originalM1, exchangeM1);
     
+    originalM1 = class_getInstanceMethod([WXEditComponent class], @selector(keyboardWasShown:));
+    exchangeM1 = class_getInstanceMethod([WXEditComponent class], @selector(bmEdit_keyboardWasShown:));
+    method_exchangeImplementations(originalM1, exchangeM1);
+    
 //    /** 替换 WXWXEditComponent 的 textView 代理方法 */
 //    Method originalM2 = class_getInstanceMethod([WXEditComponent class], @selector(textView:shouldChangeTextInRange:replacementText:));
 //    Method exchangeM2 = class_getInstanceMethod([WXEditComponent class], @selector(bmEdit_textView:shouldChangeTextInRange:replacementText:));

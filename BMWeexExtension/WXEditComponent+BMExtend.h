@@ -23,4 +23,8 @@
 - (void)setType;
 -(void)bmSetType;
 
+- (void)setViewMovedUp:(BOOL)movedUp;
+- (void)keyboardWasShown:(NSNotification*)notification;
+- (void)bmEdit_keyboardWasShown:(NSNotification*)notification;
+
 @end

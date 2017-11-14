@@ -102,7 +102,7 @@ const char * fontStorageKey = "_fontStorage";
                     }
                     return;
                 } else {
-                    fontSrc = [NSString stringWithFormat:@"%@/fe/dist/%@%@",TK_PlatformInfo().url.jsServer,fontURL.host,fontURL.path];
+                    fontSrc = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,fontURL.host,fontURL.path];
                     fontURL = [NSURL URLWithString:fontSrc];
                     [fontFamily setObject:fontSrc forKey:@"tempSrc"];
                 }

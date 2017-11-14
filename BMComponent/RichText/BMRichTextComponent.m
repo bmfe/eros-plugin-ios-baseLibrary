@@ -271,10 +271,6 @@ if (needLayout) {\
 
 - (CGSize)getComputedSizeWithConstrainedWidth:(CGFloat)width
 {
-    if (!self.currentAttributedString) {
-        return CGSizeZero;
-    }
-    
     CGFloat linesHeight = _lines * _lineHeight;
 //    CGRect rect4Text = [self.currentAttributedString  boundingRectWithSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
@@ -328,6 +324,10 @@ if (needLayout) {\
 {
     __weak typeof(self) weakSelf = self;
     return ^CGSize (CGSize constrainedSize) {
+        
+        if (!self.currentAttributedString) {
+            return CGSizeZero;
+        }
         
         CGSize computedSize = [weakSelf getComputedSizeWithConstrainedWidth:constrainedSize.width];
         
@@ -414,13 +414,13 @@ if (needLayout) {\
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
     }
-    if ([self adjustLineHeight]) {
-        if (_lineHeight > font.lineHeight) {
-            [attributedString addAttribute:NSBaselineOffsetAttributeName
-                                     value:@((_lineHeight - font.lineHeight)/ 2)
-                                     range:(NSRange){0, attributedString.length}];
-        }
-    }
+//    if ([self adjustLineHeight]) {
+//        if (_lineHeight > font.lineHeight) {
+//            [attributedString addAttribute:NSBaselineOffsetAttributeName
+//                                     value:@((_lineHeight - font.lineHeight)/ 2)
+//                                     range:(NSRange){0, attributedString.length}];
+//        }
+//    }
     
     /** 点击事件 */
     __weak typeof(span) weakSpan = span;

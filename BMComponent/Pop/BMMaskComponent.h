@@ -10,4 +10,6 @@
 
 @interface BMMaskComponent : WXComponent
 
+- (void)getPopViewRectNeedUpdateFrame:(BOOL)update;
+
 @end

@@ -72,6 +72,8 @@ WX_EXPORT_METHOD(@selector(goNext))
         
         if (attributes[@"selectType"]) {
             self.selectType = [WXConvert NSString:attributes[@"selectType"]];
+        } else {
+            self.selectType = K_SelectTypeSingle;
         }
         
         if (attributes[@"dateFormat"]) {
@@ -319,7 +321,7 @@ WX_EXPORT_METHOD(@selector(goNext))
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date atMonthPosition:(FSCalendarMonthPosition)monthPosition
 {
     
-    if (![self.selectType isEqualToString:K_SelectTypeRange]) {
+    if ([self.selectType isEqualToString:K_SelectTypeSingle]) {
         if (self.startDate) {
             [calendar deselectDate:self.startDate];
         }
@@ -327,6 +329,8 @@ WX_EXPORT_METHOD(@selector(goNext))
         self.endDate = nil;
         
         [self configureVisibleCells];
+        [self fireMsg];
+        
         return;
     }
     
@@ -369,27 +373,32 @@ WX_EXPORT_METHOD(@selector(goNext))
 {
     NSLog(@"did deselect date %@",[self.dateFormatter stringFromDate:date]);
     
-    if (self.startDate && self.endDate) {
-        
-        if (NSOrderedSame == [date compare:self.startDate]) {
-            [calendar deselectDate:self.endDate];
-        } else {
-            [calendar deselectDate:self.startDate];
+    if ([self.selectType isEqualToString:K_SelectTypeRange]) {
+        if (self.startDate && self.endDate) {
+            
+            if (NSOrderedSame == [date compare:self.startDate]) {
+                [calendar deselectDate:self.endDate];
+            } else {
+                [calendar deselectDate:self.startDate];
+            }
+            
+            self.startDate = date;
+            self.endDate = nil;
+            [calendar selectDate:self.startDate];
         }
-        
-        self.startDate = date;
-        self.endDate = nil;
-        [calendar selectDate:self.startDate];
+        else if (self.startDate && !self.endDate) {
+            self.startDate = date;
+            self.endDate = date;
+            
+            [calendar selectDate:self.startDate];
+            
+            [self fireMsg];
+            
+            return;
+        }
     }
-    else if (self.startDate && !self.endDate) {
-        self.startDate = date;
-        self.endDate = date;
+    else if ([self.selectType isEqualToString:K_SelectTypeSingle]) {
         
-        [calendar selectDate:self.startDate];
-        
-        [self fireMsg];
-        
-        return;
     }
     
     [self configureVisibleCells];

@@ -12,7 +12,7 @@
 
 /**
  动画类型
- 
+
  - BMPopAnimationTypeTranslation: 位移
  - BMPopAnimationTypeScale: 缩放
  */
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger,BMPopAnimationType) {
 
 /**
  动画位置
- 
+
  - BMPopAnimationPositionTop: 上部
  - BMPopAnimationPositionCenter: 中间
  - BMPopAnimationPositionBottom: 下部
@@ -313,4 +313,3 @@ WX_EXPORT_METHOD(@selector(hide));
 }
 
 @end
-

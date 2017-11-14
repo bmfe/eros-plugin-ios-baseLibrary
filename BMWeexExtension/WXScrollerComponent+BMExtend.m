@@ -66,6 +66,13 @@ WX_EXPORT_METHOD(@selector(refreshEnd));
     
     if (@available(iOS 11.0, *)) {
         if (!isIphoneX) scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        
+        if ([scrollView isKindOfClass:[UITableView class]]) {
+            UITableView *tableView = (UITableView *)scrollView;
+            tableView.estimatedRowHeight = 0;
+            tableView.estimatedSectionHeaderHeight = 0;
+            tableView.estimatedSectionFooterHeight = 0;
+        }
     }
     NSNumber *showRefresh = objc_getAssociatedObject(self, "bm_showRefresh");
     if (showRefresh && [showRefresh boolValue]) {

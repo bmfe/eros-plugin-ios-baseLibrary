@@ -48,11 +48,11 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     
     /** 如果已经创建过item只需更新一下文案即可 */
     if (self.rightItem) {
-        [self updateItemInfo:info item:self.rightItem];
+        [self updateItemInfo:info item:self.rightItem itemPosition:BMNavigationItemPositionRight];
         return;
     }
     
-    [self setNavigationItemInfo:info itemPosition:BMNavigationItemPositionRight];
+    [self createBarButton:info itemPosition:BMNavigationItemPositionRight];
 }
 
 /* 设置导航栏左侧按钮 */
@@ -61,12 +61,12 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     self.leftItemCallback = callback;
     
     /** 如果已经创建过item只需更新一下文案即可 */
-    if (self.centerItem) {
-        [self updateItemInfo:info item:self.leftItem];
+    if (self.leftItem) {
+        [self updateItemInfo:info item:self.leftItem itemPosition:BMNavigationItemPositionLeft];
         return;
     }
     
-    [self setNavigationItemInfo:info itemPosition:BMNavigationItemPositionLeft];
+    [self createBarButton:info itemPosition:BMNavigationItemPositionLeft];
 }
 
 /* 设置导航栏中间按钮 */
@@ -76,11 +76,11 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     
     /** 如果已经创建过item只需更新一下文案即可 */
     if (self.centerItem) {
-        [self updateItemInfo:info item:self.centerItem];
+        [self updateItemInfo:info item:self.centerItem itemPosition:BMNavigationItemPositionCenter];
         return;
     }
     
-    [self setNavigationItemInfo:info itemPosition:BMNavigationItemPositionCenter];
+    [self createBarButton:info itemPosition:BMNavigationItemPositionCenter];
 }
 
 /* 设置导航栏信息 title、hideNavbar、statusBarStyle */
@@ -94,7 +94,7 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     }
     
     /* 是否隐藏导航栏 */
-    if (info[@"navShow"]) {
+    if (info[@"hideNavbar"]) {
         [vc.navigationController setNavigationBarHidden:[WXConvert BOOL:info[@"hideNavbar"]] animated:NO];
     }
     
@@ -125,42 +125,52 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     return imageLoader;
 }
 
-- (void)setNavigationItemInfo:(NSDictionary *)info itemPosition:(BMNavigationItemPosition)itemPosition
+- (void)setNavItemWithView:(UIView *)view itemPosition:(BMNavigationItemPosition)itemPosition
 {
-    UIViewController *vc = self.weexInstance.viewController;
-    
-    UIView *view = [self barButton:info itemPosition:itemPosition];
-    
     if (!view) {
         WXLogError(@"barButton 创建失败");
         return;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-       
+    UIViewController *vc = self.weexInstance.viewController;
+    
+    [UIView performWithoutAnimation:^{
         switch (itemPosition) {
             case BMNavigationItemPositionRight:
                 vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
-                self.rightItem = view;
                 break;
             case BMNavigationItemPositionLeft:
                 vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
-                self.leftItem = view;
                 break;
             case BMNavigationItemPositionCenter:
                 vc.navigationItem.titleView = view;
-                self.centerItem = view;
                 break;
             default:
                 break;
         }
-        
-    });
+    }];
 }
 
-- (UIView *)barButton:(NSDictionary *)param itemPosition:(BMNavigationItemPosition)itemPosition
+- (void)createBarButton:(NSDictionary *)param itemPosition:(BMNavigationItemPosition)itemPosition
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    switch (itemPosition) {
+        case BMNavigationItemPositionRight:
+            self.rightItem = button;
+            [button addTarget:self action:@selector(onClickRightBarButton) forControlEvents:UIControlEventTouchUpInside];
+            break;
+        case BMNavigationItemPositionLeft:
+            self.leftItem = button;
+            [button addTarget:self action:@selector(onClickLeftBarButton) forControlEvents:UIControlEventTouchUpInside];
+            break;
+        case BMNavigationItemPositionCenter:
+            self.centerItem = button;
+            [button addTarget:self action:@selector(onClickCenterBarButtion) forControlEvents:UIControlEventTouchUpInside];
+            break;
+        default:
+            break;
+    }
     
     if (param[@"text"]) {
         NSString *title = param[@"text"];
@@ -194,6 +204,7 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
         [button setTitle:title forState:UIControlStateNormal];
         [button setTitle:title forState:UIControlStateHighlighted];
         
+        [self setNavItemWithView:button itemPosition:itemPosition];
     }
     else if (param[@"image"]) {
         NSString *icon = param[@"image"];
@@ -201,47 +212,32 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
         if (icon) {
 //            button.frame = CGRectMake(0, 0, 50, 15);
             [[self imageLoader] downloadImageWithURL:icon imageFrame:CGRectMake(0, 0, 15, 15) userInfo:nil completed:^(UIImage *image, NSError *error, BOOL finished) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    CGFloat scale = [UIScreen mainScreen].scale;
-                    
-                    CGRect rect = button.frame;
-                    rect.size = image.size;
-                    
-                    if (scale == 2) {
-                        rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
-                    }
-                    
-                    button.frame = rect;
-                    
-                    [button setBackgroundImage:image forState:UIControlStateNormal];
-                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
-//                    [button setImage:image forState:UIControlStateNormal];
-//                    [button setImage:image forState:UIControlStateHighlighted];
-                });
+                
+                CGFloat scale = [UIScreen mainScreen].scale;
+                
+                CGRect rect = button.frame;
+                rect.size = image.size;
+                
+                if (scale == 2) {
+                    rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
+                }
+                
+                button.frame = rect;
+                
+                //                    [button setBackgroundImage:image forState:UIControlStateNormal];
+                //                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
+                [button setImage:image forState:UIControlStateNormal];
+                [button setImage:image forState:UIControlStateHighlighted];
+                
+                [self setNavItemWithView:button itemPosition:itemPosition];
+                
             }];
             
         }
     }
-    
-    switch (itemPosition) {
-        case BMNavigationItemPositionRight:
-            [button addTarget:self action:@selector(onClickRightBarButton) forControlEvents:UIControlEventTouchUpInside];
-            break;
-        case BMNavigationItemPositionLeft:
-            [button addTarget:self action:@selector(onClickLeftBarButton) forControlEvents:UIControlEventTouchUpInside];
-            break;
-        case BMNavigationItemPositionCenter:
-            [button addTarget:self action:@selector(onClickCenterBarButtion) forControlEvents:UIControlEventTouchUpInside];
-            break;
-        default:
-            break;
-    }
-    
-    return button;
 }
 
-- (void)updateItemInfo:(NSDictionary *)param item:(UIButton *)button
+- (void)updateItemInfo:(NSDictionary *)param item:(UIButton *)button itemPosition:(BMNavigationItemPosition)itemPosition
 {
     if (param[@"text"]) {
         NSString *title = param[@"text"];
@@ -284,6 +280,7 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
         [button setTitleColor:textColor forState:UIControlStateNormal];
         [button setTitleColor:textColor forState:UIControlStateHighlighted];
         
+        [self setNavItemWithView:button itemPosition:itemPosition];
     }
     else if (param[@"image"]) {
         
@@ -298,16 +295,17 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
                     CGRect rect = button.frame;
                     rect.size = image.size;
                     
-                    if (scale == 3) {
-                        rect.size = CGSizeMake(image.width * 1.5, image.height * 1.5);
+                    if (scale == 2) {
+                        rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
                     }
-                    
+            
                     button.frame = rect;
                     
-                    [button setBackgroundImage:image forState:UIControlStateNormal];
-                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
-//                    [button setImage:image forState:UIControlStateNormal];
-//                    [button setImage:image forState:UIControlStateHighlighted];
+//                    [button setBackgroundImage:image forState:UIControlStateNormal];
+//                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
+                    [button setImage:image forState:UIControlStateNormal];
+                    [button setImage:image forState:UIControlStateHighlighted];
+                    [self setNavItemWithView:button itemPosition:itemPosition];
                 });
             }];
             

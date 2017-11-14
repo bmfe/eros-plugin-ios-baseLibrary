@@ -64,9 +64,9 @@ WX_EXPORT_METHOD(@selector(refreshEnd));
     
     CGSize size = [[UIScreen mainScreen] currentMode].size;
     
-//    if (@available(iOS 11.0, *)) {
-//        if (!isIphoneX) scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//    }
+    if (@available(iOS 11.0, *)) {
+        if (!isIphoneX) scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     NSNumber *showRefresh = objc_getAssociatedObject(self, "bm_showRefresh");
     if (showRefresh && [showRefresh boolValue]) {
         BMDotGifHeader *header = [BMDotGifHeader headerWithRefreshingBlock:^{

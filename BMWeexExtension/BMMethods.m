@@ -51,7 +51,7 @@
         [[self class] exchangeWeexTextComponent];
         [[self class] exchangeWeexScrollerComponent];
         [[self class] exchangeWXWebComponent];
-//        [[self class] exchangeRecyclerComponent];
+        [[self class] exchangeRecyclerComponent];
         
         [[self class] exchangeWeexPlaceholderImageComponent];
         [[self class] exchangeWeexContentImageComponent];

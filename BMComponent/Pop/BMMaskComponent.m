@@ -8,11 +8,11 @@
 
 #import "BMMaskComponent.h"
 #import "BMPopupComponent.h"
-
+#import "Masonry.h"
 
 /**
  动画类型
-
+ 
  - BMPopAnimationTypeTranslation: 位移
  - BMPopAnimationTypeScale: 缩放
  */
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger,BMPopAnimationType) {
 
 /**
  动画位置
-
+ 
  - BMPopAnimationPositionTop: 上部
  - BMPopAnimationPositionCenter: 中间
  - BMPopAnimationPositionBottom: 下部
@@ -88,6 +88,20 @@ WX_EXPORT_METHOD(@selector(hide));
             _disableMaskEvent = [WXConvert BOOL:attributes[@"disableMaskEvent"]];
         }
         
+        /** 解析位置 */
+        if (attributes[@"position"] && [attributes[@"position" ] isEqualToString:@"top"]) {
+            self.animationPosition = BMPopAnimationPositionTop;
+        }
+        else if (attributes[@"position"] && [attributes[@"position" ] isEqualToString:@"center"])
+        {
+            self.animationPosition = BMPopAnimationPositionCenter;
+        }
+        else
+        {
+            /** 缺省为 bottom */
+            self.animationPosition = BMPopAnimationPositionBottom;
+        }
+        
         /** 解析动画类型 */
         // 兼容之前版本 动画类型为 center、bottom 现在版本将 位置、动画类型分开了
         if (attributes[@"animation"] && [attributes[@"animation"] isEqualToString:@"center"]) {
@@ -108,20 +122,6 @@ WX_EXPORT_METHOD(@selector(hide));
             self.animationType = BMPopAnimationTypeTransition;
         }
         
-        /** 解析位置 */
-        if (attributes[@"position"] && [attributes[@"position" ] isEqualToString:@"top"]) {
-            self.animationPosition = BMPopAnimationPositionTop;
-        }
-        else if (attributes[@"position"] && [attributes[@"position" ] isEqualToString:@"center"])
-        {
-            self.animationPosition = BMPopAnimationPositionCenter;
-        }
-        else
-        {
-            /** 缺省为 bottom */
-            self.animationPosition = BMPopAnimationPositionBottom;
-        }
-        
         /** 为了兼容之前的如果设置了位置，没有设置动画类型的话讲动画类型设置为none */
         if (attributes[@"position"] && !attributes[@"animation"]) {
             self.animationType = BMPopAnimationTypeNone;
@@ -136,13 +136,25 @@ WX_EXPORT_METHOD(@selector(hide));
     UIView *view = [[UIView alloc] init];
     view.alpha = 0;
     view.hidden = YES;
+    return view;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     // 添加点击手势
     if (!_disableMaskEvent) {
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
-        [view addGestureRecognizer:tap];
+        UIButton *btn = [[UIButton alloc] init];
+        [btn addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btn];
+        
+        @weakify(self);
+        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
+            make.center.mas_equalTo(self.view);
+            make.edges.mas_offset(UIEdgeInsetsZero);
+        }];
     }
-    
-    return view;
 }
 
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index
@@ -150,54 +162,13 @@ WX_EXPORT_METHOD(@selector(hide));
     if ([subcomponent isKindOfClass:[BMPopupComponent class]]) {
         UIView *subView = subcomponent.view;
         
-        if (self.animationPosition == BMPopAnimationPositionCenter) {
-            subView.center = self.view.center;
-            self.fromPopViewRect = subView.frame;
-            self.toPopViewRect = subView.frame;
-            [self.view addSubview:subView];
-        }
-        else if (self.animationPosition == BMPopAnimationPositionTop && self.animationType == BMPopAnimationTypeTransition) {
-            CGRect rect4SubView = subView.frame;
-            rect4SubView.origin.y = -subView.height;
-            self.fromPopViewRect = rect4SubView;
-            
-            rect4SubView.origin.y = 0;
-            self.toPopViewRect = rect4SubView;
-            
-            subView.frame = self.fromPopViewRect;
-            [self.view addSubview:subView];
-        }
-        else if (self.animationPosition == BMPopAnimationPositionTop && (self.animationType == BMPopAnimationTypeScale || self.animationType == BMPopAnimationTypeNone)) {
-            CGRect rect4SubView = subView.frame;
-            rect4SubView.origin.y = 0;
-            self.fromPopViewRect = rect4SubView;
-            self.toPopViewRect = rect4SubView;
-            subView.frame = self.fromPopViewRect;
-            [self.view addSubview:subView];
-        }
-        else if (self.animationPosition == BMPopAnimationPositionBottom && self.animationType == BMPopAnimationTypeTransition) {
-            CGRect rect4SubView = subView.frame;
-            rect4SubView.origin.y = self.view.height;
-            self.fromPopViewRect = rect4SubView;
-            
-            rect4SubView.origin.y = self.view.height - subView.height;
-            self.toPopViewRect = rect4SubView;
-            
-            subView.frame = self.fromPopViewRect;
-            [self.view addSubview:subView];
-        }
-        else if (self.animationPosition == BMPopAnimationPositionBottom && (self.animationType == BMPopAnimationTypeScale || self.animationType == BMPopAnimationTypeNone)) {
-            CGRect rect4SubView = subView.frame;
-            
-            rect4SubView.origin.y = self.view.height - subView.height;
-            self.fromPopViewRect = rect4SubView;
-            self.toPopViewRect = rect4SubView;
-            
-            subView.frame = self.fromPopViewRect;
-            [self.view addSubview:subView];
-        }
-        
+        [self.view addSubview:subView];
     }
+}
+
+- (void)layoutDidFinish
+{
+    [super layoutDidFinish];
 }
 
 #pragma mark - Add Event
@@ -224,6 +195,51 @@ WX_EXPORT_METHOD(@selector(hide));
     }
 }
 
+- (void)getPopViewRectNeedUpdateFrame:(BOOL)update
+{
+    BMPopupComponent *popView = self.subcomponents[0];
+    UIView *subView = popView.view;
+    
+    if (self.animationPosition == BMPopAnimationPositionCenter) {
+        subView.center = self.view.center;
+        self.fromPopViewRect = subView.frame;
+        self.toPopViewRect = subView.frame;
+    }
+    else if (self.animationPosition == BMPopAnimationPositionTop && self.animationType == BMPopAnimationTypeTransition) {
+        CGRect rect4SubView = subView.frame;
+        rect4SubView.origin.y = -subView.height;
+        self.fromPopViewRect = rect4SubView;
+        
+        rect4SubView.origin.y = 0;
+        self.toPopViewRect = rect4SubView;
+    }
+    else if (self.animationPosition == BMPopAnimationPositionTop && (self.animationType == BMPopAnimationTypeScale || self.animationType == BMPopAnimationTypeNone)) {
+        CGRect rect4SubView = subView.frame;
+        rect4SubView.origin.y = 0;
+        self.fromPopViewRect = rect4SubView;
+        self.toPopViewRect = rect4SubView;
+    }
+    else if (self.animationPosition == BMPopAnimationPositionBottom && self.animationType == BMPopAnimationTypeTransition) {
+        CGRect rect4SubView = subView.frame;
+        rect4SubView.origin.y = self.view.height;
+        self.fromPopViewRect = rect4SubView;
+        
+        rect4SubView.origin.y = self.view.height - subView.height;
+        self.toPopViewRect = rect4SubView;
+    }
+    else if (self.animationPosition == BMPopAnimationPositionBottom && (self.animationType == BMPopAnimationTypeScale || self.animationType == BMPopAnimationTypeNone)) {
+        CGRect rect4SubView = subView.frame;
+        
+        rect4SubView.origin.y = self.view.height - subView.height;
+        self.fromPopViewRect = rect4SubView;
+        self.toPopViewRect = rect4SubView;
+    }
+    
+    if (update) {
+        subView.frame = self.fromPopViewRect;
+    }
+}
+
 #pragma mark - EXPORT_METHOD
 - (void)show
 {
@@ -231,6 +247,8 @@ WX_EXPORT_METHOD(@selector(hide));
         [self hide];
         return;
     }
+    
+    [self getPopViewRectNeedUpdateFrame:YES];
     
     self.view.hidden = NO;
     
@@ -252,8 +270,6 @@ WX_EXPORT_METHOD(@selector(hide));
         }
     }];
     
-    
-    
     if (_showEvent) {
         [self fireEvent:@"show" params:nil];
     }
@@ -265,10 +281,11 @@ WX_EXPORT_METHOD(@selector(hide));
 {
     if (!_isShow) return;
     
+    [self getPopViewRectNeedUpdateFrame:NO];
+    
     BMPopupComponent *popView = self.subcomponents[0];
     
     [UIView animateWithDuration:_duration animations:^{
-        self.view.alpha = 0;
         
         if (self.animationType == BMPopAnimationTypeScale) {
             popView.view.transform = CGAffineTransformMakeScale(0.5, 0.5);
@@ -278,16 +295,22 @@ WX_EXPORT_METHOD(@selector(hide));
             popView.view.frame = self.fromPopViewRect;
         }
         
+        self.view.alpha = 0;
+        
     } completion:^(BOOL finished) {
         self.view.hidden = YES;
+        if (self.animationType == BMPopAnimationTypeScale) {
+            popView.view.transform = CGAffineTransformMakeScale(1, 1);
+        }
+        
+        if (_hideEvent) {
+            [self fireEvent:@"hide" params:nil];
+        }
+        
     }];
-    
-    if (_hideEvent) {
-        [self fireEvent:@"hide" params:nil];
-    }
-    
     
     _isShow = NO;
 }
 
 @end
+

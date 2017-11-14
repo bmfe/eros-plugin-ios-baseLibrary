@@ -71,7 +71,7 @@
             
             return nil;
         } else {
-            url = [NSString stringWithFormat:@"%@/fe/dist/%@%@",TK_PlatformInfo().url.jsServer,imgUrl.host,imgUrl.path];
+            url = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,imgUrl.host,imgUrl.path];
         }
     }
     

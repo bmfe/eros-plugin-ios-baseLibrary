@@ -115,7 +115,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 /** 检查js资源文件是否有新版本 */
 - (void)checkNewVersion:(BOOL)isDiff
 {
-    if (![BMConfigManager shareInstance].platform.url.updateVersion.length) return;
+    if (![BMConfigManager shareInstance].platform.url.bundleUpdate.length) return;
     
     NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
 //    WXLogInfo(@"currentConfig is %@",currentConfig);

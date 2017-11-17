@@ -42,7 +42,7 @@
 
 - (NSString *)requestUrl
 {
-    return [BMConfigManager shareInstance].platform.url.updateVersion;
+    return [BMConfigManager shareInstance].platform.url.bundleUpdate;
 }
 
 - (id)requestArgument

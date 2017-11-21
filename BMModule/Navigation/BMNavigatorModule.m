@@ -94,8 +94,8 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
     }
     
     /* 是否隐藏导航栏 */
-    if (info[@"hideNavbar"]) {
-        [vc.navigationController setNavigationBarHidden:[WXConvert BOOL:info[@"hideNavbar"]] animated:NO];
+    if (info[@"navShow"]) {
+        [vc.navigationController setNavigationBarHidden:![WXConvert BOOL:info[@"navShow"]] animated:NO];
     }
     
     /* 状态栏样式 */

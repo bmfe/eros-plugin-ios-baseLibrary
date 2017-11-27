@@ -16,6 +16,6 @@
 @property (nonatomic, strong) NSDictionary *header;         // 请求头
 @property (nonatomic, strong) NSMutableDictionary *data;    // 请求参数
 @property (nonatomic, strong) NSDictionary *params;         // post 请求 url 添加参数
-@property (nonatomic, assign) BOOL noRepeat;                // 请求是否允许重复，默认是 false，如果为 true，发现队列中有类似请求需要 cancel 掉
+@property (nonatomic, assign) CGFloat timeout;              // 请求超时时间
 
 @end

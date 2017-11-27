@@ -80,4 +80,9 @@
     return _model.data;
 }
 
+- (CGFloat)requestTimeoutInterval
+{
+    return _model.timeout > 0 ? _model.timeout : 30;
+}
+
 @end

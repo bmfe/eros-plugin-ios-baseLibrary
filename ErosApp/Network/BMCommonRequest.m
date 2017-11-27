@@ -82,7 +82,7 @@
 
 - (CGFloat)requestTimeoutInterval
 {
-    return _model.timeout > 0 ? _model.timeout : 30;
+    return _model.timeout > 0 ? _model.timeout / 1000.0 : 30;
 }
 
 @end

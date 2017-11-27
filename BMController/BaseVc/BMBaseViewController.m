@@ -199,6 +199,7 @@
 //    }
     
     _instance.frame = self.view.bounds;
+    _weexHeight = self.view.height;
 }
 
 //TODO get height

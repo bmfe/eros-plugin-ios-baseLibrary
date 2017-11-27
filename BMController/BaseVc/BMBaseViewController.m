@@ -16,6 +16,7 @@
 #import <WeexSDK/WXDebugTool.h>
 #import <WeexSDK/WXSDKManager.h>
 #import "UIViewController+WXDemoNaviBar.h"
+#import "BMNavigationController.h"
 #import "DemoDefine.h"
 #import "CommonMacro.h"
 #import "UIImage+Util.h"
@@ -176,10 +177,35 @@
     self.arr4Request = nil;
 }
 
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+//    CGFloat currentHeight = self.view.frame.size.height;
+//
+//    if (_instance && _weexHeight && _weexHeight != currentHeight) {
+//
+//        CGFloat originY = 0;
+//        if ([UIApplication sharedApplication].statusBarFrame.size.height == 40) {
+//
+//            originY = 20;
+//        }
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            _instance.frame = CGRectMake(0, originY, self.view.width, currentHeight - originY);
+//        });
+//        _weexHeight = currentHeight - originY;
+//    } else {
+//        _weexHeight = currentHeight;
+//    }
+    
+    _instance.frame = self.view.bounds;
+}
+
 //TODO get height
 - (void)viewDidLayoutSubviews
 {
-    _weexHeight = self.view.frame.size.height;
+    [super viewDidLayoutSubviews];
+    
 }
 
 - (void)didReceiveMemoryWarning {

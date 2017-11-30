@@ -12,7 +12,6 @@
 
 @interface BMDragButton(Debug)
 + (instancetype)debugButton;
--(void)show;
 @end
 
 #endif

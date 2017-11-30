@@ -14,6 +14,7 @@
 #import "BMMediatorManager.h"
 #import <UIKit/UIKit.h>
 #import "BMResourceManager.h"
+#import "Masonry.h"
 
 @interface BMDragButton()<UIActionSheetDelegate>
 
@@ -36,34 +37,34 @@
     BMDragButton *btn = [[BMDragButton alloc] initWithFrame:frame];
     btn.backgroundColor = [UIColor blackColor];
     btn.alpha = 0.6;
-    [btn setTitle:@"调试" forState:UIControlStateNormal];
-    UIFont *font = [UIFont systemFontOfSize:14.0];
-    btn.titleLabel.font = font;
+    UILabel *lbl = [[UILabel alloc] init];
+    lbl.textColor = K_WHITE_COLOR;
+    lbl.text = @"调试";
+    lbl.font = K_FONT_14;
     btn.layer.cornerRadius = 8;
+    [btn addSubview:lbl];
+    
+    [lbl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(btn);
+    }];
     
     [btn setDragEnable:YES];
     [btn setAdsorbEnable:YES];
     
-    [btn addTarget:btn action:@selector(showDebug:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc] initWithTarget:btn action:@selector(showDebug)];
+    [btn addGestureRecognizer:oneTap];
+    
+    UITapGestureRecognizer *twoTap = [[UITapGestureRecognizer alloc] initWithTarget:btn action:@selector(refreshWeex)];
+    twoTap.numberOfTapsRequired = 2;
+    twoTap.numberOfTouchesRequired = 1;
+    [btn addGestureRecognizer:twoTap];
+    
+    [oneTap requireGestureRecognizerToFail:twoTap];
     
     return btn;
 }
 
--(void)show
-{
-    NSArray * windows = [[UIApplication sharedApplication] windows];
-    WXLogDebug(@"windows is %@",windows);
-    
-    UIWindow * keyWindow = [[UIApplication sharedApplication] keyWindow];
-    
-    WXLogDebug(@"keyWindow is %@",keyWindow);
-    
-    
-    [[[UIApplication sharedApplication] keyWindow] addSubview:self];
-    [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:self];
-}
-
-- (void)showDebug:(id)sender
+- (void)showDebug
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:nil
@@ -78,6 +79,18 @@
     UIViewController* topVC =  [[BMMediatorManager shareInstance] currentViewController];
     [actionSheet showInView:topVC.view];
     
+}
+
+- (void)refreshWeex
+{
+    /** 刷新widgetJs */
+    [BMResourceManager sharedInstance].bmWidgetJs = nil;
+    
+    UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
+    
+    if ([controller isKindOfClass:[BMBaseViewController class]]) {
+        [(BMBaseViewController*)controller refreshWeex];
+    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -95,15 +108,7 @@
             break;
         case 1:
         {
-            /** 刷新widgetJs */
-            [BMResourceManager sharedInstance].bmWidgetJs = nil;
-            
-            UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
-
-            if ([controller isKindOfClass:[BMBaseViewController class]]) {
-                [(BMBaseViewController*)controller refreshWeex];
-            }
-            
+            [self refreshWeex];
         }
             break;
 

@@ -7,20 +7,16 @@
 //
 
 #import "BMScanQRViewController.h"
-
 #import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
-
 #import "UINavigationBar+NavigationBarExtend.h"
-
 #import "BMDefine.h"
 #import "JYTTitleLabel.h"
-
 #import "NSDictionary+Util.h"
-
 #import <SVProgressHUD.h>
-
 #import <AVFoundation/AVFoundation.h>
-#define ANIMATION_KEY   @"lineAnimation"
+#import "QRShaowView.h"
+
+#define customShowSize CGSizeMake(K_SCREEN_WIDTH - 100, K_SCREEN_WIDTH - 100);
 
 typedef NS_ENUM(NSInteger, AlertType) {
     AlertTypeNoAuthorization = 7849,
@@ -36,12 +32,23 @@ typedef NS_ENUM(NSInteger, AlertType) {
 @property (strong,nonatomic)AVCaptureVideoPreviewLayer * preview;
 
 @property (nonatomic, copy) NSString *content4QRCode;
-@property (nonatomic, strong) UIImageView *line;
 @property (nonatomic, strong) UIView *bgView;
+
+@property (nonatomic,assign) CGSize showSize;
+@property (nonatomic,assign) CGSize layerViewSize;
+@property (nonatomic,strong) QRShaowView *shadowView; /**< 阴影 */
 
 @end
 
 @implementation BMScanQRViewController
+
+- (QRShaowView *)shadowView
+{
+    if (!_shadowView) {
+        _shadowView = [[QRShaowView alloc] initWithFrame:self.view.bounds];
+    }
+    return _shadowView;
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -52,13 +59,52 @@ typedef NS_ENUM(NSInteger, AlertType) {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (TARGET_IPHONE_SIMULATOR) {
+        
+        [SVProgressHUD dismiss];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"当前设备不支持此项功能" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+        return;
+    }
+    
+    AVAuthorizationStatus authStatus= [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (authStatus == AVAuthorizationStatusDenied) {
+        return ;
+    }
+    
+    self.showSize = customShowSize;
+    [self createQR];
+    [self allowScanRect];
+    self.shadowView.showSize = self.showSize;
+    [self.view addSubview:self.shadowView];
+    [self.shadowView showAnimation];
+    [SVProgressHUD dismiss];
+    
+    JYTTitleLabel * label = [[JYTTitleLabel alloc] initWithFrame:CGRectMake(10, (self.view.height - self.showSize.height) / 2 - 60, K_SCREEN_WIDTH - 10 * 2, 60)];
+    label.text = @"将条码放入框内，即可自动扫描";
+    label.textColor = [UIColor whiteColor];
+    label.textAlignment = 1;
+    label.lineBreakMode = 0;
+    label.numberOfLines = 0;
+    label.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:label];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     self.navigationItem.title = @"扫一扫";
-    
     self.navigationController.fd_prefersNavigationBarHidden = NO;
+    self.view.backgroundColor = [UIColor blackColor];
     
     /* 权限判断 */
     AVAuthorizationStatus authStatus= [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
@@ -72,37 +118,7 @@ typedef NS_ENUM(NSInteger, AlertType) {
         return;
     }
     
-    self.bgView = [[UIView alloc] initWithFrame:self.view.bounds];
-    self.bgView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:self.bgView];
-    
-    UIView * view = [[UIView alloc] initWithFrame:self.view.bounds];
-    view.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:view];
-    
-    
-    JYTTitleLabel * label = [[JYTTitleLabel alloc] initWithFrame:CGRectMake(10, 20, K_SCREEN_WIDTH - 10 * 2, 60)];
-    label.text = @"将条码放入框内，即可自动扫描";
-    label.textColor = [UIColor whiteColor];
-    label.textAlignment = 1;
-    label.lineBreakMode = 0;
-    label.numberOfLines = 0;
-    label.backgroundColor = [UIColor clearColor];
-    [view addSubview:label];
-    
-    UIImageView * image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Scan_pick_bg"]];
-    image.frame = CGRectMake(0, 0, K_SCREEN_WIDTH - 20 * 2, K_SCREEN_WIDTH - 20 * 2);
-    CGPoint pt = self.view.center;
-    pt.y -= 30;
-    image.center = pt;
-    [view addSubview:image];
-    
-    
-    _line = [[UIImageView alloc] initWithFrame:CGRectMake((image.frame.size.width - 220)/2, 5, 220, 2)];
-    _line.image = [UIImage imageNamed:@"Scan_line"];
-    [image addSubview:_line];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [SVProgressHUD showWithStatus:@"扫描器初始化中..."];
     });
 }
@@ -112,41 +128,8 @@ typedef NS_ENUM(NSInteger, AlertType) {
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)createQR
 {
-    [super viewDidAppear:animated];
-    
-    
-    
-    AVAuthorizationStatus authStatus= [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if (authStatus == AVAuthorizationStatusDenied) {
-        return ;
-    } else {
-        
-        self.view.backgroundColor = [UIColor blackColor];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            [self createView];
-            
-            [self addAnimation];
-            
-            [SVProgressHUD dismiss];
-            [self.bgView removeFromSuperview];
-            self.bgView = nil;
-        });
-        
-    }
-}
-
-- (void)createView
-{
-    if (TARGET_IPHONE_SIMULATOR) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"当前设备不支持此项功能" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-        [alert show];
-        return;
-    }
-    
     if (_device == nil) {
         // Device
         _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -172,19 +155,21 @@ typedef NS_ENUM(NSInteger, AlertType) {
         }
         
         //设置扫码支持的编码格式(如下设置条形码和二维码兼容)
-        _output.metadataObjectTypes=@[
-                                      AVMetadataObjectTypeUPCECode,
-                                      AVMetadataObjectTypeCode39Code,
-                                      AVMetadataObjectTypeCode39Mod43Code,
-                                      AVMetadataObjectTypeEAN13Code,
-                                      AVMetadataObjectTypeEAN8Code,
-                                      AVMetadataObjectTypeCode93Code,
-                                      AVMetadataObjectTypeCode128Code,
-                                      AVMetadataObjectTypePDF417Code,
-                                      AVMetadataObjectTypeQRCode,
-                                      AVMetadataObjectTypeAztecCode
-                                      ];
+        _output.metadataObjectTypes=@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+//  @[
+//                                      AVMetadataObjectTypeUPCECode,
+//                                      AVMetadataObjectTypeCode39Code,
+//                                      AVMetadataObjectTypeCode39Mod43Code,
+//                                      AVMetadataObjectTypeEAN13Code,
+//                                      AVMetadataObjectTypeEAN8Code,
+//                                      AVMetadataObjectTypeCode93Code,
+//                                      AVMetadataObjectTypeCode128Code,
+//                                      AVMetadataObjectTypePDF417Code,
+//                                      AVMetadataObjectTypeQRCode,
+//                                      AVMetadataObjectTypeAztecCode
+//                                      ];
         
+
         //        _output.rectOfInterest = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
         
         // Preview
@@ -192,22 +177,59 @@ typedef NS_ENUM(NSInteger, AlertType) {
         _preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
         _preview.frame = self.view.bounds;
         [self.view.layer insertSublayer:self.preview atIndex:0];
+        
+        self.layerViewSize = CGSizeMake(_preview.frame.size.width, _preview.frame.size.height);
     }
     
     // Start
     [_session startRunning];
 }
 
-
-- (void)addAnimation
-{
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
-    animation.fromValue = [NSNumber numberWithFloat:5];
-    animation.toValue = [NSNumber numberWithFloat:(K_SCREEN_WIDTH - 20 * 2) - 13];
-    animation.duration = 2;
-    animation.repeatCount = FLT_MAX;
-    animation.autoreverses = YES;
-    [_line.layer addAnimation:animation forKey:ANIMATION_KEY];
+/** 配置扫码范围 */
+-(void)allowScanRect{
+    
+    
+    /** 扫描是默认是横屏, 原点在[右上角]
+     *  rectOfInterest = CGRectMake(0, 0, 1, 1);
+     *  AVCaptureSessionPresetHigh = 1920×1080   摄像头分辨率
+     *  需要转换坐标 将屏幕与 分辨率统一
+     */
+    
+    //剪切出需要的大小位置
+    CGRect shearRect = CGRectMake((self.layerViewSize.width - self.showSize.width) / 2,
+                                  (self.layerViewSize.height - self.showSize.height) / 2,
+                                  self.showSize.height,
+                                  self.showSize.height);
+    
+    
+    CGFloat deviceProportion = 1920.0 / 1080.0;
+    CGFloat screenProportion = self.layerViewSize.height / self.layerViewSize.width;
+    
+    //分辨率比> 屏幕比 ( 相当于屏幕的高不够)
+    if (deviceProportion > screenProportion) {
+        //换算出 分辨率比 对应的 屏幕高
+        CGFloat finalHeight = self.layerViewSize.width * deviceProportion;
+        // 得到 偏差值
+        CGFloat addNum = (finalHeight - self.layerViewSize.height) / 2;
+        
+        // (对应的实际位置 + 偏差值)  /  换算后的屏幕高
+        self.output.rectOfInterest = CGRectMake((shearRect.origin.y + addNum) / finalHeight,
+                                                shearRect.origin.x / self.layerViewSize.width,
+                                                shearRect.size.height/ finalHeight,
+                                                shearRect.size.width/ self.layerViewSize.width);
+        
+    }else{
+        
+        CGFloat finalWidth = self.layerViewSize.height / deviceProportion;
+        
+        CGFloat addNum = (finalWidth - self.layerViewSize.width) / 2;
+        
+        self.output.rectOfInterest = CGRectMake(shearRect.origin.y / self.layerViewSize.height,
+                                                (shearRect.origin.x + addNum) / finalWidth,
+                                                shearRect.size.height / self.layerViewSize.height,
+                                                shearRect.size.width / finalWidth);
+    }
+    
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
@@ -224,7 +246,7 @@ typedef NS_ENUM(NSInteger, AlertType) {
     }
     
     [_session stopRunning];
-    [_line.layer removeAnimationForKey:ANIMATION_KEY];
+    [self.shadowView stopAnimation];
     
     if ([_content4QRCode hasPrefix:@"http"]) {
         //
@@ -264,22 +286,7 @@ typedef NS_ENUM(NSInteger, AlertType) {
     if (alertView.tag == AlertTypeNoAuthorization) {
         if (buttonIndex == 1) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (K_SYSTEM_VERSION > 8.0) {
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                } else {
-                    NSURL *privacyUrl;
-                    if (alertView.tag == 1) {
-                        privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=PHOTOS"];
-                    } else {
-                        privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=CAMERA"];
-                    }
-                    if ([[UIApplication sharedApplication] canOpenURL:privacyUrl]) {
-                        [[UIApplication sharedApplication] openURL:privacyUrl];
-                    } else {
-                        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"抱歉" message:@"无法跳转到隐私设置页面，请手动前往设置页面，谢谢" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                        [alert show];
-                    }
-                }
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
             });
         }
         [self.navigationController popViewControllerAnimated:YES];
@@ -299,8 +306,7 @@ typedef NS_ENUM(NSInteger, AlertType) {
     //
     // Start
     [_session startRunning];
-    
-    [self addAnimation];
+    [self.shadowView showAnimation];
 }
 
 

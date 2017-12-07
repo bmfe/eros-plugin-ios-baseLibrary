@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BMBaseLibrary"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "本木医疗 iOS App 所需基础库"
 
   # This description is used to generate tags and improve search results.
@@ -157,7 +157,7 @@ Pod::Spec.new do |s|
 
    ss.requires_arc = true
    #s.xcconfig = { "FRAMEWORK_SEARCH_PATHS" => "$(SDKROOT)/TRemoteDebugger" }
-   ss.dependency 'AMapNavi-NO-IDFA','5.0.1'
+   ss.dependency 'AMap3DMap-NO-IDFA','5.6.0'
   end
 
 

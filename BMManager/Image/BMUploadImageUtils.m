@@ -48,7 +48,6 @@
     NSMutableArray *arr4Request = [NSMutableArray array];
     for (UIImage *image in images) {
         BMUploadImageRequest *api = [[BMUploadImageRequest alloc] initWithImage:image params:_imageInfo.params];
-        api.image = image;
         [arr4Request addObject:api];
     }
     

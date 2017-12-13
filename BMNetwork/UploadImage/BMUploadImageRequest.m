@@ -9,16 +9,19 @@
 #import "BMUploadImageRequest.h"
 #import <AFURLRequestSerialization.h>
 
-@implementation BMUploadImageRequest
-{
-    id _params;
-}
+@interface BMUploadImageRequest ()
 
-- (instancetype)initWithImage:(UIImage *)image params:(id)params
+@property (nonatomic, strong) BMUploadImageModel *imageModel;
+
+@end
+
+@implementation BMUploadImageRequest
+
+- (instancetype)initWithImage:(UIImage *)image uploadImageModel:(BMUploadImageModel *)imageModel
 {
     if (self = [super init]) {
         _image = image;
-        _params = params;
+        _imageModel = imageModel;
     }
     return self;
 }
@@ -30,6 +33,15 @@
 
 - (NSString *)baseUrl
 {
+    return nil;
+}
+
+/** 添加自定义 Headers */
+- (NSDictionary *)requestHeaderFieldValueDictionary
+{
+    if (self.imageModel.header) {
+        return self.imageModel.header;
+    }
     return nil;
 }
 
@@ -50,7 +62,7 @@
 
 - (id)requestArgument
 {
-    return _params;
+    return self.imageModel.params;
 }
 
 @end

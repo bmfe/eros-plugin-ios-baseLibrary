@@ -8,10 +8,11 @@
 
 #import "BMBaseRequest.h"
 #import <UIKit/UIKit.h>
+#import "BMUploadImageModel.h"
 
 @interface BMUploadImageRequest : BMBaseRequest
 
-- (instancetype)initWithImage:(UIImage *)image params:(id)params;
+- (instancetype)initWithImage:(UIImage *)image uploadImageModel:(BMUploadImageModel *)imageModel;
 
 @property (nonatomic,strong)UIImage * image;
 

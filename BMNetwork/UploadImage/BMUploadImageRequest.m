@@ -47,7 +47,7 @@
 
 - (NSString *)requestUrl
 {
-    return TK_PlatformInfo().url.image;
+    return self.imageModel.url ?: TK_PlatformInfo().url.image;
 }
 
 - (AFConstructingBlock)constructingBodyBlock {

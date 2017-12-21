@@ -78,14 +78,14 @@
     method_exchangeImplementations(originalM, exchangeM);
 
     
-    /** 获取原始_registerDefaultModules方法 */
-    originalM = class_getClassMethod([WXSDKEngine class], @selector(_registerDefaultModules));
-    
-    /** 获取自定义的bm_registerDefaultModules方法 */
-    exchangeM = class_getClassMethod([WXSDKEngine class], @selector(bm_registerDefaultModules));
-    
-    /** 交换方法 */
-    method_exchangeImplementations(originalM, exchangeM);
+//    /** 获取原始_registerDefaultModules方法 */
+//    originalM = class_getClassMethod([WXSDKEngine class], @selector(_registerDefaultModules));
+//    
+//    /** 获取自定义的bm_registerDefaultModules方法 */
+//    exchangeM = class_getClassMethod([WXSDKEngine class], @selector(bm_registerDefaultModules));
+//    
+//    /** 交换方法 */
+//    method_exchangeImplementations(originalM, exchangeM);
     
 }
 +(void)exchangeWeexAddRule

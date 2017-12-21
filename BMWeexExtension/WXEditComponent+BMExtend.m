@@ -67,9 +67,15 @@ const char *  _attrKey = "_attr";
 - (BOOL)bmEdit_textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]) {
+        NSString *typeStr = [WXUtility returnKeyType:[[self valueForKey:_returnKeyTypeKey] integerValue]];
         if ([[self valueForKey:_returnEventKey] boolValue]) {
-            NSString *typeStr = [WXUtility returnKeyType:[[self valueForKey:_returnKeyTypeKey] integerValue]];
             [self fireEvent:@"return" params:@{@"value":[textView text],@"returnKeyType":typeStr} domChanges:@{@"attrs":@{@"value":[textView text]}}];
+        }
+        if(typeStr.length > 0 && ![@"default" isEqualToString:typeStr]){
+            if (self.view) {
+                [self.view resignFirstResponder];
+            }
+            return NO;
         }
     }
 

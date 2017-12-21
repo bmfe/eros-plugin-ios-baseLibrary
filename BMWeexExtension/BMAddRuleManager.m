@@ -93,7 +93,7 @@ const char * fontStorageKey = "_fontStorage";
             if ([fontURL.scheme isEqualToString:BM_LOCAL]) {
                 // 拦截器
                 if (BM_InterceptorOn()) {
-                    // 从本地读取图片
+                    // 从本地读取
                     NSString *locaFilePath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,fontURL.host,fontURL.path];
                     if ([WXUtility isFileExist:locaFilePath]) {
                         [fontFamily setObject:[NSURL fileURLWithPath:locaFilePath] forKey:@"localSrc"];
@@ -108,26 +108,9 @@ const char * fontStorageKey = "_fontStorage";
                 }
             }
             
-            //先找本地是否有iconfont文件
-//            NSString * path = [fontURL lastPathComponent];
-//            NSString * ttfPath = [K_JS_PAGES_PATH stringByAppendingPathComponent:path];
-            
             // remote font file
             NSString *fontfile = [NSString stringWithFormat:@"%@/%@",BM_FONT_DOWNLOAD_DIR,[WXUtility md5:[fontURL absoluteString]]];
-            
-//            if ([WXUtility isFileExist:ttfPath]) {
-//                if (NO == [WXUtility isFileExist:fontfile]) {
-//                    NSError * error = nil;
-//
-//                    BOOL copyIconfontSuccess = [[NSFileManager defaultManager] copyItemAtPath:ttfPath toPath:fontfile error:nil];
-//                    if(copyIconfontSuccess && nil == error){
-//                        WXLogInfo(@"拷贝Iconfont成功");
-//                    }
-//
-//                }
-//            }
-            
-            
+    
             if ([WXUtility isFileExist:fontfile]) {
                 // if has been cached, load directly
                 [fontFamily setObject:[NSURL fileURLWithPath:fontfile] forKey:@"localSrc"];

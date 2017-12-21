@@ -26,7 +26,7 @@ const char * imageDownloadFinishKey = "imageDownloadFinish";
 
 const char * placeholderOperationKey = "placeholderOperation";
 
-const char * imageSrcKey = "imageSrc";
+const char * imageSrcKey = "_imageSrc";
 
 const char * blurRadiusKey = "blurRadius";
 
@@ -106,7 +106,7 @@ static NSString * defaultKey = @"default";
     }
     
     
-    if (placeholderSrc.length > 0 && NO == [placeholderSrc isEqualToString:defaultKey]) {
+    if (placeholderSrc.length > 0 && ![placeholderSrc isEqualToString:defaultKey]) {
         WXLogDebug(@"Updating image, component:%@, placeholder:%@ ", self.ref, placeholderSrc);
         NSMutableString *newURL = [placeholderSrc mutableCopy];
         WX_REWRITE_URL(placeholderSrc, WXResourceTypeImage, self.weexInstance)
@@ -197,11 +197,11 @@ static NSString * defaultKey = @"default";
 
 - (void)bm_updateContentImageWithFailedBlock:(void(^)(NSString *, NSError *))downloadFailedBlock
 {
-    objc_property_t imageSrcProperty = class_getProperty([WXImageComponent class], imageSrcKey);
+//    objc_property_t imageSrcProperty = class_getProperty([WXImageComponent class], imageSrcKey);
+//
+//    NSString * imageSrcPName = [[NSString alloc] initWithCString:property_getName(imageSrcProperty) encoding:NSUTF8StringEncoding];
     
-    NSString * imageSrcPName = [[NSString alloc] initWithCString:property_getName(imageSrcProperty) encoding:NSUTF8StringEncoding];
-    
-    id imageSrcValue = [self valueForKey:imageSrcPName];
+    id imageSrcValue = [self valueForKey:@"imageSrc"];
     
     NSString *imageSrc = nil;
     
@@ -340,6 +340,10 @@ static NSString * defaultKey = @"default";
                         }
                         
                         [strongSelf readyToRender];
+                    } else if (strongSelf->_isCompositingChild) {
+                        [strongSelf setValue:[NSNumber numberWithBool:YES] forKey:imageDownloadFinishPName];
+                        [strongSelf setValue:image forKey:@"image"];
+                        [strongSelf setNeedsDisplay];
                     }
                 });
             }];

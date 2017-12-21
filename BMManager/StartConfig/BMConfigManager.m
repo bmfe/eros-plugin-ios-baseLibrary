@@ -243,10 +243,6 @@
 
 + (void)initWeexSDK
 {
-    [WXAppConfiguration setAppGroup:@"BM"];
-    [WXAppConfiguration setAppName:@"JYT"];
-    [WXAppConfiguration setExternalUserAgent:@"ExternalUA"];
-    
     [WXSDKEngine initSDKEnvironment];
     
     [BMConfigManager registerBmHandlers];

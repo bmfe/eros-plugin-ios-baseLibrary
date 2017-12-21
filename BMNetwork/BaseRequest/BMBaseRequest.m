@@ -38,12 +38,14 @@
         
     } failure:^(YTKBaseRequest *request) {
         
-        // 获取错误code
-        NSString *errorCode = [NSString stringWithFormat:@"(Code:%ld)",(long)request.responseStatusCode];
-        WXLogError(@"%@",errorCode);
         WXLogError(@"%@ Request_URL>>>>>>>>>>>>>>>>:%@ \n\n\n",NSStringFromClass([self class]),request.requestTask.originalRequest);
         
-        NSString *msg = [NSString stringWithFormat:@"网络请求出错%@",errorCode];
+        // 获取错误code
+        NSString *errorCode = [NSString stringWithFormat:@"%d",request.error.code];
+        NSString *msg = request.error.localizedDescription;
+        if (!msg) {
+            msg = [NSString stringWithFormat:@"网络请求出错(code:%@)",errorCode];
+        }
         
         NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:errorCode,@"resCode",msg,@"msg",@{},@"data", nil];
         if (resultBlock) {

@@ -32,8 +32,16 @@
         
         WXLogInfo(@"%@ Request_URL>>>>>>>>>>>>>>>>:%@",NSStringFromClass([self class]),request.requestTask.originalRequest);
         
+        NSString *status = [NSString stringWithFormat:@"%d",request.responseStatusCode];
+        NSString *errorMsg = @"";
+        id data = request.responseObject ?: @{};
+        NSDictionary *resData = @{
+                                  @"status": status,
+                                  @"errorMsg": errorMsg,
+                                  @"data": data
+                                  };
         if (resultBlock) {
-            resultBlock(request.responseObject);
+            resultBlock(resData);
         }
         
     } failure:^(YTKBaseRequest *request) {
@@ -47,9 +55,14 @@
             msg = [NSString stringWithFormat:@"网络请求出错(code:%@)",errorCode];
         }
         
-        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:errorCode,@"resCode",msg,@"msg",@{},@"data", nil];
+        NSDictionary *resData = @{
+                                  @"status": errorCode,
+                                  @"errorMsg": msg,
+                                  @"data": @{}
+                                  };
+        
         if (resultBlock) {
-            resultBlock(dic);
+            resultBlock(resData);
         }
         
     }];

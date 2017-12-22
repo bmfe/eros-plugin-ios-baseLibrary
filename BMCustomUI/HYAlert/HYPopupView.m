@@ -221,7 +221,7 @@
         UITableView *tableView = (UITableView *)view;
         tableView.scrollEnabled = NO;
         CGPoint pt = tableView.contentOffset;
-        pt.y -= K_NAVBAR_HEIGHT;
+        pt.y -= K_TOPBAR_HEIGHT;
         CGRect rect4Self = self.frame;
         rect4Self.origin = pt;
         self.frame = rect4Self;

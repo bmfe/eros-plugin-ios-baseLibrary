@@ -107,7 +107,7 @@
         self.fd_prefersNavigationBarHidden = YES;
     } else {
         self.fd_prefersNavigationBarHidden = NO;
-        _weexHeight -= K_NAVBAR_HEIGHT;
+        _weexHeight -= K_TOPBAR_HEIGHT;
     }
     
     /* 是否禁用返回 */

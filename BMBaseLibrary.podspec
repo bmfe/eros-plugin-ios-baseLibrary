@@ -180,8 +180,8 @@ Pod::Spec.new do |s|
 
 # 对iOS系统类的拓展
  s.subspec 'BMExtension' do |ss|
-    ss.source_files  = "BMExtension/*.{c,h,m,mm,S}"
-    ss.public_header_files = "BMExtension/*.h"
+    ss.source_files  = "BMExtension/**/*.{c,h,m,mm,S}"
+    ss.public_header_files = "BMExtension/**/*.h"
     ss.requires_arc  = true
   end
 

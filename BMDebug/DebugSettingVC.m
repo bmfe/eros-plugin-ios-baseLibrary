@@ -209,6 +209,8 @@
     [[NSUserDefaults standardUserDefaults] setObject:number forKey:BM_Weex_Interceptor];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
+    [[BMMediatorManager shareInstance] loadJSMediator:YES];
+    
 //    if (!on) {
 //        NSURL *url = [NSURL URLWithString:TK_PlatformInfo().url.jsServer];
 //        if (!url) {

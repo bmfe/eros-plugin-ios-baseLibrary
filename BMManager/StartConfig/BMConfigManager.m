@@ -10,6 +10,7 @@
 #import <YTKNetwork.h>
 #import "BMDefine.h"
 #import <SVProgressHUD.h>
+#import <CryptLib.h>
 
 #import "BMPayManager.h"
 #import <WXApi.h>
@@ -70,6 +71,11 @@
 - (instancetype)init
 {
     if (self = [super init]) {
+        
+//        NSString *jStr = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
+//        NSString *decryptStr = [[[CryptLib alloc] init] decryptCipherTextWith:jStr key:AES_KEY iv:AES_IV];
+//        NSData *jData = [decryptStr dataUsingEncoding:NSUTF8StringEncoding];
+        
         NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"]];
         NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:jData options:NSJSONReadingAllowFragments error:nil];
         _platform = [BMPlatformModel yy_modelWithJSON:jDic];

@@ -265,8 +265,14 @@ static NSString * defaultKey = @"default";
                     
                     if ([imageLoadEventValue boolValue]) {
                         NSMutableDictionary *sizeDict = [NSMutableDictionary new];
-                        sizeDict[@"naturalWidth"] = @(image.size.width * image.scale);
-                        sizeDict[@"naturalHeight"] = @(image.size.height * image.scale);
+                        sizeDict[@"naturalWidth"] = @0;
+                        sizeDict[@"naturalHeight"] = @0;
+                        if (!error) {
+                            sizeDict[@"naturalWidth"] = @(image.size.width * image.scale);
+                            sizeDict[@"naturalHeight"] = @(image.size.height * image.scale);
+                        } else {
+                            [sizeDict setObject:[error description]?:@"" forKey:@"errorDesc"];
+                        }
                         [strongSelf fireEvent:@"load" params:@{ @"success": error? @false : @true,@"size":sizeDict}];
                     }
                     if (error) {

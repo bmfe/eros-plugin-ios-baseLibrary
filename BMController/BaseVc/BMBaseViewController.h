@@ -12,9 +12,9 @@
 
 @interface BMBaseViewController : UIViewController
 
+@property (nonatomic, strong) WXSDKInstance *instance;      /**< instance */
 @property (nonatomic, strong) NSURL *url;
-
-@property (nonatomic, strong) BMRouterModel *routerModel;   // 页面导航信息
+@property (nonatomic, strong) BMRouterModel *routerModel;   /**< 页面导航信息 */
 
 /* 刷新weex页面 */
 - (void)refreshWeex;

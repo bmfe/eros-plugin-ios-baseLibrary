@@ -55,4 +55,11 @@
 /** js资源更新完毕提示 */
 - (void)showJsResourceUpdatedAlert;
 
+/**
+ 加载一个常驻内存的WeexInstance作为js端的中介者
+ 
+ @param reload 是否重新加载 当reload为 ture 时，强制重新加载一个新的
+ */
+- (void)loadJSMediator:(BOOL)reload;
+
 @end

@@ -32,6 +32,7 @@ WX_EXPORT_METHOD(@selector(refreshWeex))
 WX_EXPORT_METHOD(@selector(toMap:))
 WX_EXPORT_METHOD(@selector(toWebView:))
 WX_EXPORT_METHOD(@selector(callPhone:))
+WX_EXPORT_METHOD(@selector(openBrowser:))
 
 - (void)open:(NSDictionary *)info callback:(WXModuleCallback)callback
 {
@@ -78,10 +79,18 @@ WX_EXPORT_METHOD(@selector(callPhone:))
     return;
 }
 
+/** 打开app内置webview */
 - (void)toWebView:(NSDictionary *)info
 {
     BMWebViewRouterModel *model = [BMWebViewRouterModel yy_modelWithJSON:info];
     [[BMMediatorManager shareInstance] toWebViewWithRouterInfo:model];
+}
+
+/** 使用iOS系统自带浏览器打开 url */
+- (void)openBrowser:(NSString *)url
+{
+    NSURL *openUrl = [NSURL URLWithString:url];
+    [[UIApplication sharedApplication] openURL:openUrl];
 }
 
 - (void)callPhone:(NSDictionary *)info

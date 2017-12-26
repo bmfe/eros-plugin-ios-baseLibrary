@@ -33,7 +33,6 @@
 @interface BMBaseViewController () <UIScrollViewDelegate, UIWebViewDelegate>
 
 @property (nonatomic, strong) UIView *weexView;
-@property (nonatomic, strong) WXSDKInstance *instance;  /* instance */
 @property (nonatomic, strong) NSHashTable *arr4Request;  // 存放此控制器对应的所有请求，当viewDidDisappear
 
 @property (nonatomic, assign) CGFloat weexHeight;

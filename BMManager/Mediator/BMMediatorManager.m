@@ -27,7 +27,7 @@
 @property (nonatomic, strong) BMRouterModel *openVcRouterModel;    // 跳转页面时的routerModel
 @property (nonatomic, weak) WXSDKInstance *openVcWeexInstance;     // 跳转页面前的weexInstance
 
-@property (nonatomic, strong) UIViewController *jsMediator;        // 此页面作为js端的中介者，常驻内存
+@property (nonatomic, strong) BMBaseViewController *jsMediator;        // 此页面作为js端的中介者，常驻内存
 
 @property (nonatomic, weak) UIViewController *loginViewController;  // 登录vc
 
@@ -109,11 +109,23 @@
     [currentVc presentViewController:vc animated:YES completion:nil];
 }
 
-/* 加载一个js页面常驻内存 */
-- (void)loadJSMediator:(NSString *)path
+
+/**
+ 加载一个常驻内存的WeexInstance作为js端的中介者
+
+ @param reload 是否重新加载 当reload为 ture 时，强制重新加载一个新的
+ */
+- (void)loadJSMediator:(BOOL)reload
 {
+    if (!reload && self.jsMediator.instance.rootView) {
+        return;
+    }
+    
+    if (self.jsMediator) {
+        self.jsMediator = nil;
+    }
     BMBaseViewController *jsMediatorVc = [[BMBaseViewController alloc] init];
-    jsMediatorVc.url = [BMAppResource configJSFullURLWithPath:path?:K_JS_MEDIATOR_PATH];
+    jsMediatorVc.url = [BMAppResource configJSFullURLWithPath:[BMConfigManager shareInstance].platform.page.mediatorPage?:K_JS_MEDIATOR_PATH];
     [jsMediatorVc view];
     
     self.jsMediator = jsMediatorVc;
@@ -131,7 +143,7 @@
     BMPlatformModel *platformInfo = [BMConfigManager shareInstance].platform;
     
     /* 加载js端的中介者 */
-    [self loadJSMediator:platformInfo.page.mediatorPage];
+    [self loadJSMediator:YES];
 
     
     BMBaseViewController *firstVc = [[BMBaseViewController alloc] init];

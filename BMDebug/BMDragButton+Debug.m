@@ -83,11 +83,13 @@
 
 - (void)refreshWeex
 {
-    /** 刷新widgetJs */
+    //刷新widgetJs
     [BMResourceManager sharedInstance].bmWidgetJs = nil;
     
-    UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
+    //检查js中介者是否加载成功
+    [[BMMediatorManager shareInstance] loadJSMediator:NO];
     
+    UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
     if ([controller isKindOfClass:[BMBaseViewController class]]) {
         [(BMBaseViewController*)controller refreshWeex];
     }
@@ -99,15 +101,13 @@
         case 0:
         {
             UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:[[DebugSettingVC alloc] init]];
-            
             UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
-            
-            
             [controller presentViewController:nav animated:YES completion:nil];
         }
             break;
         case 1:
         {
+            //刷新
             [self refreshWeex];
         }
             break;
@@ -129,8 +129,6 @@
             
      }
             break;
-
-            
         default:
             break;
     }

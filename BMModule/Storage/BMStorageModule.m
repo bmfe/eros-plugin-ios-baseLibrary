@@ -37,31 +37,24 @@ WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
     if (!data || !key) return;
     
     [[BMDB DB] addOrUpdateData:data primatyKey:key success:^(BOOL success) {
-        NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
         if (callback) {
-            NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-            callback(resultData);
+            callback([NSNumber numberWithBool:success]);
         }
     }];
-    
-    if ([key isEqualToString:@"userInfo"]) {
-        [[BMUserInfoModel shareInstance] yy_modelSetWithJSON:data];
-    }
 }
 
 /** 存储数据 同步方法 */
-- (NSDictionary *)setDataSync:(NSString *)key data:(id)data
+- (BOOL)setDataSync:(NSString *)key data:(id)data
 {
     if (![data isKindOfClass:[NSString class]]) {
         data = [data yy_modelToJSONString];
     }
     
-    if (!data || !key) return [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"存储失败，请检查数据" data:nil];
+    if (!data || !key) return @0;
     
     BOOL success = [[BMDB DB] addOrUpdateData:data primatyKey:key];
-    NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
-    NSString *msg = success ? @"数据存储成功" : @"数据存储失败";
-    return [NSDictionary configCallbackDataWithResCode:resCode msg:msg data:nil];
+    
+    return success;
 }
 
 - (void)getData:(NSString *)key callback:(WXModuleCallback)callback
@@ -70,19 +63,15 @@ WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
 
     id resData = [[BMDB DB] queryWithPrimatyKey:key];
     if (callback) {
-        NSInteger resCode = resData ? BMResCodeSuccess : BMResCodeError;
-        NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:resData];
-        callback(resultData);
+        callback(resData);
     }
 }
 
 /** 获取数据 同步方法 */
-- (NSDictionary *)getDataSync:(NSString *)key
+- (id)getDataSync:(NSString *)key
 {
     id resData = [[BMDB DB] queryWithPrimatyKey:key];
-    NSInteger resCode = resData ? BMResCodeSuccess : BMResCodeError;
-    NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:resData];
-    return resultData;
+    return resData;
 }
 
 - (void)deleteData:(NSString *)key callback:(WXModuleCallback)callback
@@ -90,46 +79,34 @@ WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
     if (!key) return;
     
     [[BMDB DB] deleteWithPrimatyKey:key success:^(BOOL success) {
-        
-        NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
         if (callback) {
-            NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-            callback(resultData);
+            callback([NSNumber numberWithBool:success]);
         }
-        
     }];
 }
 
 /** 删除一条数据 同步方法 */
-- (NSDictionary *)deleteDataSync:(NSString *)key
+- (BOOL)deleteDataSync:(NSString *)key
 {
     if (!key) return nil;
     
     BOOL success = [[BMDB DB] deleteWithPrimatyKey:key];
-    NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
-    NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-    return resultData;
+    return success;
 }
 
 - (void)removeData:(WXModuleCallback)callback
 {
     [[BMDB DB] deleteAllSuccess:^(BOOL success) {
-        
-        NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
         if (callback) {
-            NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-            callback(resultData);
+            callback([NSNumber numberWithBool:success]);
         }
-        
     }];
 }
 
 /** 删除所有数据 同步方法 */
-- (NSDictionary *)removeDataSync
+- (BOOL)removeDataSync
 {
     BOOL success = [[BMDB DB] deleteAll];
-    NSInteger resCode = success ? BMResCodeSuccess : BMResCodeError;
-    NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-    return resultData;
+    return success;
 }
 @end

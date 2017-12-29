@@ -1,16 +1,24 @@
 //
-//  BMBrowserImgModule.m
-//  BM-JYT
+//  BMImageModule.m
+//  BMBaseLibrary
 //
-//  Created by 窦静轩 on 2017/4/1.
-//  Copyright © 2017年 XHY. All rights reserved.
+//  Created by XHY on 2017/12/29.
 //
 
-#import "BMBrowserImgModule.h"
+#import "BMImageModule.h"
+
 #import <SDWebImage/SDImageCache.h>
 #import "PBViewController.h"
 #import <objc/runtime.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+
+#import "BMImageManager.h"
+#import <BMScreenshotEventManager.h>
+
+#import "BMUploadImageModel.h"
+#import <YYModel/YYModel.h>
+
+#import <TZImagePickerController/TZImagePickerController.h>
 
 static NSString * indexKey = @"index";
 static NSString * imagesKey = @"images";
@@ -18,25 +26,57 @@ static NSString * typeKey = @"type";
 static NSString * localKey = @"local";
 static NSString * networkKey = @"network";
 
-@interface BMBrowserImgModule()<PBViewControllerDelegate,PBViewControllerDataSource>
+@interface BMImageModule () <PBViewControllerDelegate,PBViewControllerDataSource>
 {
     PBViewController * _photoBrowser;
 }
+
 @property (nonatomic,strong)NSMutableArray * images;
+
 @end
 
-
-
-
-@implementation BMBrowserImgModule
-
-
+@implementation BMImageModule
 @synthesize weexInstance;
 
-WX_EXPORT_METHOD(@selector(open:callback:))
-WX_EXPORT_METHOD(@selector(close))
+WX_EXPORT_METHOD(@selector(uploadImage::))
+WX_EXPORT_METHOD(@selector(uploadScreenshot:))
+WX_EXPORT_METHOD(@selector(preview::))
 
--(void)open:(NSDictionary*)info callback:(WXModuleCallback)callback
+/** 拍照 */
+- (void)camera:(NSDictionary *)info :(WXModuleCallback)callback
+{
+    
+}
+
+/** 从相册选择图片最多9张 */
+- (void)pick:(NSDictionary *)info :(WXModuleCallback)callback
+{
+    
+}
+
+/** 可选择拍照或者从相册选择图片上传至服务器 */
+- (void)uploadImage:(NSDictionary *)info :(WXModuleCallback)callback
+{
+    BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
+    [BMImageManager uploadImageWithInfo:model weexInstance:weexInstance callback:callback];
+}
+
+/** 将刚刚的截屏图片上传到服务器 */
+- (void)uploadScreenshot:(WXModuleCallback)callback
+{
+    if (![[BMScreenshotEventManager shareInstance] snapshotImage]) {
+        NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"截屏图片不存在" data:nil];
+        if (callback) {
+            callback(resDic);
+        }
+        return;
+    }
+    NSArray *images = @[[[BMScreenshotEventManager shareInstance] snapshotImage]];
+    [BMImageManager uploadImage:images callback:callback];
+}
+
+/** 预览图片 */
+- (void)preview:(NSDictionary *)info :(WXModuleCallback)callback
 {
     if ([info isKindOfClass:[NSDictionary class]]) {
         NSArray * images = [(NSDictionary*)info objectForKey:imagesKey];
@@ -77,27 +117,18 @@ WX_EXPORT_METHOD(@selector(close))
                 _photoBrowser = nil;
             }
             
-             _photoBrowser = [PBViewController new];
-             _photoBrowser.pb_dataSource = self;
-             _photoBrowser.pb_delegate = self;
-             _photoBrowser.pb_startPage = [index integerValue];
-
+            _photoBrowser = [PBViewController new];
+            _photoBrowser.pb_dataSource = self;
+            _photoBrowser.pb_delegate = self;
+            _photoBrowser.pb_startPage = [index integerValue];
+            
             [weexInstance.viewController presentViewController:_photoBrowser animated:YES completion:^{
                 if (callback) {
                     callback([NSDictionary dictionary]);
                 }
             }];
-        
+            
         }
-    }
-}
--(void)close
-{
-    if (_photoBrowser) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_photoBrowser dismissViewControllerAnimated:YES completion:nil];
-        });
     }
 }
 
@@ -132,7 +163,5 @@ WX_EXPORT_METHOD(@selector(close))
 - (void)viewController:(PBViewController *)viewController didLongPressedPageAtIndex:(NSInteger)index presentedImage:(UIImage *)presentedImage {
     NSLog(@"didLongPressedPageAtIndex: %@", @(index));
 }
-
-
 
 @end

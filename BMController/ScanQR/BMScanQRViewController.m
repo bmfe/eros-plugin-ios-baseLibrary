@@ -7,7 +7,7 @@
 //
 
 #import "BMScanQRViewController.h"
-#import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
+#import <UINavigationController+FDFullscreenPopGesture.h>
 #import "UINavigationBar+NavigationBarExtend.h"
 #import "BMDefine.h"
 #import "JYTTitleLabel.h"

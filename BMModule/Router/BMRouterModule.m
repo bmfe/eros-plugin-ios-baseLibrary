@@ -62,6 +62,7 @@ WX_EXPORT_METHOD(@selector(openBrowser:))
     [[BMMediatorManager shareInstance] backVcWithRouterModel:routerModel weexInstance:weexInstance];
 }
 
+/** 刷新当前weexInstance */
 - (void)refreshWeex
 {
     if ([weexInstance.viewController respondsToSelector:@selector(refreshWeex)]) {
@@ -93,6 +94,7 @@ WX_EXPORT_METHOD(@selector(openBrowser:))
     [[UIApplication sharedApplication] openURL:openUrl];
 }
 
+/** 拨打电话 */
 - (void)callPhone:(NSDictionary *)info
 {
     if (!info[@"phone"]) {
@@ -109,6 +111,17 @@ WX_EXPORT_METHOD(@selector(openBrowser:))
         }];
         [alert show];
     }
+}
+
+/** 刷新app */
+- (void)setHomePage:(NSString *)path
+{
+    if (![path isKindOfClass:[NSString class]]) {
+        WXLogError(@"setHomePage Error: %@",path);
+        return;
+    }
+    BM_SetUserDefaultData(K_HomePagePath, path);
+    [[NSNotificationCenter defaultCenter] postNotificationName:K_BMAppReStartNotification object:nil];
 }
 
 @end

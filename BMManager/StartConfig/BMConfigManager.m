@@ -43,6 +43,7 @@
 #import "BMToolsModule.h"
 #import "BMNavigatorModule.h"
 #import "BMAuthorLoginModule.h"
+#import "BMCommunicationModule.h"
 
 #import <WeexSDK/WeexSDK.h>
 #import "WXUtility.h"
@@ -72,11 +73,11 @@
 {
     if (self = [super init]) {
         
-//        NSString *jStr = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
-//        NSString *decryptStr = [[[CryptLib alloc] init] decryptCipherTextWith:jStr key:AES_KEY iv:AES_IV];
-//        NSData *jData = [decryptStr dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *jStr = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
+        NSString *decryptStr = [[[CryptLib alloc] init] decryptCipherTextWith:jStr key:AES_KEY iv:AES_IV];
+        NSData *jData = [decryptStr dataUsingEncoding:NSUTF8StringEncoding];
         
-        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"]];
+//        NSData *jData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"eros.native" ofType:@"json"]];
         NSDictionary *jDic = [NSJSONSerialization JSONObjectWithData:jData options:NSJSONReadingAllowFragments error:nil];
         _platform = [BMPlatformModel yy_modelWithJSON:jDic];
     }
@@ -238,8 +239,9 @@
                               @"bmEvents":          NSStringFromClass([BMEventsModule class]),
                               @"bmBrowserImg":      NSStringFromClass([BMBrowserImgModule class]),
                               @"bmTool":            NSStringFromClass([BMToolsModule class]),
-                              @"bmAuth":     NSStringFromClass([BMAuthorLoginModule class]),
-                              @"bmNavigator":       NSStringFromClass([BMNavigatorModule class])
+                              @"bmAuth":            NSStringFromClass([BMAuthorLoginModule class]),
+                              @"bmNavigator":       NSStringFromClass([BMNavigatorModule class]),
+                              @"bmCommunication":   NSStringFromClass([BMCommunicationModule class])
                               };
     
     for (NSString *moduleName in modules.allKeys) {

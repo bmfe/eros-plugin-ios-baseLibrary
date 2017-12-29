@@ -147,7 +147,8 @@
 
     
     BMBaseViewController *firstVc = [[BMBaseViewController alloc] init];
-    firstVc.url = [BMAppResource configJSFullURLWithPath:platformInfo.page.homePage];
+    NSString *homePage = BM_GetUserDefaultData(K_HomePagePath)?:platformInfo.page.homePage;
+    firstVc.url = [BMAppResource configJSFullURLWithPath:homePage];
     BMNavigationController *firstNavc = [[BMNavigationController alloc] initWithRootViewController:firstVc];
     
     _window.rootViewController = firstNavc;

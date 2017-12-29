@@ -15,12 +15,10 @@
     NSMutableDictionary *resultDic = [[NSMutableDictionary alloc] init];
     
     msg = msg ? msg : @"";
-    data = data ? data : @{};
+    data = data ? data : @"";
     
-    if ([data isKindOfClass:[NSString class]]) data = @{@"value": data};
-    
-    [resultDic setValue:[NSNumber numberWithInteger:resCode] forKey:@"resCode"];
-    [resultDic setValue:msg forKey:@"msg"];
+    [resultDic setValue:[NSNumber numberWithInteger:resCode] forKey:@"status"];
+    [resultDic setValue:msg forKey:@"errorMsg"];
     [resultDic setValue:data forKey:@"data"];
     
     return resultDic;

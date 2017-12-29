@@ -51,7 +51,11 @@
 #define K_FontSizeBig_Scale 1.15
 #define K_FontSizeExtralarge_Scale 1.3
 
+/**----------------------------- BMNotification ------------------------------------*/
 #define K_BMAppReStartNotification          @"BMAppReStartNotification"
+
+/**----------------------------- key ------------------------------------*/
+#define K_HomePagePath @"HomePagePathKey"
 
 /** 获取配置信息 */
 CG_INLINE BMPlatformModel* TK_PlatformInfo() {

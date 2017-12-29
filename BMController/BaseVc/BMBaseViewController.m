@@ -8,7 +8,7 @@
 
 #import "BMBaseViewController.h"
 
-#import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
+#import <UINavigationController+FDFullscreenPopGesture.h>
 
 #import <WeexSDK/WXSDKInstance.h>
 #import <WeexSDK/WXSDKEngine.h>

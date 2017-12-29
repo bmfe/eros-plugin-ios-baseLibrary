@@ -34,35 +34,54 @@ WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
         data = [data yy_modelToJSONString];
     }
     
-    if (!data || !key) return;
+    if (!data || !key) {
+        
+        if (callback) {
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"key or data error" data:nil];
+            callback(resData);
+        }
+        
+        return;
+    }
     
     [[BMDB DB] addOrUpdateData:data primatyKey:key success:^(BOOL success) {
         if (callback) {
-            callback([NSNumber numberWithBool:success]);
+            NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+            callback(resData);
         }
     }];
 }
 
 /** 存储数据 同步方法 */
-- (BOOL)setDataSync:(NSString *)key data:(id)data
+- (NSDictionary *)setDataSync:(NSString *)key data:(id)data
 {
     if (![data isKindOfClass:[NSString class]]) {
         data = [data yy_modelToJSONString];
     }
     
-    if (!data || !key) return @0;
+    if (!data || !key) return [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"key or data error" data:nil];
     
     BOOL success = [[BMDB DB] addOrUpdateData:data primatyKey:key];
-    
-    return success;
+    NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+    NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+    return resData;
 }
 
 - (void)getData:(NSString *)key callback:(WXModuleCallback)callback
 {
-    if (!key) return;
+    if (!key) {
+        if (callback) {
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"key error" data:nil];
+            callback(resData);
+        }
+        return;
+    }
 
-    id resData = [[BMDB DB] queryWithPrimatyKey:key];
+    id data = [[BMDB DB] queryWithPrimatyKey:key];
     if (callback) {
+        NSInteger status = data ? BMResCodeSuccess : BMResCodeError;
+        NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:data];
         callback(resData);
     }
 }
@@ -70,43 +89,58 @@ WX_EXPORT_METHOD_SYNC(@selector(removeDataSync))
 /** 获取数据 同步方法 */
 - (id)getDataSync:(NSString *)key
 {
-    id resData = [[BMDB DB] queryWithPrimatyKey:key];
-    return resData;
+    id data = [[BMDB DB] queryWithPrimatyKey:key];
+    NSInteger status = data ? BMResCodeSuccess : BMResCodeError;
+    return [NSDictionary configCallbackDataWithResCode:status msg:nil data:data];
 }
 
 - (void)deleteData:(NSString *)key callback:(WXModuleCallback)callback
 {
-    if (!key) return;
+    if (!key) {
+        if (callback) {
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"key error" data:nil];
+            callback(resData);
+        }
+        return;
+    }
     
     [[BMDB DB] deleteWithPrimatyKey:key success:^(BOOL success) {
         if (callback) {
-            callback([NSNumber numberWithBool:success]);
+            NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+            callback(resData);
         }
     }];
 }
 
 /** 删除一条数据 同步方法 */
-- (BOOL)deleteDataSync:(NSString *)key
+- (NSDictionary *)deleteDataSync:(NSString *)key
 {
     if (!key) return nil;
     
     BOOL success = [[BMDB DB] deleteWithPrimatyKey:key];
-    return success;
+    NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+    NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+    return resData;
 }
 
 - (void)removeData:(WXModuleCallback)callback
 {
     [[BMDB DB] deleteAllSuccess:^(BOOL success) {
         if (callback) {
-            callback([NSNumber numberWithBool:success]);
+            NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+            callback(resData);
         }
     }];
 }
 
 /** 删除所有数据 同步方法 */
-- (BOOL)removeDataSync
+- (NSDictionary *)removeDataSync
 {
     BOOL success = [[BMDB DB] deleteAll];
-    return success;
+    NSInteger status = success ? BMResCodeSuccess : BMResCodeError;
+    NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:status msg:nil data:nil];
+    return resData;
 }
 @end

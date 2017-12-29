@@ -12,7 +12,7 @@
 #import "NSTimer+Addition.h"
 #import "BMPopActionViewManager.h"
 #import "BMMediatorManager.h"
-#import <FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h>
+#import <UINavigationController+FDFullscreenPopGesture.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "UIWebView+BMExtend.h"
 #import "BMUserInfoModel.h"

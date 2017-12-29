@@ -12,7 +12,7 @@
 #import "BMJSVersionModel.h"
 #import <YYModel.h>
 #import "BMUpdateBundlejsRequest.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+#import <SVProgressHUD.h>
 #import "NSData+bsdiff.h"
 #import "BMResourceCheck.h"
 #import "BMMediatorManager.h"

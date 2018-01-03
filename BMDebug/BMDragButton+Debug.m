@@ -15,6 +15,9 @@
 #import <UIKit/UIKit.h>
 #import "BMResourceManager.h"
 #import "Masonry.h"
+#ifdef DEBUG
+#import <TBWXDevTool/WXDevTool.h>
+#endif
 
 @interface BMDragButton()<UIActionSheetDelegate>
 
@@ -71,7 +74,7 @@
                                   delegate:self
                                   cancelButtonTitle:@"取消"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"设置项",@"刷新",@"扫一扫",
+                                  otherButtonTitles:@"设置项",@"刷新",@"调试",
                                   nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     
@@ -114,19 +117,9 @@
 
         case 2:
         {
-            #if TARGET_IPHONE_SIMULATOR//模拟器
-                UIAlertView * av = [[UIAlertView alloc] initWithTitle:@"提示" message:@"仅支持真机" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil,nil];
-                [av show];
-            #elif TARGET_OS_IPHONE//真机
-                UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
-            
-                if ([controller isKindOfClass:[BMBaseViewController class]]) {
-                    WXScannerVC * scanViewController = [[WXScannerVC alloc] init];
-                    [controller.navigationController pushViewController:scanViewController animated:YES];
-                }
-
-            #endif
-            
+#ifdef DEBUG
+            [WXDevTool launchDevToolDebugWithUrl:@"ws://192.168.15.110:8088/debugProxy/native"];
+#endif
      }
             break;
         default:

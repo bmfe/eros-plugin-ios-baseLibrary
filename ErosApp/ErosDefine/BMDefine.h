@@ -56,6 +56,7 @@
 
 /**----------------------------- key ------------------------------------*/
 #define K_HomePagePath @"HomePagePathKey"
+#define BM_LOCAL @"bmlocal"
 
 /** 获取配置信息 */
 CG_INLINE BMPlatformModel* TK_PlatformInfo() {

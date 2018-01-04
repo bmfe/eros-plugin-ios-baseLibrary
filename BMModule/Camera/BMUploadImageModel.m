@@ -16,6 +16,10 @@
         _imageWidth = 800;
     }
     
+    if ([_url isEqualToString:@""]) {
+        _url = nil;
+    }
+    
     return YES;
 }
 

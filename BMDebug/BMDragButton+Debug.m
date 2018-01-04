@@ -118,7 +118,14 @@
         case 2:
         {
 #ifdef DEBUG
-            [WXDevTool launchDevToolDebugWithUrl:@"ws://192.168.15.110:8088/debugProxy/native"];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已开启 weex debug 调试窗口" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"开始调试" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
+            }];
+            [alert addAction:cancel];
+            [alert addAction:ok];
+            [[BMMediatorManager shareInstance].currentViewController presentViewController:alert animated:YES completion:nil];
 #endif
      }
             break;

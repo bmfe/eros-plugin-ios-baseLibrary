@@ -41,15 +41,24 @@
 
 #pragma mark - Public Method
 
++ (void)camera:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
+{
+    [[BMImageManager shareInstance].uploadImageUtils camera:model weexInstance:weexInstance callback:callback];
+}
+
++ (void)pick:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
+{
+    [[BMImageManager shareInstance].uploadImageUtils pick:model weexInstance:weexInstance callback:callback];
+}
 
 + (void)uploadImageWithInfo:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
 {
     [[BMImageManager shareInstance].uploadImageUtils uploadImageWithInfo:model weexInstance:weexInstance callback:callback];
 }
 
-+ (void)uploadImage:(NSArray<UIImage *> *)images callback:(WXModuleCallback)callback
++ (void)uploadImage:(NSArray *)images uploadImageModel:(BMUploadImageModel *)model callback:(WXModuleCallback)callback
 {
-    [[BMImageManager shareInstance].uploadImageUtils uploadImage:images callback:callback];
+    [[BMImageManager shareInstance].uploadImageUtils uploadImage:images uploadImageModel:model callback:callback];
 }
 
 @end

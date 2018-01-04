@@ -11,12 +11,14 @@
 #import "BMCommonRequest.h"
 #import "BMBaseViewController.h"
 #import "BMUserInfoModel.h"
+#import "BMImageManager.h"
 
 @implementation BMAxiosNetworkModule
 
 @synthesize weexInstance;
 
 WX_EXPORT_METHOD(@selector(fetch:callback:))
+WX_EXPORT_METHOD(@selector(uploadImage:::))
 
 
 - (void)fetch:(NSDictionary *)info callback:(WXModuleCallback)callback
@@ -46,6 +48,12 @@ WX_EXPORT_METHOD(@selector(fetch:callback:))
     }];
     
     WXLogInfo(@"%@",api.originalRequest);
+}
+
+- (void)uploadImage:(NSDictionary *)info :(NSArray *)images :(WXModuleCallback)callback
+{
+    BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
+    [BMImageManager uploadImage:images uploadImageModel:model callback:callback];
 }
 
 @end

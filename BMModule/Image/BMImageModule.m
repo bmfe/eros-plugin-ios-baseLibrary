@@ -22,7 +22,6 @@
 
 static NSString * indexKey = @"index";
 static NSString * imagesKey = @"images";
-static NSString * typeKey = @"type";
 static NSString * localKey = @"local";
 static NSString * networkKey = @"network";
 
@@ -38,6 +37,8 @@ static NSString * networkKey = @"network";
 @implementation BMImageModule
 @synthesize weexInstance;
 
+WX_EXPORT_METHOD(@selector(camera::))
+WX_EXPORT_METHOD(@selector(pick::))
 WX_EXPORT_METHOD(@selector(uploadImage::))
 WX_EXPORT_METHOD(@selector(uploadScreenshot:))
 WX_EXPORT_METHOD(@selector(preview::))
@@ -45,13 +46,15 @@ WX_EXPORT_METHOD(@selector(preview::))
 /** 拍照 */
 - (void)camera:(NSDictionary *)info :(WXModuleCallback)callback
 {
-    
+    BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
+    [BMImageManager camera:model weexInstance:weexInstance callback:callback];
 }
 
 /** 从相册选择图片最多9张 */
 - (void)pick:(NSDictionary *)info :(WXModuleCallback)callback
 {
-    
+    BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
+    [BMImageManager pick:model weexInstance:weexInstance callback:callback];
 }
 
 /** 可选择拍照或者从相册选择图片上传至服务器 */
@@ -72,7 +75,7 @@ WX_EXPORT_METHOD(@selector(preview::))
         return;
     }
     NSArray *images = @[[[BMScreenshotEventManager shareInstance] snapshotImage]];
-    [BMImageManager uploadImage:images callback:callback];
+    [BMImageManager uploadImage:images uploadImageModel:nil callback:callback];
 }
 
 /** 预览图片 */
@@ -81,29 +84,14 @@ WX_EXPORT_METHOD(@selector(preview::))
     if ([info isKindOfClass:[NSDictionary class]]) {
         NSArray * images = [(NSDictionary*)info objectForKey:imagesKey];
         NSNumber * index = [(NSDictionary*)info objectForKey:indexKey];
-        NSString * type = [(NSDictionary*)info objectForKey:typeKey];
-        
-        
+    
         NSMutableArray * imagsArray = [[NSMutableArray alloc] initWithCapacity:0];
-        
-        BOOL isLocal = NO;
+
         if ([images isKindOfClass:[NSArray class]]) {
             for (int i = 0; i < images.count; i++) {
                 NSString * url = [images objectAtIndex:i];
-                
-                if ([type isEqualToString:localKey]) {
-                    isLocal = YES;
-                    UIImage * image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:[url md5]];
-                    if (nil != image) {
-                        [imagsArray addObject:image];
-                    }
-                    
-                }
-                if ([type isEqualToString:networkKey]) {
-                    isLocal = NO;
-                    if (nil != url) {
-                        [imagsArray addObject:url];
-                    }
+                if (nil != url) {
+                    [imagsArray addObject:url];
                 }
             }
             
@@ -141,9 +129,48 @@ WX_EXPORT_METHOD(@selector(preview::))
 - (void)viewController:(PBViewController *)viewController presentImageView:(UIImageView *)imageView forPageAtIndex:(NSInteger)index progressHandler:(void (^)(NSInteger, NSInteger))progressHandler {
     
     NSString *url = self.images[index]?:@"";
-    UIImage *placeholder = nil;
+    
+    NSURL *imgUrl = [NSURL URLWithString:url];
+    
+    if (!imgUrl) {
+        WXLogError(@"image url error: %@",url);
+        return;
+    }
+    
+    if ([imgUrl.scheme isEqualToString:BM_LOCAL])
+    {
+        // 拦截器
+        if (BM_InterceptorOn()) {
+            // 从jsbundle读取图片
+            NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
+            UIImage *img = [UIImage imageWithContentsOfFile:imgPath];
+            
+            if (!img) {
+                WXLogError(@"预览jsbundle中图片失败:%@",url);
+            }
+            
+            imageView.image = img;
+            
+            return;
+        } else {
+            url = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,imgUrl.host,imgUrl.path];
+        }
+    }
+    
+    if (![url hasPrefix:@"http"])
+    {
+        NSFileManager *fm = [NSFileManager defaultManager];
+        if ([fm fileExistsAtPath:url]) {
+            UIImage *image = [UIImage imageWithContentsOfFile:url];
+            imageView.image = image;
+        } else {
+            WXLogError(@"预览图片失败：%@",url);
+        }
+        return;
+    }
+    
     [imageView sd_setImageWithURL:[NSURL URLWithString:url]
-                 placeholderImage:placeholder
+                 placeholderImage:nil
                           options:0
                          progress:progressHandler
                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {

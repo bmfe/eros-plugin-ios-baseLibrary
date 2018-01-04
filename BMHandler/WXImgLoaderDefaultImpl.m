@@ -24,8 +24,6 @@
 #define WXDispatchQueueSetterSementics assign
 #endif
 
-#define BM_LOCAL @"bmlocal"
-
 @interface WXImgLoaderDefaultImpl()
 
 @property (WXDispatchQueueSetterSementics, nonatomic) dispatch_queue_t ioQueue;
@@ -39,7 +37,13 @@
 
 - (id<WXImageOperationProtocol>)downloadImageWithURL:(NSString *)url imageFrame:(CGRect)imageFrame userInfo:(NSDictionary *)userInfo completed:(void(^)(UIImage *image,  NSError *error, BOOL finished))completedBlock
 {
-    if (!url) return nil;
+    if (!url) {
+        if (completedBlock) {
+            NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"image url error"}];
+            completedBlock(nil,error,YES);
+        }
+        return nil;
+    }
  
     if ([url hasPrefix:@"//"]) {
         url = [@"https:" stringByAppendingString:url];
@@ -47,22 +51,26 @@
     
     NSURL *imgUrl = [NSURL URLWithString:url];
     
-    if (!imgUrl || !imgUrl.scheme) {
+    if (!imgUrl) {
         WXLogError(@"image url error: %@",url);
+        if (completedBlock) {
+            NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"image url error"}];
+            completedBlock(nil,error,YES);
+        }
         return nil;
     }
     else if ([imgUrl.scheme isEqualToString:BM_LOCAL])
     {
         // 拦截器
         if (BM_InterceptorOn()) {
-            // 从本地读取图片
+            // 从jsbundle读取图片
             NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
             
             UIImage *img = [UIImage imageWithContentsOfFile:imgPath];
             NSError *error = nil;
             
             if (!img) {
-                error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"获取本地图片失败"}];
+                error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"获取jsbundle中图片失败"}];
             }
             
             if (completedBlock) {
@@ -74,7 +82,26 @@
             url = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,imgUrl.host,imgUrl.path];
         }
     }
-    
+    else if (![url hasPrefix:@"http"])
+    {
+        NSFileManager *fm = [NSFileManager defaultManager];
+        if ([fm fileExistsAtPath:url]) {
+            UIImage *image = [UIImage imageWithContentsOfFile:url];
+            NSError *error = nil;
+            if (!image) {
+                error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"本地缓存的图片加载失败"}];
+            }
+            if (completedBlock) {
+                completedBlock(image,error,YES);
+            }
+        } else {
+            if (completedBlock) {
+                NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:-1100 userInfo:@{NSLocalizedDescriptionKey:@"本地缓存的图片不存在"}];
+                completedBlock(nil,error,YES);
+            }
+        }
+        return nil;
+    }
     
     [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         

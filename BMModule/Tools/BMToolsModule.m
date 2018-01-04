@@ -11,22 +11,28 @@
 #import "BMPushMessageManager.h"
 #import "WatermarkView.h"
 #import "WXUtility.h"
+#import "BMScanQRViewController.h"
 
 @implementation BMToolsModule
 
 @synthesize weexInstance;
 
+WX_EXPORT_METHOD(@selector(scan:));
 WX_EXPORT_METHOD(@selector(resignKeyboard:));
-
 WX_EXPORT_METHOD(@selector(isInstallWXApp:));
-
 WX_EXPORT_METHOD(@selector(getCid:));
-
 WX_EXPORT_METHOD(@selector(copyString:callback:));
-
 WX_EXPORT_METHOD(@selector(addWatermark:));
-
 WX_EXPORT_METHOD(@selector(env:));
+
+/** 调用扫一扫 */
+- (void)scan:(WXModuleCallback)callback
+{
+    BMScanQRViewController *scanQrVc = [[BMScanQRViewController alloc] init];
+    scanQrVc.hidesBottomBarWhenPushed = YES;
+    scanQrVc.callback = callback;
+    [weexInstance.viewController.navigationController pushViewController:scanQrVc animated:YES];
+}
 
 /** 辞退键盘 */
 - (void)resignKeyboard:(WXModuleCallback)callback

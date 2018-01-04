@@ -12,8 +12,12 @@
 
 @interface BMImageManager : NSObject
 
++ (void)camera:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
+
++ (void)pick:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
+
 + (void)uploadImageWithInfo:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
 
-+ (void)uploadImage:(NSArray<UIImage *> *)images callback:(WXModuleCallback)callback;
++ (void)uploadImage:(NSArray *)images uploadImageModel:(BMUploadImageModel *)model callback:(WXModuleCallback)callback;
 
 @end

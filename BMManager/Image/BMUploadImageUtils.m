@@ -28,6 +28,7 @@
 @property (nonatomic, weak) WXSDKInstance *weexInstance;
 @property (nonatomic, copy) WXModuleCallback callback;
 @property (nonatomic, strong) BMUploadImageModel *imageInfo;
+@property (nonatomic, assign) BOOL isLocal; /**< 通过此参数判断是否返回本地的图片地址 */
 
 @end
 
@@ -103,7 +104,8 @@
     imagePickerVc.allowPickingGif = NO;
     imagePickerVc.allowPickingOriginalPhoto = NO;
     imagePickerVc.allowTakePicture = NO;
-    
+    imagePickerVc.needShowStatusBar = YES;
+    imagePickerVc.allowCrop = NO;
     /* 判断是否是上传头像如果是则 允许裁剪图片 */
     if (self.imageInfo.allowCrop && self.imageInfo.maxCount == 1) {
         imagePickerVc.allowCrop = YES;
@@ -113,8 +115,11 @@
     __weak typeof(self)weakSelf = self;
     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
         
-        [weakSelf uploadImage:photos];
-        
+        if (weakSelf.isLocal) {
+            [weakSelf cacheImages:photos];
+        } else {
+            [weakSelf uploadImage:photos];
+        }
     }];
     
     [self.weexInstance.viewController presentViewController:imagePickerVc animated:YES completion:nil];
@@ -134,10 +139,6 @@
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
         alert.tag = 1;
         [alert show];
-    } else if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) { // 正在弹框询问用户是否允许访问相册，监听权限状态
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            return [self takePhoto];
-        });
     } else { // 调用相机
         //资源类型为照相机
         UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -162,9 +163,17 @@
     if (!image) {
         return;
     }
+    // 图片保存到系统相册
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized || [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+        } completionHandler:nil];
+    }
     
+    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+     
+        @strongify(self);
         CGSize asize = CGSizeMake(self.imageInfo.imageWidth, self.imageInfo.imageWidth * image.size.height / image.size.width);
         
         UIImage *smallImage = [image imageToSize:asize];
@@ -175,10 +184,38 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            // 上传服务器
-            [self uploadImage:@[smallImage]];
+            
+            if (self.isLocal) {
+                //缓存图片到本地
+                [self cacheImages:@[smallImage]];
+            } else {
+                //上传服务器
+                [self uploadImage:@[smallImage]];
+            }
+            
         });
         
+    });
+}
+
+/** 将图片缓存到磁盘 */
+- (void)cacheImages:(NSArray *)images
+{
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        NSMutableArray *imagesPath = [[NSMutableArray alloc] init];
+        for (UIImage *img in images) {
+            NSString *path = [self saveImage2Disk:img];
+            [imagesPath addObject:path];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.callback) {
+                NSDictionary *backData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:imagesPath];
+                self.callback(backData);
+            }
+        });
     });
 }
 
@@ -218,20 +255,129 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+//------------------------------------------------------------------------------------
+#pragma mark - 将图片保存到本地
+//------------------------------------------------------------------------------------
+//获取当前时间字符串
+- (NSString *)getCurrentTimeString
+{
+    return [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] * 1000];
+}
+
+#pragma mark ---------图片管理-----------
+//获取图片完整路径
+- (NSString *)getImagePath{
+    
+    NSString* path=NSHomeDirectory();
+    path=[path stringByAppendingPathComponent:@"Library/Caches/images"];
+    NSFileManager *fm=[NSFileManager defaultManager];
+    
+    if (![fm fileExistsAtPath:path]) {
+        [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    NSString *filePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg",[self getCurrentTimeString]]];
+    return filePath;
+}
+
+//图片保存本地
+- (NSString *)saveImage2Disk:(UIImage *)tempImage
+{
+    NSData *imageData=UIImageJPEGRepresentation(tempImage, 1);
+    // and then we write it out
+    NSString *path=[self getImagePath];
+    if ([imageData writeToFile:path atomically:YES]) {
+        return path;
+    }
+    return @"";
+}
+
 #pragma mark - Public Method
 
 - (void)uploadImageWithInfo:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
 {
+    self.isLocal = NO;
     self.imageInfo = info;
     self.weexInstance = weexInstance;
     self.callback = callback;
     [self selectImage];
 }
 
-- (void)uploadImage:(NSArray<UIImage *> *)images callback:(WXModuleCallback)callback
+- (void)uploadImage:(NSArray *)images uploadImageModel:(BMUploadImageModel *)info callback:(WXModuleCallback)callback
 {
+    self.isLocal = NO;
     self.callback = callback;
-    [self uploadImage:images];
+    self.imageInfo = info;
+    
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        NSMutableArray *imgs = [[NSMutableArray alloc] initWithCapacity:images.count];
+        for (id item in images) {
+            if ([item isKindOfClass:[UIImage class]]) {
+                [imgs addObject:item];
+            }
+            else if ([item isKindOfClass:[NSString class]])
+            {
+                NSString *imgPath = (NSString *)item;
+                if ([imgPath hasPrefix:BM_LOCAL])
+                {
+                    // 拦截器
+                    if (BM_InterceptorOn()) {
+                        NSURL *imgUrl = [NSURL URLWithString:imgPath];
+                        // 从jsbundle读取图片
+                        NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
+                        UIImage *img = [UIImage imageWithContentsOfFile:imgPath];
+                        
+                        if (img) {
+                            [imgs addObject:img];
+                        } else {
+                            WXLogError(@"加载jsbundle中图片失败:%@",imgPath);
+                        }
+                        
+                    } else {
+                        WXLogError(@"拦截器关闭状态下不支持上传jsbundle中的图片");
+                    }
+                }
+                else if (![imgPath hasPrefix:@"http"])
+                {
+                    NSFileManager *fm = [NSFileManager defaultManager];
+                    if ([fm fileExistsAtPath:imgPath]) {
+                        UIImage *img = [UIImage imageWithContentsOfFile:imgPath];
+                        if (img) {
+                            [imgs addObject:img];
+                        } else {
+                            WXLogError(@"加载本地图片失败：%@",imgPath);
+                        }
+                    } else {
+                        WXLogError(@"本地图片不存在：%@",imgPath);
+                    }
+                }
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self uploadImage:imgs];
+        });
+    });
+}
+
+- (void)camera:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
+{
+    self.isLocal = YES;
+    self.imageInfo = info;
+    self.callback = callback;
+    self.weexInstance = weexInstance;
+    [self takePhoto];
+}
+
+- (void)pick:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
+{
+    self.isLocal = YES;
+    self.imageInfo = info;
+    self.callback = callback;
+    self.weexInstance = weexInstance;
+    [self LocalPhoto];
 }
 
 @end

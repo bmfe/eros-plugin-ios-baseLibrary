@@ -15,9 +15,7 @@
 #import <WeexSDK/WXUtility.h>
 #import <WeexSDK/WXDebugTool.h>
 #import <WeexSDK/WXSDKManager.h>
-#import "UIViewController+WXDemoNaviBar.h"
 #import "BMNavigationController.h"
-#import "DemoDefine.h"
 #import "CommonMacro.h"
 #import "UIImage+Util.h"
 #import "UIView+Util.h"

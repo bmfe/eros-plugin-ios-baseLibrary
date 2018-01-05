@@ -10,7 +10,6 @@
 #import "BMDragButton+Debug.h"
 #import "DebugSettingVC.h"
 #import "BMBaseViewController.h"
-#import "WXScannerVC.h"
 #import "BMMediatorManager.h"
 #import <UIKit/UIKit.h>
 #import "BMResourceManager.h"

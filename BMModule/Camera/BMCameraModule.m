@@ -52,7 +52,7 @@ WX_EXPORT_METHOD(@selector(uploadScreenshot:))
         return;
     }
     NSArray *images = @[[[BMScreenshotEventManager shareInstance] snapshotImage]];
-    [BMImageManager uploadImage:images callback:callback];
+    [BMImageManager uploadImage:images uploadImageModel:nil callback:callback];
 }
 
 @end

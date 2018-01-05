@@ -18,7 +18,7 @@
 @synthesize weexInstance;
 
 WX_EXPORT_METHOD(@selector(fetch:callback:))
-WX_EXPORT_METHOD(@selector(uploadImage:::))
+WX_EXPORT_METHOD(@selector(uploadImage::))
 
 
 - (void)fetch:(NSDictionary *)info callback:(WXModuleCallback)callback
@@ -50,9 +50,10 @@ WX_EXPORT_METHOD(@selector(uploadImage:::))
     WXLogInfo(@"%@",api.originalRequest);
 }
 
-- (void)uploadImage:(NSDictionary *)info :(NSArray *)images :(WXModuleCallback)callback
+- (void)uploadImage:(NSDictionary *)info :(WXModuleCallback)callback
 {
     BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
+    NSArray *images = info[@"images"];
     [BMImageManager uploadImage:images uploadImageModel:model callback:callback];
 }
 

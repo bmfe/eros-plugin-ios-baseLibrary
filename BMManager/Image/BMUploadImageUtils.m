@@ -104,7 +104,6 @@
     imagePickerVc.allowPickingGif = NO;
     imagePickerVc.allowPickingOriginalPhoto = NO;
     imagePickerVc.allowTakePicture = NO;
-    imagePickerVc.needShowStatusBar = YES;
     imagePickerVc.allowCrop = NO;
     /* 判断是否是上传头像如果是则 允许裁剪图片 */
     if (self.imageInfo.allowCrop && self.imageInfo.maxCount == 1) {
@@ -147,7 +146,7 @@
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
             picker.delegate = self;
             /* 判断是否是上传头像如果是则 允许裁剪图片 */
-            if (self.imageInfo.allowCrop && self.imageInfo.maxCount == 1) picker.allowsEditing = YES;
+            if (self.imageInfo.allowCrop) picker.allowsEditing = YES;
             //资源类型为照相机
             picker.sourceType = sourceType;
             [self.weexInstance.viewController presentViewController:picker animated:YES completion:nil];

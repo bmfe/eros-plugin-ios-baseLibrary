@@ -17,8 +17,6 @@
 @property (nonatomic,strong) WKWebView *webview;    /**< webView */
 @property (nonatomic,copy) NSString *chartInfo;     /**< 图标数据 */
 
-@property (nonatomic,assign) CGFloat bmHeight;      /**< css定义的宽度 */
-
 /** event */
 @property (nonatomic,assign) BOOL finishEvent; /**< 图表加载完毕事件 */
 
@@ -34,10 +32,6 @@
         
         if (attributes[@"chartInfo"]) {
             _chartInfo = [attributes[@"chartInfo"] yy_modelToJSONString];
-        }
-        
-        if (styles[@"height"]) {
-            _bmHeight = [WXConvert CGFloat:styles[@"height"]] * [WXUtility defaultPixelScaleFactor];
         }
         
         [self createWebView];
@@ -135,10 +129,7 @@
     NSString *echartJsPath = [[NSBundle mainBundle] pathForResource:@"echarts.min" ofType:@"js"];
     NSString *echartJsStr = [NSString stringWithContentsOfFile:echartJsPath encoding:NSUTF8StringEncoding error:nil];
     [self webViewRunScript:echartJsStr];
-    
-    NSString *setSizeScript = [NSString stringWithFormat:@"setHeight('%fpx')",self.bmHeight];
-    [self webViewRunScript:setSizeScript];
-    
+
     //    NSString *script = @"setOption({'tooltip':{'show':true},'legend':{'data':['数量（吨）']},'xAxis':[{'type':'category','data':['桔子','香蕉','苹果','西瓜']}],'yAxis':[{'type':'value'}],'series':[{'name':'数量（吨）','type':'bar','data':[100,200,300,400]}]})";
     
     NSString *script = [NSString stringWithFormat:@"setOption(%@)",self.chartInfo];

@@ -120,6 +120,11 @@ static NSString * defaultKey = @"default";
         placeholderOperation =  [imageLoader downloadImageWithURL:newURL imageFrame:self.calculatedFrame userInfo:nil completed:^(UIImage *image, NSError *error, BOOL finished) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
+                
+                if (!strongSelf) {
+                    return ;
+                }
+                
                 UIImage *viewImage = ((UIImageView *)strongSelf.view).image;
                 if (error) {
                     downloadFailedBlock(placeholderSrc,error);
@@ -262,6 +267,10 @@ static NSString * defaultKey = @"default";
             [imageLoader downloadImageWithURL:newURL imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong typeof(self) strongSelf = weakSelf;
+                    
+                    if (!strongSelf) {
+                        return ;
+                    }
                     
                     if ([imageLoadEventValue boolValue]) {
                         NSMutableDictionary *sizeDict = [NSMutableDictionary new];

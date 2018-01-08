@@ -42,7 +42,7 @@
     btn.alpha = 0.6;
     UILabel *lbl = [[UILabel alloc] init];
     lbl.textColor = K_WHITE_COLOR;
-    lbl.text = @"调试";
+    lbl.text = @"Debug";
     lbl.font = K_FONT_14;
     btn.layer.cornerRadius = 8;
     [btn addSubview:lbl];
@@ -72,9 +72,9 @@
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:nil
                                   delegate:self
-                                  cancelButtonTitle:@"取消"
+                                  cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:@"设置项",@"刷新",@"调试",
+                                  otherButtonTitles:@"Setting",@"Refresh",@"Debug",
                                   nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     
@@ -118,9 +118,9 @@
         case 2:
         {
 #ifdef DEBUG
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已开启 weex debug 调试窗口" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"开始调试" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已正确配置‘debugUrl’并已开启‘weex debug’调试窗口" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Debug" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
             }];
             [alert addAction:cancel];

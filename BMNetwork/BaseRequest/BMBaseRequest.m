@@ -49,12 +49,8 @@
         WXLogError(@"%@ Request_URL>>>>>>>>>>>>>>>>:%@ \n\n\n",NSStringFromClass([self class]),request.requestTask.originalRequest);
         
         // 获取错误code
-        NSString *errorCode = [NSString stringWithFormat:@"%d",request.error.code];
-        NSString *msg = request.error.localizedDescription;
-        if (!msg) {
-            msg = [NSString stringWithFormat:@"网络请求出错(code:%@)",errorCode];
-        }
-        
+        NSNumber *errorCode = [NSNumber numberWithInteger:request.responseStatusCode ?: -1];
+        NSString *msg = [NSString getStatusText:[errorCode integerValue]];
         NSDictionary *resData = @{
                                   @"status": errorCode,
                                   @"errorMsg": msg,

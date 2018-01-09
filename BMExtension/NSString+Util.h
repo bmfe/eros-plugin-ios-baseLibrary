@@ -60,4 +60,6 @@
 -(NSString*)encodeString;
 
 -(NSString *)decodeString;
+
++ (NSString*)getStatusText:(NSInteger)code;
 @end

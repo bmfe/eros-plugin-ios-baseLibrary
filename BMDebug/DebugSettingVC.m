@@ -29,11 +29,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"本木医疗Debug";
+    self.title = @"Debug";
     
     NSDictionary * userInfo = [[BMResourceManager sharedInstance] loadConfigData:K_JS_VERSION_PATH];
     if ([userInfo isKindOfClass:[NSDictionary class]]) {
-        _jsVersion = userInfo[@"jsVersion"] ? userInfo[@"jsVersion"]:@"取不到版本有bug,妈的去找开发";
+        _jsVersion = userInfo[@"jsVersion"] ? userInfo[@"jsVersion"]:@"";
     }
     
     [self.navigationController.navigationBar ex_setBackgroundColor:K_NAV_BAR_COLOR];
@@ -46,6 +46,7 @@
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.rowHeight = 55;
     [self.view addSubview:_tableView];
 }
 
@@ -131,7 +132,8 @@
         if (nil == cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellVersionId];
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
-            cell.textLabel.text = [NSString stringWithFormat:@"js版本号:  %@",_jsVersion];
+            cell.textLabel.text = [NSString stringWithFormat:@"jsVersion:  %@",_jsVersion];
+            cell.textLabel.numberOfLines = 2;
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             
         }
@@ -143,7 +145,8 @@
         if (nil == cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellAppVersionId];
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
-            cell.textLabel.text = [NSString stringWithFormat:@"app版本号: %@ (%@)",K_APP_VERSION,K_AppBuild_VERSION];
+            cell.textLabel.text = [NSString stringWithFormat:@"appVersion: %@ (%@)",K_APP_VERSION,K_AppBuild_VERSION];
+            cell.textLabel.numberOfLines = 2;
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             
         }

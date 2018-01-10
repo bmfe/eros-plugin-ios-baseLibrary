@@ -27,8 +27,9 @@ WX_EXPORT_METHOD(@selector(sms:::))
 WX_EXPORT_METHOD(@selector(contacts:))
 
 /** 打电话 */
-- (void)call:(NSString *)phone
+- (void)call:(NSDictionary *)info
 {
+    NSString *phone = info[@"to"];
     if (!phone) {
         WXLogError(@"电话号码错误");
         return;
@@ -40,7 +41,7 @@ WX_EXPORT_METHOD(@selector(contacts:))
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:phone preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
-        UIAlertAction *callPhone = [UIAlertAction actionWithTitle:@"" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *callPhone = [UIAlertAction actionWithTitle:@"拨打" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",phone]]];
         }];
         [alert addAction:cancel];

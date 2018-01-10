@@ -65,13 +65,25 @@
             [arr4ImagesUrl addObject:result];
         }
         
-        NSDictionary *backData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:arr4ImagesUrl];
         if (self.callback) {
+            NSDictionary *backData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:arr4ImagesUrl];
             self.callback(backData);
         }
         
     } failure:^(YTKBatchRequest * _Nonnull batchRequest) {
         [SVProgressHUD dismiss];
+
+        if (self.callback) {
+            // 获取错误code
+            NSNumber *errorCode = [NSNumber numberWithInteger:batchRequest.failedRequest.responseStatusCode ?: -1];
+            NSString *msg = [NSString getStatusText:[errorCode integerValue]];
+            NSDictionary *resData = @{
+                                      @"status": errorCode,
+                                      @"errorMsg": msg,
+                                      @"data": @{}
+                                      };
+            self.callback(resData);
+        }
         
     }];
 }

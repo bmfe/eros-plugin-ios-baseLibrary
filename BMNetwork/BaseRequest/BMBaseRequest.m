@@ -32,7 +32,7 @@
         
         WXLogInfo(@"%@ Request_URL>>>>>>>>>>>>>>>>:%@",NSStringFromClass([self class]),request.requestTask.originalRequest);
         
-        NSString *status = [NSString stringWithFormat:@"%d",request.responseStatusCode];
+        NSString *status = [NSNumber numberWithInteger:request.responseStatusCode ?: -1];
         NSString *errorMsg = @"";
         id data = request.responseObject ?: @{};
         NSDictionary *resData = @{

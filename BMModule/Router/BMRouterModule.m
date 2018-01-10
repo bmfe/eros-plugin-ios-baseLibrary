@@ -33,6 +33,7 @@ WX_EXPORT_METHOD(@selector(toMap:))
 WX_EXPORT_METHOD(@selector(toWebView:))
 WX_EXPORT_METHOD(@selector(callPhone:))
 WX_EXPORT_METHOD(@selector(openBrowser:))
+WX_EXPORT_METHOD(@selector(setHomePage:))
 
 - (void)open:(NSDictionary *)info callback:(WXModuleCallback)callback
 {

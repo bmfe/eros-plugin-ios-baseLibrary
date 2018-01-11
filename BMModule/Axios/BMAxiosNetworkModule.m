@@ -54,6 +54,13 @@ WX_EXPORT_METHOD(@selector(uploadImage::))
 {
     BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
     NSArray *images = info[@"images"];
+    if (!images || !images.count) {
+        if (callback) {
+            NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeError msg:@"上传图片参数错误" data:nil];
+            callback(resData);
+        }
+        return;
+    }
     [BMImageManager uploadImage:images uploadImageModel:model callback:callback];
 }
 

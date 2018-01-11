@@ -297,14 +297,16 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
                     
                     if (scale == 2) {
                         rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
+                    } else {
+                        rect.size = CGSizeMake(image.width * 1.5, image.height * 1.5);
                     }
             
                     button.frame = rect;
                     
-//                    [button setBackgroundImage:image forState:UIControlStateNormal];
-//                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
-                    [button setImage:image forState:UIControlStateNormal];
-                    [button setImage:image forState:UIControlStateHighlighted];
+                    [button setBackgroundImage:image forState:UIControlStateNormal];
+                    [button setBackgroundImage:image forState:UIControlStateHighlighted];
+//                    [button setImage:image forState:UIControlStateNormal];
+//                    [button setImage:image forState:UIControlStateHighlighted];
                     [self setNavItemWithView:button itemPosition:itemPosition];
                 });
             }];

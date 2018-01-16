@@ -61,8 +61,8 @@
         NSMutableArray *arr4ImagesUrl = [NSMutableArray array];
         
         for (BMUploadImageRequest *request in batchRequest.requestArray) {
-            NSDictionary *result = [request responseObject];
-            [arr4ImagesUrl addObject:result];
+            id result = [request responseObject];
+            [arr4ImagesUrl addObject:result ?: @""];
         }
         
         if (self.callback) {

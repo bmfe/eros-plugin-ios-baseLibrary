@@ -45,6 +45,7 @@
 #import "BMAuthorLoginModule.h"
 #import "BMCommunicationModule.h"
 #import "BMImageModule.h"
+#import "BMWebSocketModule.h"
 
 #import <WeexSDK/WeexSDK.h>
 #import "WXUtility.h"
@@ -243,7 +244,8 @@
                               @"bmAuth":            NSStringFromClass([BMAuthorLoginModule class]),
                               @"bmNavigator":       NSStringFromClass([BMNavigatorModule class]),
                               @"bmCommunication":   NSStringFromClass([BMCommunicationModule class]),
-                              @"bmImage":           NSStringFromClass([BMImageModule class])
+                              @"bmImage":           NSStringFromClass([BMImageModule class]),
+                              @"bmWebSocket":       NSStringFromClass([BMWebSocketModule class])
                               };
     
     for (NSString *moduleName in modules.allKeys) {

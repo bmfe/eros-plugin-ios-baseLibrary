@@ -19,4 +19,6 @@
 
 - (UIView *)bmList_loadView;
 
+- (void)bmScroller_viewDidLoad;
+
 @end

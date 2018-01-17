@@ -58,15 +58,22 @@ WX_EXPORT_METHOD(@selector(refreshEnd));
     return view;
 }
 
+- (void)bmScroller_viewDidLoad
+{
+    [self bmScroller_viewDidLoad];
+    
+    UIScrollView *scrollView = self.view;
+    if (@available(iOS 11.0, *)) {
+        scrollView.contentInsetAdjustmentBehavior = isIphoneX ? UIScrollViewContentInsetAdjustmentAutomatic : UIScrollViewContentInsetAdjustmentNever;
+    }
+}
+
 - (void)checkNeedShowRefresh:(UIView *)view
 {
     UIScrollView *scrollView = (UIScrollView *)view;
     
     CGSize size = [[UIScreen mainScreen] currentMode].size;
     
-//    if (@available(iOS 11.0, *)) {
-//        if (!isIphoneX) scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//    }
     NSNumber *showRefresh = objc_getAssociatedObject(self, "bm_showRefresh");
     if (showRefresh && [showRefresh boolValue]) {
         BMDotGifHeader *header = [BMDotGifHeader headerWithRefreshingBlock:^{

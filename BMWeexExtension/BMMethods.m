@@ -173,6 +173,11 @@
     Method originalM4 = class_getInstanceMethod([WXListComponent class], @selector(loadView));
     Method exchangeM4 = class_getInstanceMethod([WXScrollerComponent class], @selector(bmList_loadView));
     method_exchangeImplementations(originalM4, exchangeM4);
+    
+    /** 替换 WXScrollerComponent 的 viewDidLoad 方法 */
+    Method originalM5 = class_getInstanceMethod([WXScrollerComponent class], @selector(viewDidLoad));
+    Method exchangeM5 = class_getInstanceMethod([WXScrollerComponent class], @selector(bmScroller_viewDidLoad));
+    method_exchangeImplementations(originalM5, exchangeM5);
 }
 
 

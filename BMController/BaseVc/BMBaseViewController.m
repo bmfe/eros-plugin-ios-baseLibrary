@@ -79,6 +79,7 @@
     
     /* 设置0 0点坐标从导航栏下开始 */
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     /* 设置背景颜色 */
     [self.view setBackgroundColor:K_BACKGROUND_COLOR];

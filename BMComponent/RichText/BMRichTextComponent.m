@@ -275,17 +275,17 @@ if (needLayout) {\
 //    CGRect rect4Text = [self.currentAttributedString  boundingRectWithSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) text:self.currentAttributedString];
-    CGRect rect4Text = layout.textBoundingRect;
+    CGSize size4Text = layout.textBoundingSize;
     
-    if (rect4Text.size.height < linesHeight) {
-        rect4Text.size.height = linesHeight;
+    if (size4Text.height < linesHeight) {
+        size4Text.height = linesHeight;
     }
     
     if (_lines != 0) {
-        rect4Text.size.height = linesHeight;
+        size4Text.height = linesHeight;
     }
     
-    CGSize computedSize = CGSizeMake(width, rect4Text.size.height);
+    CGSize computedSize = CGSizeMake(width, size4Text.height);
     
     return computedSize;
 }

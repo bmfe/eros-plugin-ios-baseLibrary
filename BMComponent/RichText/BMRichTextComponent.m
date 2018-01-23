@@ -271,6 +271,10 @@ if (needLayout) {\
 
 - (CGSize)getComputedSizeWithConstrainedWidth:(CGFloat)width
 {
+    if (!self.currentAttributedString) {
+        return CGSizeZero;
+    }
+    
     CGFloat linesHeight = _lines * _lineHeight;
 //    CGRect rect4Text = [self.currentAttributedString  boundingRectWithSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
@@ -306,6 +310,11 @@ if (needLayout) {\
 //    [self setNeedsDisplay];
 //    [self setNeedsDisplay];
     
+}
+
+- (void)layoutDidFinish
+{
+    [super setNeedsLayout];
 }
 
 - (UIView *)loadView

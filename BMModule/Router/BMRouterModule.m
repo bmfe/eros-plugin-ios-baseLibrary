@@ -51,7 +51,7 @@ WX_EXPORT_METHOD(@selector(setHomePage:))
 {
     if (callback) {
         BMBaseViewController *currentVc = (BMBaseViewController *)weexInstance.viewController;
-        NSDictionary *params = currentVc.routerModel.params;
+        id params = currentVc.routerModel.params ?: @"";
         callback(params);
     }
 }

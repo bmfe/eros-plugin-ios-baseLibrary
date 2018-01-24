@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BMBaseLibrary"
-  s.version      = "1.1.3"
+  s.version      = "1.1.4"
   s.summary      = "本木医疗 iOS App 所需基础库"
 
   # This description is used to generate tags and improve search results.
@@ -218,7 +218,7 @@ s.subspec 'BMModule' do |ss|
     ss.public_header_files = "BMModule/**/*.h"
     ss.resources = 'BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle'
     ss.requires_arc  = true
-    ss.dependency "Realm",'2.6.2'
+    ss.dependency "Realm",'3.1.0'
   end
 
 

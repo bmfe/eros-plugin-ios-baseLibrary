@@ -36,8 +36,6 @@
         _jsVersion = userInfo[@"jsVersion"] ? userInfo[@"jsVersion"]:@"";
     }
     
-    [self.navigationController.navigationBar ex_setBackgroundColor:K_NAV_BAR_COLOR];
-    
     UIBarButtonItem * item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(close)];
     self.navigationItem.leftBarButtonItem = item;
     

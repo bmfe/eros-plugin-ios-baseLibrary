@@ -14,6 +14,7 @@
 #import <UIKit/UIKit.h>
 #import "BMResourceManager.h"
 #import "Masonry.h"
+#import "BMNavigationController.h"
 #ifdef DEBUG
 #import <TBWXDevTool/WXDevTool.h>
 #endif
@@ -102,7 +103,7 @@
     switch (buttonIndex) {
         case 0:
         {
-            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:[[DebugSettingVC alloc] init]];
+            BMNavigationController * nav = [[BMNavigationController alloc] initWithRootViewController:[[DebugSettingVC alloc] init]];
             UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
             [controller presentViewController:nav animated:YES completion:nil];
         }

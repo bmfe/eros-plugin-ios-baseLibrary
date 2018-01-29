@@ -15,9 +15,9 @@
 #import "BMResourceManager.h"
 #import "Masonry.h"
 #import "BMNavigationController.h"
-#ifdef DEBUG
 #import <TBWXDevTool/WXDevTool.h>
-#endif
+#import "WXScannerVC.h"
+
 
 @interface BMDragButton()<UIActionSheetDelegate>
 
@@ -117,16 +117,17 @@
 
         case 2:
         {
-#ifdef DEBUG
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已正确配置‘debugUrl’并已开启‘weex debug’调试窗口" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Debug" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
-            }];
-            [alert addAction:cancel];
-            [alert addAction:ok];
-            [[BMMediatorManager shareInstance].currentViewController presentViewController:alert animated:YES completion:nil];
-#endif
+            //扫一扫调试
+            WXScannerVC *scanVc = [[WXScannerVC alloc] init];
+            [[BMMediatorManager shareInstance].currentViewController.navigationController pushViewController:scanVc animated:YES];
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已正确配置‘debugUrl’并已开启‘weex debug’调试窗口" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+//            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Debug" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
+//            }];
+//            [alert addAction:cancel];
+//            [alert addAction:ok];
+//            [[BMMediatorManager shareInstance].currentViewController presentViewController:alert animated:YES completion:nil];
      }
             break;
         default:

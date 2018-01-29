@@ -165,8 +165,8 @@ Pod::Spec.new do |s|
 # Debug 相关类
  s.subspec 'BMDebug' do |ss|
     #ss.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'DebugVersion=1 TestVersion=0 AppStoreVersion=0' }
-    ss.source_files  = "BMDebug/*.{c,h,m,mm,S}"
-    ss.public_header_files = "BMDebug/*.h"
+    ss.source_files  = "BMDebug/**/*.{c,h,m,mm,S}"
+    ss.public_header_files = "BMDebug/**/*.h"
     ss.requires_arc  = true
   end
 

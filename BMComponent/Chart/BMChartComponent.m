@@ -12,6 +12,8 @@
 #import "WXUtility.h"
 #import "YYModel.h"
 
+#define ChartInfo @"options"
+
 @interface BMChartComponent()<WKNavigationDelegate>
 
 @property (nonatomic,strong) WKWebView *webview;    /**< webView */
@@ -30,8 +32,8 @@
         
         _finishEvent = NO;
         
-        if (attributes[@"chartInfo"]) {
-            _chartInfo = [attributes[@"chartInfo"] yy_modelToJSONString];
+        if (attributes[ChartInfo]) {
+            _chartInfo = [NSString stringWithFormat:@"%@",attributes[ChartInfo]];
         }
         
         [self createWebView];
@@ -61,13 +63,13 @@
 
 - (void)fillAttributes:(NSDictionary *)attributes
 {
-    if (attributes[@"chartInfo"]) {
-        NSString *info = [WXConvert NSString:attributes[@"chartInfo"]];
+    if (attributes[ChartInfo]) {
+        NSString *info = [NSString stringWithFormat:@"%@",attributes[ChartInfo]];;
         
         if (![info isEqualToString:self.chartInfo]) {
             self.chartInfo = info;
             WXPerformBlockOnMainThread(^{
-                [self.webview reload];
+                [self runChatInfo];
             });
         }
         
@@ -112,6 +114,19 @@
     }];
 }
 
+- (void)runChatInfo
+{
+    NSString *script = [NSString stringWithFormat:@"setOption(%@)",self.chartInfo];
+    [self.webview evaluateJavaScript:script completionHandler:^(id _Nullable dict, NSError * _Nullable error) {
+        if (error) {
+            WXLogError(@"Run script:%@ Error:%@",script,error);
+        }
+        else if (_finishEvent) {
+            [self fireEvent:@"finish" params:nil];
+        }
+    }];
+}
+
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
@@ -132,16 +147,7 @@
 
     //    NSString *script = @"setOption({'tooltip':{'show':true},'legend':{'data':['数量（吨）']},'xAxis':[{'type':'category','data':['桔子','香蕉','苹果','西瓜']}],'yAxis':[{'type':'value'}],'series':[{'name':'数量（吨）','type':'bar','data':[100,200,300,400]}]})";
     
-    NSString *script = [NSString stringWithFormat:@"setOption(%@)",self.chartInfo];
-    [webView evaluateJavaScript:script completionHandler:^(id _Nullable dict, NSError * _Nullable error) {
-        if (error) {
-            WXLogError(@"Run script:%@ Error:%@",script,error);
-        }
-        else if (_finishEvent) {
-            [self fireEvent:@"finish" params:nil];
-        }
-    }];
-    
+    [self runChatInfo];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error

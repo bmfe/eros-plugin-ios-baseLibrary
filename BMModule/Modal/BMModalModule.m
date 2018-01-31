@@ -65,7 +65,7 @@ WX_EXPORT_METHOD(@selector(hideLoading))
 
 - (void)showLoading:(NSDictionary *)info
 {
-    NSString *message = info[@"message"];
+    NSString *message = [NSString stringWithFormat:@"%@",info[@"message"]];
     
     message = message.length ? message : nil;
     
@@ -74,7 +74,7 @@ WX_EXPORT_METHOD(@selector(hideLoading))
 
 - (void)toast:(NSDictionary *)info
 {
-    NSString *message = info[@"message"];
+    NSString *message = [NSString stringWithFormat:@"%@",info[@"message"]];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [SVProgressHUD showImage:nil status:message];

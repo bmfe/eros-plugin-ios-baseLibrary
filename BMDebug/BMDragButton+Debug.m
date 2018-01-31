@@ -117,6 +117,11 @@
 
         case 2:
         {
+            if (TARGET_IPHONE_SIMULATOR) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"模拟器不支持此项功能，请使用真机调试" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                [alert show];
+                return;
+            }
             //扫一扫调试
             WXScannerVC *scanVc = [[WXScannerVC alloc] init];
             [[BMMediatorManager shareInstance].currentViewController.navigationController pushViewController:scanVc animated:YES];

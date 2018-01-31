@@ -19,8 +19,6 @@
 #import "BMConfigManager.h"
 
 
-#define JS_PATH @"jsPath"
-
 #define JS_VERSION @"jsVersion"
 
 #define TIMESTAMP @"timestamp"

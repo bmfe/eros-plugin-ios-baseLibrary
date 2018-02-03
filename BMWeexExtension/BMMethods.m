@@ -277,6 +277,10 @@
     Method exchangeMSetUrl = class_getInstanceMethod([WXWebComponent class], @selector(bm_setUrl:));
     method_exchangeImplementations(originalMSetUrl, exchangeMSetUrl);
     
+    /* 替换 WXWebComponent 的loadURL 方法*/
+    Method originalMLoadUrl = class_getInstanceMethod([WXWebComponent class], @selector(loadURL:));
+    Method exchangeMLoadUrl = class_getInstanceMethod([WXWebComponent class], @selector(bm_lodaURL:));
+    method_exchangeImplementations(originalMLoadUrl, exchangeMLoadUrl);
 }
 
 + (void)exchangeRecyclerComponent

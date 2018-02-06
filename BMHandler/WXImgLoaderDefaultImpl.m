@@ -67,16 +67,14 @@
         if (BM_InterceptorOn()) {
             // 从jsbundle读取图片
             UIImage *img = nil;
-            // 从jsbundle读取图片
             NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
-            
-            if([NSData sd_contentTypeForImageData:[NSData dataWithContentsOfFile:imgPath]] == @"image/gif"){
-                
-                NSData *gifData = [NSData dataWithContentsOfFile: imgPath];
-                img = [UIImage sd_animatedGIFWithData:gifData];
-            }else {
-                img = [UIImage imageWithContentsOfFile:imgPath];
+            NSData *imgData = [NSData dataWithContentsOfFile:imgPath];
+            if ([[NSData sd_contentTypeForImageData:imgData] isEqualToString:@"image/gif"]) {
+                img = [UIImage sd_animatedGIFWithData:imgData];
+            } else {
+                img = [UIImage imageWithData:imgData];
             }
+            
             NSError *error = nil;
             
             if (!img) {

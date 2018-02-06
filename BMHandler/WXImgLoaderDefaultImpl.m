@@ -8,6 +8,8 @@
 
 #import "WXImgLoaderDefaultImpl.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIImage+GIF.h>
+#import <SDWebImage/NSData+ImageContentType.h>
 
 #define MIN_IMAGE_WIDTH 36
 #define MIN_IMAGE_HEIGHT 36
@@ -64,9 +66,15 @@
         // 拦截器
         if (BM_InterceptorOn()) {
             // 从jsbundle读取图片
+            UIImage *img = nil;
             NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
+            NSData *imgData = [NSData dataWithContentsOfFile:imgPath];
+            if ([[NSData sd_contentTypeForImageData:imgData] isEqualToString:@"image/gif"]) {
+                img = [UIImage sd_animatedGIFWithData:imgData];
+            } else {
+                img = [UIImage imageWithData:imgData];
+            }
             
-            UIImage *img = [UIImage imageWithContentsOfFile:imgPath];
             NSError *error = nil;
             
             if (!img) {

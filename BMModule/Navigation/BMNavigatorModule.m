@@ -218,7 +218,7 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
                 CGRect rect = button.frame;
                 rect.size = image.size;
                 
-                if (scale == 2) {
+                if (scale == 2 && K_SYSTEM_VERSION >= 11.0) {
                     rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
                 }
                 
@@ -295,7 +295,7 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
                     CGRect rect = button.frame;
                     rect.size = image.size;
                     
-                    if (scale == 2) {
+                    if (scale == 2 && K_SYSTEM_VERSION >= 11.0) {
                         rect.size = CGSizeMake(image.width / 1.5, image.height / 1.5 );
                     }
             

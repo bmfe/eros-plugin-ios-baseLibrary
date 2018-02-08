@@ -72,7 +72,7 @@
             if ([[NSData sd_contentTypeForImageData:imgData] isEqualToString:@"image/gif"]) {
                 img = [UIImage sd_animatedGIFWithData:imgData];
             } else {
-                img = [UIImage imageWithData:imgData];
+                img = [UIImage imageWithContentsOfFile:imgPath];
             }
             
             NSError *error = nil;

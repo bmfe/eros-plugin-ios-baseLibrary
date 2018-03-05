@@ -533,10 +533,10 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         }
         else
         {
-            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().appBoard] encoding:NSUTF8StringEncoding error:nil];
+            // 拦截器关闭app不再拼接 widget，起服务的时候js端会自动拼接
+            return nil;
+//            widgetJs = [NSString stringWithContentsOfURL:[BMAppResource configJSFullURLWithPath:TK_PlatformInfo().appBoard] encoding:NSUTF8StringEncoding error:nil];
         }
-        //        NSString *filePath = [[NSBundle bundleForClass:self] pathForResource:@"bm-base" ofType:@"js"];
-        //        NSString *widgetJs = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         _bmWidgetJs = widgetJs;
     }
     return _bmWidgetJs;

@@ -219,7 +219,7 @@ s.subspec 'BMModule' do |ss|
     ss.resources = 'BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle'
     ss.requires_arc  = true
     ss.dependency "Realm",'3.1.0'
-    ss.dependency "BindingX",'1.0.0'
+   # ss.dependency "BindingX",'1.0.0'
   end
 
 

@@ -48,7 +48,7 @@
         WKWebView *webview = [[WKWebView alloc] init];
         webview.navigationDelegate = self;
         webview.scrollView.scrollEnabled = NO;
-        webview.backgroundColor = [UIColor redColor];
+        webview.opaque = NO;
         
         NSString *filePath = [[NSBundle mainBundle]pathForResource:@"bm-chart" ofType:@"html"];
         NSString *htmlStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];

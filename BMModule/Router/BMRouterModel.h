@@ -19,7 +19,8 @@
 @property (nonatomic, copy) NSString *url;                      // 下一个页面路径
 @property (nonatomic, copy) NSString *type;                     // 页面出现方式：push ， present
 @property (nonatomic, strong) NSDictionary *params;             // 需要传到下一个页面的数据
-@property (nonatomic, assign) BOOL canBack;                     // 是否禁止手势返回 true 禁止
+@property (nonatomic, assign) BOOL canBack;                     // 是否禁止返回 true 禁止 手势返回 和 按钮返回都会屏蔽
+@property (nonatomic, assign) BOOL gesBack;                     // 是否开启手势返回 默认开启
 @property (nonatomic, assign) NSInteger vLength;                // 页面返回多少级
 @property (nonatomic, assign) BOOL isRunBackCallback;           // 点击返回按钮时是否响应 backCallback 回调方法 👇
 @property (nonatomic, copy) WXModuleCallback backCallback;      // 点击返回时的回调方法

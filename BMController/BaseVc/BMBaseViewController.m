@@ -118,7 +118,11 @@
         /* 添加BackItem */
         [self addBackBarbuttonItem];
     }
-
+    
+    /* 是否禁用手势返回 */
+    if (!self.routerModel.gesBack) {
+        self.fd_interactivePopDisabled = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

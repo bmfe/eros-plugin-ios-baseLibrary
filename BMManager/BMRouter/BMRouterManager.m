@@ -42,18 +42,15 @@ static NSString * oauthKey = @"oauth";
     {
         //微信支付
         if ([host isEqualToString:@"pay"]) {
-            [[BMPayManager shareInstance] applicationOpenURL:url];
+            return [[BMPayManager shareInstance] applicationOpenURL:url];
         }
         //微信登录
         else if ([host isEqualToString:oauthKey]){
-            [[BMAuthorManager shareInstance] applicationOpenURL:url];
-        }
-        else{
-            [[BMAuthorManager shareInstance] applicationOpenURL:url];
+            return [[BMAuthorManager shareInstance] applicationOpenURL:url];
         }
      }
     /* 友盟分享回调 */
-    return [[UMSocialManager defaultManager] handleOpenURL:url];
+    return [[UMSocialManager defaultManager] handleOpenURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 #pragma mark openPage

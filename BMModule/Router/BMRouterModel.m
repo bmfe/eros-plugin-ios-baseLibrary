@@ -15,6 +15,7 @@
     if (self = [super init]) {
         _canBack = YES;
         _navShow = YES;
+        _gesBack = YES;
     }
     return self;
 }

@@ -18,5 +18,12 @@
 - (void)show;
 // 消失
 - (void)dismiss;
+
+// 连接 热刷新WS Server
+- (void)hotRefreshWebSocketConnect;
+
+// 刷新当前 weex 页面
+- (void)refreshWeex;
+
 @end
 #endif

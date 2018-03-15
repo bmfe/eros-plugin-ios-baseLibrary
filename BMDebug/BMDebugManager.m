@@ -10,12 +10,18 @@
 #import "BMDebugManager.h"
 #import "BMDragButton+Debug.h"
 #import "UIWindow+Util.h"
+#import "BMHotRefreshWebScoket.h"
+#import "BMResourceManager.h"
+#import "BMBaseViewController.h"
 
 
 @interface BMDebugManager ()
 {
     BMDragButton * _debugButton;
 }
+
+@property (nonatomic, strong) BMHotRefreshWebScoket *hotRefreshWS; /**< 热刷新WS */
+
 @end
 
 
@@ -28,8 +34,27 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instance = [[BMDebugManager alloc] init];
+        [_instance hotRefreshWebSocketConnect];
     });
     return _instance;
+}
+
+- (void)hotRefreshWebSocketConnect
+{
+    if (!BM_InterceptorOn()) {
+        [self.hotRefreshWS connect];
+    } else {
+        [self.hotRefreshWS close];
+    }
+}
+
+
+- (BMHotRefreshWebScoket *)hotRefreshWS
+{
+    if (!_hotRefreshWS) {
+        _hotRefreshWS = [[BMHotRefreshWebScoket alloc] init];
+    }
+    return _hotRefreshWS;
 }
 
 // 显示
@@ -54,5 +79,20 @@
 {
     [_debugButton removeFromSuperview];
 }
+
+- (void)refreshWeex
+{
+    //刷新widgetJs
+    [BMResourceManager sharedInstance].bmWidgetJs = nil;
+    
+    //检查js中介者是否加载成功
+    [[BMMediatorManager shareInstance] loadJSMediator:NO];
+    
+    UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
+    if ([controller isKindOfClass:[BMBaseViewController class]]) {
+        [(BMBaseViewController*)controller refreshWeex];
+    }
+}
+
 @end
 #endif

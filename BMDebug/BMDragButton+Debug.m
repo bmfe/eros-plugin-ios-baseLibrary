@@ -17,6 +17,7 @@
 #import "BMNavigationController.h"
 #import <TBWXDevTool/WXDevTool.h>
 #import "WXScannerVC.h"
+#import "BMDebugManager.h"
 
 
 @interface BMDragButton()<UIActionSheetDelegate>
@@ -86,16 +87,7 @@
 
 - (void)refreshWeex
 {
-    //刷新widgetJs
-    [BMResourceManager sharedInstance].bmWidgetJs = nil;
-    
-    //检查js中介者是否加载成功
-    [[BMMediatorManager shareInstance] loadJSMediator:NO];
-    
-    UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
-    if ([controller isKindOfClass:[BMBaseViewController class]]) {
-        [(BMBaseViewController*)controller refreshWeex];
-    }
+    [[BMDebugManager shareInstance] refreshWeex];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

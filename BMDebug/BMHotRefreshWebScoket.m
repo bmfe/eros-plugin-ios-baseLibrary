@@ -9,6 +9,7 @@
 #import "BMHotRefreshWebScoket.h"
 #import "BMWebSocketLoader.h"
 #import "BMDebugManager.h"
+#import "SVProgressHUD.h"
 
 #define BM_HOT_REFRESH @"SERVER/JS_BUNDLE_CHANGED"
 
@@ -37,6 +38,15 @@
     }
 }
 
+- (void)reConnect
+{
+    static int delay = 2;
+    delay += 2;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self connect];
+    });
+}
+
 - (void)webSocket:(NSString *)url protocol:(NSString *)protocol
 {
     if(loader)
@@ -53,17 +63,18 @@
     };
     loader.onOpen = ^() {
         WXLogInfo(@"BMHotRefresh Websocket connected");
+        [SVProgressHUD showImage:nil status:@"BMHotRefresh Websocket connected"];
     };
     loader.onFail = ^(NSError *error) {
         WXLogError(@"BMHotRefresh Websocket Failed With Error %@", error);
         if (weakSelf) {
-            [weakSelf connect];
+            [weakSelf reConnect];
         }
     };
     loader.onClose = ^(NSInteger code,NSString *reason,BOOL wasClean) {
         WXLogInfo(@"BMHotRefresh Websocket colse: %@", reason);
         if (weakSelf) {
-            [weakSelf connect];
+            [weakSelf reConnect];
         }
     };
     

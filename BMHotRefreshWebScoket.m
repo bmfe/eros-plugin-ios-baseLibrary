@@ -26,6 +26,7 @@
     }
     
     NSString *portUrl = [NSString stringWithFormat:@"ws://%@:8890",url.host];
+//    portUrl = @"ws://192.168.15.240:8890";
     [self webSocket:portUrl protocol:nil];
 }
 

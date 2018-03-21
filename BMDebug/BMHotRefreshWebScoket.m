@@ -69,7 +69,6 @@
     };
     loader.onClose = ^(NSInteger code,NSString *reason,BOOL wasClean) {
         WXLogInfo(@"BMHotRefresh Websocket colse: %@", reason);
-        [SVProgressHUD showImage:nil status:@"hot refresh disconnected."];
         if (weakSelf) {
             [weakSelf reConnect];
         }

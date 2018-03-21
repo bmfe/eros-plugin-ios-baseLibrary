@@ -13,7 +13,7 @@
 #import "BMHotRefreshWebScoket.h"
 #import "BMResourceManager.h"
 #import "BMBaseViewController.h"
-
+#import "SVProgressHUD.h"
 
 @interface BMDebugManager ()
 {
@@ -52,6 +52,8 @@
     if (_hotRefreshWS) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:BM_HotRefreshKey];
         [_hotRefreshWS close];
+        _hotRefreshWS = nil;
+        [SVProgressHUD showImage:nil status:@"hot refresh disconnected."];
     }
 }
 

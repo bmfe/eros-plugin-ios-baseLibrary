@@ -34,17 +34,24 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instance = [[BMDebugManager alloc] init];
-        [_instance hotRefreshWebSocketConnect];
+        [_instance checkHotRefreshStatus];
     });
     return _instance;
 }
 
 - (void)hotRefreshWebSocketConnect
 {
-    if (!BM_InterceptorOn()) {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:BM_HotRefreshKey];
+    if (TK_PlatformInfo().url.socketServer) {
         [self.hotRefreshWS connect];
-    } else {
-        [self.hotRefreshWS close];
+    }
+}
+
+- (void)hotRefreshWebSocketClose
+{
+    if (_hotRefreshWS) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:BM_HotRefreshKey];
+        [_hotRefreshWS close];
     }
 }
 
@@ -55,6 +62,13 @@
         _hotRefreshWS = [[BMHotRefreshWebScoket alloc] init];
     }
     return _hotRefreshWS;
+}
+
+- (void)checkHotRefreshStatus
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:BM_HotRefreshKey]) {
+        [self hotRefreshWebSocketConnect];
+    }
 }
 
 // 显示

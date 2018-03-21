@@ -9,6 +9,8 @@
 #ifdef DEBUG
 #import <UIKit/UIKit.h>
 
+#define BM_HotRefreshKey @"BM_HotRefreshKey"
+
 @interface BMDebugManager : NSObject
 
 //获得单例对象
@@ -21,6 +23,9 @@
 
 // 连接 热刷新WS Server
 - (void)hotRefreshWebSocketConnect;
+
+// 关闭 热刷新WS 
+- (void)hotRefreshWebSocketClose;
 
 // 刷新当前 weex 页面
 - (void)refreshWeex;

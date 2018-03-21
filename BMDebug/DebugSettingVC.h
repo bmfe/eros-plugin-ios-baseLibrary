@@ -2,8 +2,8 @@
 //  DebugSettingVC.h
 //  TicketAnalysis
 //
-//  Created by 窦静轩 on 16/8/24.
-//  Copyright © 2016年 窦静轩. All rights reserved.
+//  Created by XHY on 17/3/24.
+//  Copyright © 2017年 XHY. All rights reserved.
 //
 
 

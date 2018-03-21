@@ -20,15 +20,7 @@
 
 - (void)connect
 {
-    NSURL *url = [NSURL URLWithString:TK_PlatformInfo().url.jsServer];
-    if (!url) {
-        WXLogError(@"BMHotRefresh WebSocket Server URL Error");
-        return;
-    }
-    
-    NSString *portUrl = [NSString stringWithFormat:@"ws://%@:8890",url.host];
-//    portUrl = @"ws://192.168.15.240:8890";
-    [self webSocket:portUrl protocol:nil];
+    [self webSocket:TK_PlatformInfo().url.socketServer protocol:nil];
 }
 
 - (void)close
@@ -40,6 +32,10 @@
 
 - (void)reConnect
 {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:BM_HotRefreshKey]) {
+        return;
+    }
+    
     static int delay = 2;
     delay += 2;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -63,7 +59,7 @@
     };
     loader.onOpen = ^() {
         WXLogInfo(@"BMHotRefresh Websocket connected");
-        [SVProgressHUD showImage:nil status:@"BMHotRefresh Websocket connected"];
+        [SVProgressHUD showImage:nil status:@"hot refresh connected."];
     };
     loader.onFail = ^(NSError *error) {
         WXLogError(@"BMHotRefresh Websocket Failed With Error %@", error);
@@ -73,6 +69,7 @@
     };
     loader.onClose = ^(NSInteger code,NSString *reason,BOOL wasClean) {
         WXLogInfo(@"BMHotRefresh Websocket colse: %@", reason);
+        [SVProgressHUD showImage:nil status:@"hot refresh disconnected."];
         if (weakSelf) {
             [weakSelf reConnect];
         }

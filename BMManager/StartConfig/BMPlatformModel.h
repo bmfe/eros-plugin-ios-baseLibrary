@@ -20,7 +20,8 @@
 @property (nonatomic, copy) NSString *jsServer;             /**< js文件服务器url */
 @property (nonatomic, copy) NSString *image;                /**< 图片上传接口url */
 @property (nonatomic, copy) NSString *bundleUpdate;         /**< 检查js版本接口 注：不需要请求的域名 */
-@property (nonatomic, copy) NSString *debugServer;          /**< weex debug 调试地址 */
+@property (nonatomic, copy) NSString *socketServer;         /**< 热刷新sockert地址 */
+
 @end
 
 @interface BMPlatformModelGetui : NSObject

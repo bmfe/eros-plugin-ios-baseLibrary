@@ -42,6 +42,7 @@ WX_EXPORT_METHOD(@selector(pick::))
 WX_EXPORT_METHOD(@selector(uploadImage::))
 WX_EXPORT_METHOD(@selector(uploadScreenshot:))
 WX_EXPORT_METHOD(@selector(preview::))
+WX_EXPORT_METHOD(@selector(base64encode:callback:))
 
 /** 拍照 */
 - (void)camera:(NSDictionary *)info :(WXModuleCallback)callback
@@ -118,6 +119,18 @@ WX_EXPORT_METHOD(@selector(preview::))
             
         }
     }
+}
+
+/** 图片base64编码 */
+- (void)base64encode:(NSString *)url callback:(WXModuleCallback)callback
+{
+    UIImage *img = [UIImage imageNamed:url];
+    NSData *imgData = UIImageJPEGRepresentation(img, 1.0f);
+    NSString *encodedImgStr = [imgData base64EncodedStringWithOptions:0];
+    if (callback) {
+        callback(encodedImgStr);
+    }
+    return;
 }
 
 #pragma mark - PBViewControllerDataSource

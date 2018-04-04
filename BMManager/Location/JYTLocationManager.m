@@ -10,7 +10,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import "TransformCLLocation.h"
 #import <UIKit/UIKit.h>
-#import "AMapUtility.h"
 
 @interface JYTLocationManager () <CLLocationManagerDelegate>
 {
@@ -92,12 +91,7 @@
     CLLocation *location = [locations firstObject]; //取出第一个位置
     
     /* 将gps坐标系转换成gcj-02坐标系 */
-//    CLLocation *cll = [TransformCLLocation transformToMars:location];
-//    //位置坐标
-//    CLLocationCoordinate2D coordinate = cll.coordinate;
-    
-    CLLocationCoordinate2D coordinate = AMapCoordinateConvert(location.coordinate, AMapCoordinateTypeGPS);
-    
+    CLLocationCoordinate2D coordinate = [TransformCLLocation wgs84ToGcj02:location.coordinate];
     [self.locationManager stopUpdatingLocation];
     
     [self callBackWithLongitude:[NSString stringWithFormat:@"%f",coordinate.longitude] latitude:[NSString stringWithFormat:@"%f",coordinate.latitude]];

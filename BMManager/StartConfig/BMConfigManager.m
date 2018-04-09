@@ -61,7 +61,6 @@
 #import "BMRichTextComponent.h"
 #import "WeexMarketPlugins.h"
 
-#import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AFNetworking/AFNetworkReachabilityManager.h>
 
 

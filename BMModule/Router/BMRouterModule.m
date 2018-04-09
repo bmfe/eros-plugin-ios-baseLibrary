@@ -17,7 +17,6 @@
 #import "BMUserInfoModel.h"
 #import "BMDB.h"
 #import <YYModel.h>
-#import "BMMapViewController.h"
 
 #import "BMWebViewRouterModel.h"
 
@@ -29,7 +28,6 @@ WX_EXPORT_METHOD(@selector(open:callback:))
 WX_EXPORT_METHOD(@selector(getParams:))
 WX_EXPORT_METHOD(@selector(back:callback:))
 WX_EXPORT_METHOD(@selector(refreshWeex))
-WX_EXPORT_METHOD(@selector(toMap:))
 WX_EXPORT_METHOD(@selector(toWebView:))
 WX_EXPORT_METHOD(@selector(callPhone:))
 WX_EXPORT_METHOD(@selector(openBrowser:))
@@ -69,16 +67,6 @@ WX_EXPORT_METHOD(@selector(setHomePage:))
     if ([weexInstance.viewController respondsToSelector:@selector(refreshWeex)]) {
         [(BMBaseViewController *)weexInstance.viewController refreshWeex];
     }
-}
-
-- (void)toMap:(NSDictionary *)info
-{
-    /** 解析map info */
-    BMMapInfoModel *mapInfo = [BMMapInfoModel yy_modelWithJSON:info];
-    BMMapViewController *mapViewController = [[BMMapViewController alloc] initWithMapViewInfo:mapInfo];
-    [[BMMediatorManager shareInstance].currentViewController.navigationController pushViewController:mapViewController animated:YES];
-    
-    return;
 }
 
 /** 打开app内置webview */

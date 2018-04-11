@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <YYModel.h>
+#import "YYModel.h"
 
 typedef NS_ENUM(NSInteger,BMSharePlarformType) {
     BMSharePlarformType_Sina = 0,

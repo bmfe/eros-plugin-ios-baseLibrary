@@ -15,7 +15,7 @@
 #import "BMAppResource.h"
 #import "BMPushMessageManager.h"
 #import "BMPayManager.h"
-#import <UMSocialCore/UMSocialManager.h>
+#import <UMengUShare/UMSocialCore/UMSocialCore.h>
 
 #import <UMengUShare/WXApi.h>
 #import <BMAuthorManager.h>

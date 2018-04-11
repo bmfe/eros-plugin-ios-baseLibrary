@@ -8,7 +8,7 @@
 
 #import "BMShareModule.h"
 #import "BMShareModel.h"
-#import <YYModel.h>
+#import "YYModel.h"
 #import "BMPopActionViewManager.h"
 
 @interface BMShareModule ()

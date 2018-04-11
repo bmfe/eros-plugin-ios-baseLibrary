@@ -16,7 +16,7 @@
 
 #import "BMUserInfoModel.h"
 #import "BMDB.h"
-#import <YYModel.h>
+#import "YYModel.h"
 
 #import "BMWebViewRouterModel.h"
 

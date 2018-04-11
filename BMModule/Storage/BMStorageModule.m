@@ -10,7 +10,7 @@
 #import "BMDB.h"
 #import "NSDictionary+Util.h"
 #import "BMUserInfoModel.h"
-#import <YYModel.h>
+#import "YYModel.h"
 #import "BMMediatorManager.h"
 #import "BMPushMessageManager.h"
 

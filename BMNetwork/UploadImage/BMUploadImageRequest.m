@@ -7,7 +7,7 @@
 //
 
 #import "BMUploadImageRequest.h"
-#import <AFURLRequestSerialization.h>
+#import "AFURLRequestSerialization.h"
 
 @interface BMUploadImageRequest ()
 

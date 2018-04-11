@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <YYModel.h>
+#import "YYModel.h"
 
 @interface BMAxiosRequestModel : NSObject
 

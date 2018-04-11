@@ -8,7 +8,7 @@
 
 #import "BMAuthorLoginModule.h"
 #import <UMengUShare/WXApi.h>
-#import <UMSocialCore/UMSocialCore.h>
+#import <UMengUShare/UMSocialCore/UMSocialCore.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 
 @interface BMAuthorLoginModule()<WXApiDelegate>

@@ -10,7 +10,7 @@
 #import <SSZipArchive/SSZipArchive.h>
 #import "BMCheckJsVersionRequest.h"
 #import "BMJSVersionModel.h"
-#import <YYModel.h>
+#import "YYModel.h"
 #import "BMUpdateBundlejsRequest.h"
 #import <SVProgressHUD.h>
 #import "NSData+bsdiff.h"

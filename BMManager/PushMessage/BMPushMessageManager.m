@@ -7,9 +7,8 @@
 //
 
 #import "BMPushMessageManager.h"
-#import <GTSDK/GeTuiSdk.h>
+#import <GTSDK/GTSDK/GeTuiSdk.h>
 #import "BMGlobalEventManager.h"
-#import "YYModel.h"
 #import "BMConfigManager.h"
 
 // iOS10 及以上需导入 UserNotifications.framework
@@ -93,13 +92,6 @@
         [[UIApplication sharedApplication] registerForRemoteNotifications];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
-//    else
-//    {
-//        UIRemoteNotificationType apn_type = (UIRemoteNotificationType)(UIRemoteNotificationTypeAlert |
-//                                                                       UIRemoteNotificationTypeSound |
-//                                                                       UIRemoteNotificationTypeBadge);
-//        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:apn_type];
-//    }
 }
 
 /**

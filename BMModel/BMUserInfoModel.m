@@ -7,7 +7,7 @@
 //
 
 #import "BMUserInfoModel.h"
-#import <YYModel.h>
+#import "YYModel.h"
 
 @implementation BMUserInfoModel
 

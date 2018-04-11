@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <YYModel.h>
+#import <YYModel/YYModel.h>
 #import <WeexSDK/WXModuleProtocol.h>
 
 #define K_ANIMATE_PRESENT @"PRESENT"

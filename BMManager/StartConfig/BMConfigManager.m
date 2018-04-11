@@ -7,13 +7,13 @@
 //
 
 #import "BMConfigManager.h"
-#import <YTKNetwork.h>
+#import "YTKNetwork.h"
 #import "BMDefine.h"
 #import <SVProgressHUD.h>
 #import <CryptLib.h>
 
 #import "BMPayManager.h"
-#import <WXApi.h>
+#import "WXApi.h"
 
 #import "BMUserInfoModel.h"
 #import "BMDB.h"
@@ -50,7 +50,7 @@
 #import <WeexSDK/WeexSDK.h>
 #import "WXUtility.h"
 
-#import <UMSocialCore/UMSocialCore.h>
+#import <UMengUShare/UMSocialCore/UMSocialCore.h>
 #import <UMMobClick/MobClick.h>
 
 #import "WXBMNetworkDefaultlpml.h"

@@ -17,7 +17,7 @@
 #import "BMUploadImageRequest.h"
 
 #import <TZImagePickerController/TZImagePickerController.h>
-#import <TZImageManager.h>
+#import <TZImagePickerController/TZImageManager.h>
 
 #import <SDWebImage/SDImageCache.h>
 

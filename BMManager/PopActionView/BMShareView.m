@@ -7,7 +7,7 @@
 //
 
 #import "BMShareView.h"
-#import <UMSocialCore/UMSocialCore.h>
+#import <UMengUShare/UMSocialCore/UMSocialCore.h>
 #import "BMMediatorManager.h"
 #import <WXApi.h>
 #import "SVProgressHUD.h"

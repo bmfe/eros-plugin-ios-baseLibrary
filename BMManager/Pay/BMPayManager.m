@@ -9,14 +9,14 @@
 #import "BMPayManager.h"
 #import "BMConfigManager.h"
 #import "BMWechatPayInfoModel.h"
-#import <YYModel.h>
+#import <YYModel/YYModel.h>
 #import <SVProgressHUD.h>
 
 #import "BMDefine.h"
 
 #import "NSDictionary+Util.h"
 
-#import <WXApi.h>
+#import "WXApi.h"
 
 @interface BMPayManager () <WXApiDelegate, UIAlertViewDelegate>
 

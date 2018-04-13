@@ -51,7 +51,6 @@
 #import "WXUtility.h"
 
 #import <UMengUShare/UMSocialCore/UMSocialCore.h>
-#import <UMMobClick/MobClick.h>
 
 #import "WXBMNetworkDefaultlpml.h"
 
@@ -59,7 +58,6 @@
 #import "BMEventsModule.h"
 #import "BMBrowserImgModule.h"
 #import "BMRichTextComponent.h"
-#import "WeexMarketPlugins.h"
 
 #import <AFNetworking/AFNetworkReachabilityManager.h>
 
@@ -149,26 +147,6 @@
 + (void)configUmeng
 {
     BMPlatformModel *platformInfo = TK_PlatformInfo();
-    
-    /* 友盟统计 */
-    NSString *chanelId = @"App Store";
-    // 开启crash信息收集功能
-    [MobClick setCrashReportEnabled:YES];
-    
-#ifdef DEBUG
-    chanelId = @"Testing";
-    [MobClick setLogEnabled:NO];
-    [MobClick setCrashReportEnabled:NO];
-#endif
-    
-    UMConfigInstance.appKey = platformInfo.umeng.iOSAppKey;
-    UMConfigInstance.channelId = chanelId;
-    
-    [MobClick setAppVersion:K_APP_VERSION];
-    [MobClick setEncryptEnabled:YES];
-    [MobClick startWithConfigure:UMConfigInstance];
-    
-    
     
     /* 友盟分享 */
     [[UMSocialManager defaultManager] setUmSocialAppkey:platformInfo.umeng.iOSAppKey];

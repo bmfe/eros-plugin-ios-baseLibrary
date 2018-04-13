@@ -13,7 +13,6 @@
 #import "BMMediatorManager.h"
 #import "BMBaseViewController.h"
 #import "BMAppResource.h"
-#import "BMPushMessageManager.h"
 #import "BMPayManager.h"
 #import <UMengUShare/UMSocialCore/UMSocialCore.h>
 
@@ -35,8 +34,6 @@ static NSString * oauthKey = @"oauth";
 {
     NSString * scheme = url.scheme;
     NSString * host = url.host;
-    
-    [[BMPushMessageManager shareInstance] setIsLaunchedByNotification:NO];
     
     if ([scheme isEqualToString:[BMConfigManager shareInstance].platform.wechat.appId])
     {

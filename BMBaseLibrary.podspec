@@ -26,21 +26,6 @@ Pod::Spec.new do |s|
     ss.requires_arc  = true
   end
 
-# #Weex插件商城
-#   s.subspec 'WeexPlugins' do |ss|
-#    ss.source_files  = "Weexplugin/**/*.{h,m,mm}"
-#    #s.exclude_files = "Classes/Exclude"
-#    ss.resources = "Weexplugin/Resources/*"
-
-#    ss.public_header_files = "Weexplugin/**/*.h"
-
-#    ss.requires_arc = true
-#    #s.xcconfig = { "FRAMEWORK_SEARCH_PATHS" => "$(SDKROOT)/TRemoteDebugger" }
-#    ss.dependency 'AMap3DMap-NO-IDFA','5.6.0'
-#   end
-
-
-
 # Debug 相关类
   s.subspec 'BMDebug' do |ss|
     #ss.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'DebugVersion=1 TestVersion=0 AppStoreVersion=0' }

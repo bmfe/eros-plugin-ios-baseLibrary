@@ -8,7 +8,6 @@
 
 #import "BMToolsModule.h"
 #import <UMengUShare/WXApi.h>
-#import "BMPushMessageManager.h"
 #import "WatermarkView.h"
 #import "WXUtility.h"
 #import "BMScanQRViewController.h"
@@ -51,22 +50,6 @@ WX_EXPORT_METHOD(@selector(env:));
      NSInteger resCode = isInstall ? BMResCodeSuccess : BMResCodeError;
     if (callback) {
         NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-        callback(resDic);
-    }
-}
-
-/** 获取 cid */
--(void)getCid:(WXModuleCallback)callback
-{
-    NSString * cid = [BMPushMessageManager getCid];
-    NSInteger resCode = cid.length > 0 ? BMResCodeSuccess : BMResCodeError;
-    
-    if (callback) {
-        NSMutableDictionary * dict = nil;
-        if (cid.length > 0) {
-            dict  = [NSMutableDictionary dictionaryWithObjectsAndKeys:cid,@"cid",nil];
-        }
-        NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:dict];
         callback(resDic);
     }
 }

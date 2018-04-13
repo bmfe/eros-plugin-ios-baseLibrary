@@ -12,7 +12,6 @@
 #import "BMUserInfoModel.h"
 #import "YYModel.h"
 #import "BMMediatorManager.h"
-#import "BMPushMessageManager.h"
 
 @implementation BMStorageModule
 

@@ -49,9 +49,9 @@
 /**
  这里主要判断是否是本地html，如果是本地html，则加载本地html
  */
--(void)bm_lodaURL:(NSString *)url
+-(void)bm_loadURL:(NSString *)url
 {
-    UIWebView *webview = (UIWebView *)[self valueForKey:@"webview"];
+    UIWebView * webview = (UIWebView *)self.view;
     
     if(webview){
         NSURL *urlPath = [NSURL URLWithString:url];

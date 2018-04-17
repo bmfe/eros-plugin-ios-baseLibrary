@@ -62,10 +62,10 @@
                 [webview loadRequest:request];
             }else {
                 NSString *debugUrl = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,urlPath.host,urlPath.path];
-                [self bm_lodaURL:debugUrl];
+                [self bm_loadURL:debugUrl];
             }
         }else {
-            [self bm_lodaURL:url];
+            [self bm_loadURL:url];
         }
     }
 }

@@ -263,13 +263,13 @@
     
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelLog];
+    [WXLog setLogLevel:WeexLogLevelLog];
     [[BMDebugManager shareInstance] show];
 //    [[ATManager shareInstance] show];
     
 #else
     [WXDebugTool setDebug:NO];
-    [WXLog setLogLevel:WXLogLevelError];
+    [WXLog setLogLevel:WeexLogLevelError];
 #endif
 }
 

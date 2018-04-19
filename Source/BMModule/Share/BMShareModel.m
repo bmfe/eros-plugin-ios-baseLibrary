@@ -12,30 +12,50 @@
 
 - (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic {
     
-    /* 如果js没有传平台，添加默认分享平台：
-     1.剪切板、
-     2.微信聊天、
-     3.微信朋友圈
-     后续根据需求在扩展 */
-    if (!_platforms) {
-        _platforms = @[K_SharePlarformPasteboard,K_SharePlarformWechatSession,K_SharePlarformWechatTimeLine];
+    NSString *platform = dic[@"platform"];
+    if ([platform isEqualToString:K_SharePlatformWechatSession]) {
+        _platform = BMSharePlatformType_WechatSession;
+    }
+    else if ([platform isEqualToString:K_SharePlatformWechatTimeLine])
+    {
+        _platform = BMSharePlatformType_WechatTimeLine;
+    } else {
+        WXLogError(@"BMShare platform Error");
+    }
+    
+    NSString *type = dic[@"type"];
+    if ([type isEqualToString:K_ShareTypeText]) {
+        _shareType = BMShareTypeText;
+    }
+    else if ([type isEqualToString:K_ShareTypeImage])
+    {
+        _shareType = BMShareTypeImage;
+    }
+    else if ([type isEqualToString:K_ShareTypeTextImage])
+    {
+        _shareType = BMShareTypeTextImage;
+    }
+    else if ([type isEqualToString:K_ShareTypeWebpage])
+    {
+        _shareType = BMShareTypeWebpage;
+    }
+    else if ([type isEqualToString:K_ShareTypeMusic])
+    {
+        _shareType = BMShareTypeMusic;
+    }
+    else if ([type isEqualToString:K_ShareTypeVideo])
+    {
+        _shareType = BMShareTypeVideo;
+    }
+    else if ([type isEqualToString:K_ShareTypeMiniProgram])
+    {
+        _shareType = BMShareTypeMiniProgram;
+    }
+    else {
+        _shareType = BMShareTypeWebpage;
     }
     
     return YES;
-}
-
-+ (NSDictionary *)allPlarform
-{
-    return @{
-             K_SharePlarformSina: @(BMSharePlarformType_Sina),
-             K_SharePlarformWechatSession: @(BMSharePlarformType_WechatSession),
-             K_SharePlarformWechatTimeLine: @(BMSharePlarformType_WechatTimeLine),
-             K_SharePlarformWechatFavorite: @(BMSharePlarformType_WechatFavorite),
-             K_SharePlarformQQ: @(BMSharePlarformType_QQ),
-             K_SharePlarformQzone: @(BMSharePlarformType_Qzone),
-             K_SharePlarformPasteboard: @(BMSharePlarformType_Pasteboard),
-             K_SharePlarformFontSize: @(BMSharePlarformType_FontSize)
-             };
 }
 
 @end

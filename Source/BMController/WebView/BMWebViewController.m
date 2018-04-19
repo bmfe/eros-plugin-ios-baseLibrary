@@ -10,7 +10,6 @@
 #import "JYTTitleLabel.h"
 #import <Masonry/Masonry.h>
 #import "NSTimer+Addition.h"
-#import "BMPopActionViewManager.h"
 #import "BMMediatorManager.h"
 #import <UINavigationController+FDFullscreenPopGesture.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -56,9 +55,6 @@ typedef void(^BMNativeHandle)(void);
 @property (nonatomic, copy) NSString *urlStr;
 /** js端传的分享内容 */
 @property (nonatomic, strong) BMShareModel *shareModel;
-
-/** 底部弹出的功能页面 */
-@property (nonatomic, strong) BMPopActionViewManager *actionView;
 
 @end
 
@@ -109,14 +105,6 @@ typedef void(^BMNativeHandle)(void);
     return _progressLayer;
 }
 
-- (BMPopActionViewManager *)actionView
-{
-    if (!_actionView) {
-        _actionView = [[BMPopActionViewManager alloc] init];
-    }
-    return _actionView;
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -164,11 +152,7 @@ typedef void(^BMNativeHandle)(void);
     /* 返回按钮 */
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"NavBar_BackItemIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(backItemClicked)];
     self.navigationItem.leftBarButtonItem = backItem;
-    
-    /** 功能面板 */
-    UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"actionIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(share)];
-    self.navigationItem.rightBarButtonItem = shareItem;
-    
+
 
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
     
@@ -177,11 +161,6 @@ typedef void(^BMNativeHandle)(void);
         
         _showProgress = YES;
     });
-}
-
-- (void)share
-{
-    [self.actionView showWebViewActionViewWithWebView:self.webView shareInfo:self.shareModel];
 }
 
 - (void)didReceiveMemoryWarning {

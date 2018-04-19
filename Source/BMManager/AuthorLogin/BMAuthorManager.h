@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "BMModuleProtocol.h"
-#import <UMengUShare/WXApi.h>
+#import <WechatOpenSDK/WXApi.h>
 
 @interface BMAuthorManager : NSObject<WXApiDelegate>
 

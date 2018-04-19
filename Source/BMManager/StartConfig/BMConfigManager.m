@@ -10,6 +10,8 @@
 #import "YTKNetwork.h"
 #import "BMDefine.h"
 #import <SVProgressHUD.h>
+#import <SDWebImage/SDImageCache.h>
+#import <SDWebImage/SDWebImageDownloader.h>
 #import <CryptLib.h>
 
 #import "BMPayManager.h"
@@ -38,7 +40,6 @@
 #import "BMCameraModule.h"
 #import "BMPayModule.h"
 #import "BMStorageModule.h"
-#import "BMShareModule.h"
 #import "BMAppConfigModule.h"
 #import "BMToolsModule.h"
 #import "BMNavigatorModule.h"
@@ -50,7 +51,8 @@
 #import <WeexSDK/WeexSDK.h>
 #import "WXUtility.h"
 
-#import <UMengUShare/UMSocialCore/UMSocialCore.h>
+#import <UMCShare/UMShare/UMShare.h>
+#import <UMCCommon/UMCommon/UMCommon.h>
 
 #import "WXBMNetworkDefaultlpml.h"
 
@@ -113,6 +115,10 @@
     
     BMPlatformModel *platformInfo = TK_PlatformInfo();
     
+    /** 设置sdimage减小内存占用 */
+    [[SDImageCache sharedImageCache] setShouldDecompressImages:NO];
+    [[SDWebImageDownloader sharedDownloader] setShouldDecompressImages:NO];
+    [[SDImageCache sharedImageCache] setShouldCacheImagesInMemory:NO];
     
     /** 设置统一请求url */
     [[YTKNetworkConfig sharedConfig] setBaseUrl:platformInfo.url.request];
@@ -127,12 +133,6 @@
     /** 设置 HUD */
     [BMConfigManager configProgressHUD];
     
-    /** 配置友盟相关sdk */
-    if (platformInfo.umeng.enabled) {
-        [BMConfigManager configUmeng];
-    }
-    
-    
     if (platformInfo.wechat.enabled) {
         /* 注册微信SDK */
         [WXApi registerApp:platformInfo.wechat.appId];
@@ -141,24 +141,6 @@
     
     /* 监听截屏事件 */
 //    [[BMScreenshotEventManager shareInstance] monitorScreenshotEvent];
-    
-}
-
-+ (void)configUmeng
-{
-    BMPlatformModel *platformInfo = TK_PlatformInfo();
-    
-    /* 友盟分享 */
-    [[UMSocialManager defaultManager] setUmSocialAppkey:platformInfo.umeng.iOSAppKey];
-    
-    
-    /** 友盟微信分享功能 */
-    if (platformInfo.wechat.appId.length && platformInfo.wechat.appSecret.length) {
-        //设置微信AppId，设置分享url，默认使用友盟的网址
-        [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession
-                                              appKey:platformInfo.wechat.appId appSecret:platformInfo.wechat.appSecret
-                                         redirectURL:@""];
-    }
     
 }
 
@@ -205,7 +187,6 @@
                               @"bmCamera":          NSStringFromClass([BMCameraModule class]),
                               @"bmPay":             NSStringFromClass([BMPayModule class]),
                               @"bmStorage":         NSStringFromClass([BMStorageModule class]),
-                              @"bmShare":           NSStringFromClass([BMShareModule class]),
                               @"bmFont":            NSStringFromClass([BMAppConfigModule class]),
                               @"bmEvents":          NSStringFromClass([BMEventsModule class]),
                               @"bmBrowserImg":      NSStringFromClass([BMBrowserImgModule class]),
@@ -232,13 +213,13 @@
     
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelLog];
+    [WXLog setLogLevel:WeexLogLevelLog];
     [[BMDebugManager shareInstance] show];
 //    [[ATManager shareInstance] show];
     
 #else
     [WXDebugTool setDebug:NO];
-    [WXLog setLogLevel:WXLogLevelError];
+    [WXLog setLogLevel:WeexLogLevelError];
 #endif
 }
 

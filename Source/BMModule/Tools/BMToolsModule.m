@@ -7,7 +7,7 @@
 //
 
 #import "BMToolsModule.h"
-#import <UMengUShare/WXApi.h>
+#import <WechatOpenSDK/WXApi.h>
 #import "WatermarkView.h"
 #import "WXUtility.h"
 #import "BMScanQRViewController.h"

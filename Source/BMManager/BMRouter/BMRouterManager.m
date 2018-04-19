@@ -14,9 +14,8 @@
 #import "BMBaseViewController.h"
 #import "BMAppResource.h"
 #import "BMPayManager.h"
-#import <UMengUShare/UMSocialCore/UMSocialCore.h>
-
-#import <UMengUShare/WXApi.h>
+#import <UMCShare/UMShare/UMShare.h>
+#import <WechatOpenSDK/WXApi.h>
 #import <BMAuthorManager.h>
 #import "BMDefine.h"
 #import <BMConfigManager.h>

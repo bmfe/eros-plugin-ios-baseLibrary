@@ -124,17 +124,7 @@
     
     /** 设置 HUD */
     [BMConfigManager configProgressHUD];
-<<<<<<< HEAD
 
-=======
-    
-    if (platformInfo.wechat.enabled) {
-        /* 注册微信SDK */
-        [WXApi registerApp:platformInfo.wechat.appId];
-    }
-    
-    
->>>>>>> 62fe10eba358850b0aa30bbe50aa472a0d489659
     /* 监听截屏事件 */
 //    [[BMScreenshotEventManager shareInstance] monitorScreenshotEvent];
     

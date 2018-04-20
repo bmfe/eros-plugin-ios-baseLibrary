@@ -17,7 +17,6 @@
 
 WX_EXPORT_METHOD(@selector(scan:));
 WX_EXPORT_METHOD(@selector(resignKeyboard:));
-WX_EXPORT_METHOD(@selector(getCid:));
 WX_EXPORT_METHOD(@selector(copyString:callback:));
 WX_EXPORT_METHOD(@selector(addWatermark:));
 WX_EXPORT_METHOD(@selector(env:));

@@ -19,15 +19,14 @@ Pod::Spec.new do |s|
 
   s.exclude_files = 'Source/BMDevice/*'
   s.source_files = "Source/**/*.{h,m,mm}"
-  s.resources = 'Source/BMWeexExtension/Resources/*','Source/BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle','Source/BMManager/Resources/*.png','Source/BMComponent/Calendar/Resources/*'
+  s.resources = 'Source/BMWeexExtension/Resources/*','Source/BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle','Source/BMComponent/Calendar/Resources/*','Source/BMComponent/Chart/Resources/*'
   s.prefix_header_file = 'Source/ErosApp/ErosDefine/PrefixHeader.pch'
   
   s.dependency 'YYText', '1.0.7'
-  s.dependency "Realm",'3.1.0'
-  s.dependency "BindingX",'1.0.1'
+  s.dependency "Realm", '3.1.0'
+  s.dependency "BindingX", '1.0.1'
   s.dependency 'FSCalendar','2.7.8'
   s.dependency 'TZImagePickerController', '1.9.8'
-  s.dependency 'UMengUShare/Social/WeChat', '6.4.6'
   s.dependency 'Masonry', '1.1.0'
   s.dependency 'YYModel', '1.0.4'
   s.dependency 'SSZipArchive', '1.6.2'

@@ -7,49 +7,18 @@
 //
 
 #import "BMAuthorLoginModule.h"
-#import <UMengUShare/WXApi.h>
-#import <UMengUShare/UMSocialCore/UMSocialCore.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 
-@interface BMAuthorLoginModule()<WXApiDelegate>
+@interface BMAuthorLoginModule()
 
 @end
 
 @implementation BMAuthorLoginModule
 @synthesize weexInstance;
 
-WX_EXPORT_METHOD(@selector(wechat:callback:))
-
 WX_EXPORT_METHOD_SYNC(@selector(canUseTouchId))
-
 WX_EXPORT_METHOD(@selector(touchId:callback:))
 
-/** 调用微信登录 */
-- (void)wechat:(NSDictionary *)info callback:(WXModuleCallback)success
-{
-    [[UMSocialManager defaultManager] getUserInfoWithPlatform:UMSocialPlatformType_WechatSession currentViewController:weexInstance.viewController completion:^(id result, NSError *error) {
-       
-        if (error) {
-            WXLogError(@"%@",error);
-            NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:@"微信授权失败" data:nil];
-            if (success) {
-                success(resDic);
-            }
-        } else {
-            UMSocialUserInfoResponse *resp = result;
-            
-            if (success) {
-                NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-                [userInfo setValue:resp.uid?:@"" forKey:@"uid"];
-                [userInfo setValue:resp.name?:@"" forKey:@"name"];
-                NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:@"微信授权成功" data:userInfo];
-                success(resDic);
-            }
-            
-        }
-        
-    }];
-}
 
 - (NSDictionary *)canUseTouchId
 {

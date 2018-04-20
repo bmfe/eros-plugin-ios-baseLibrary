@@ -13,14 +13,11 @@
 #import "BMMediatorManager.h"
 #import "BMBaseViewController.h"
 #import "BMAppResource.h"
-#import "BMPayManager.h"
-#import <UMengUShare/UMSocialCore/UMSocialCore.h>
-
-#import <UMengUShare/WXApi.h>
-#import <BMAuthorManager.h>
 #import "BMDefine.h"
 #import <BMConfigManager.h>
 
+
+static NSString * schemeKey = @"weexeros";
 
 static NSString * openPageKey = @"openpage";
 
@@ -35,19 +32,20 @@ static NSString * oauthKey = @"oauth";
     NSString * scheme = url.scheme;
     NSString * host = url.host;
     
-    if ([scheme isEqualToString:[BMConfigManager shareInstance].platform.wechat.appId])
-    {
-        //微信支付
-        if ([host isEqualToString:@"pay"]) {
-            return [[BMPayManager shareInstance] applicationOpenURL:url];
+    if ([scheme isEqualToString:schemeKey]) {
+        /* openPage */
+        if ([[host lowercaseString] isEqualToString:openPageKey]) {
+            return [[self class] openPage:url];
         }
-        //微信登录
-        else if ([host isEqualToString:oauthKey]){
-            return [[BMAuthorManager shareInstance] applicationOpenURL:url];
+        
+        /* openTab */
+        else if ([[host lowercaseString] isEqualToString:openTabKey]) {
+            return [[self class] openTab:url];
         }
-     }
-    /* 友盟分享回调 */
-    return [[UMSocialManager defaultManager] handleOpenURL:url sourceApplication:sourceApplication annotation:annotation];
+        
+    }
+    
+    return NO;
 }
 
 #pragma mark openPage

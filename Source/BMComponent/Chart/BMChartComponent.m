@@ -50,7 +50,7 @@
         webview.scrollView.scrollEnabled = NO;
         webview.opaque = NO;
         
-        NSString *filePath = [[NSBundle mainBundle]pathForResource:@"bm-chart" ofType:@"html"];
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"bm-chart" ofType:@"html"];
         NSString *htmlStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webview loadHTMLString:htmlStr baseURL:[NSURL URLWithString:htmlStr]];
         WXLogInfo(@"\n【webView】loadHTMLString");

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BMShareModel.h"
 #import "BMWebViewRouterModel.h"
 
 @interface BMWebViewController : UIViewController

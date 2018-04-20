@@ -160,17 +160,13 @@ const char * fontStorageKey = "_fontStorage";
 #pragma mark 创建iconfont下载路径
 +(void)createIconfontDownloadPath
 {
-    if (NO == [WXUtility isFileExist:BM_FONT_DOWNLOAD_DIR]) {
+    if (![WXUtility isFileExist:BM_FONT_DOWNLOAD_DIR]) {
         NSError * error = nil;
         BOOL createSuccess = [[NSFileManager defaultManager] createDirectoryAtPath:BM_FONT_DOWNLOAD_DIR withIntermediateDirectories:YES attributes:nil error:&error];
-        if (NO == createSuccess || nil != error) {
-            WXLogError(@"创建文件失败");
-            return;
+        if (createSuccess) {
+            WXLogInfo(@"创建iconfont文件夹成功");
+            [[self class] addSkipBackupAttributeToItemAtPath:BM_FONT_DOWNLOAD_DIR];
         }
-    }
-    BOOL addSkipSuccess = [[self class] addSkipBackupAttributeToItemAtPath:BM_FONT_DOWNLOAD_DIR];
-    if (addSkipSuccess) {
-        WXLogInfo(@"创建iconfont文件夹成功");
     }
 }
 

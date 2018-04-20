@@ -7,7 +7,6 @@
 //
 
 #import "BMToolsModule.h"
-#import <UMengUShare/WXApi.h>
 #import "WatermarkView.h"
 #import "WXUtility.h"
 #import "BMScanQRViewController.h"
@@ -18,7 +17,6 @@
 
 WX_EXPORT_METHOD(@selector(scan:));
 WX_EXPORT_METHOD(@selector(resignKeyboard:));
-WX_EXPORT_METHOD(@selector(isInstallWXApp:));
 WX_EXPORT_METHOD(@selector(getCid:));
 WX_EXPORT_METHOD(@selector(copyString:callback:));
 WX_EXPORT_METHOD(@selector(addWatermark:));
@@ -37,17 +35,6 @@ WX_EXPORT_METHOD(@selector(env:));
 - (void)resignKeyboard:(WXModuleCallback)callback
 {
     NSInteger resCode = [[[UIApplication sharedApplication].delegate window] endEditing:YES] ? BMResCodeSuccess : BMResCodeError;
-    if (callback) {
-        NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
-        callback(resDic);
-    }
-}
-
-/** 判断是否安装了微信 */
--(void)isInstallWXApp:(WXModuleCallback)callback
-{
-    BOOL isInstall = [WXApi isWXAppInstalled];
-     NSInteger resCode = isInstall ? BMResCodeSuccess : BMResCodeError;
     if (callback) {
         NSDictionary *resDic = [NSDictionary configCallbackDataWithResCode:resCode msg:nil data:nil];
         callback(resDic);

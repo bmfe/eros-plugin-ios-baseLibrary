@@ -10,9 +10,11 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/UIImage+GIF.h>
 #import <SDWebImage/NSData+ImageContentType.h>
+#import <SDWebImage/SDImageCache.h>
 
 #define MIN_IMAGE_WIDTH 36
 #define MIN_IMAGE_HEIGHT 36
+
 
 #if OS_OBJECT_USE_OBJC
 #undef  WXDispatchQueueRelease
@@ -74,7 +76,7 @@
             } else {
                 img = [UIImage imageWithContentsOfFile:imgPath];
             }
-            
+            [[SDImageCache sharedImageCache] setShouldDisableiCloud:NO];
             NSError *error = nil;
             
             if (!img) {

@@ -135,7 +135,7 @@
 
 #pragma mark - Public Method
 
-- (void)loadViewControllerWithWindow:(UIWindow *)_window
+- (UIViewController *)loadHomeViewController
 {
     /* 显示状态栏 */
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -145,15 +145,13 @@
     /* 加载js端的中介者 */
     [self loadJSMediator:YES];
 
-    
     BMBaseViewController *firstVc = [[BMBaseViewController alloc] init];
     NSString *homePage = BM_GetUserDefaultData(K_HomePagePath)?:platformInfo.page.homePage;
     firstVc.url = [BMAppResource configJSFullURLWithPath:homePage];
     BMNavigationController *firstNavc = [[BMNavigationController alloc] initWithRootViewController:firstVc];
     
-    _window.rootViewController = firstNavc;
-    [_window makeKeyAndVisible];
-    
+    return firstNavc;
+
     /* 引导页面 */
 //    [HYGuideView showInView:_window];
 

@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
   s.dependency 'SocketRocket', '0.4.2'
   s.dependency 'SDWebImage', '3.7.6'
   s.dependency 'MJRefresh', '3.1.12'
+  s.dependency 'CTMediator', '13'
 
   #Device信息非ARC
   s.subspec 'BMDevice' do |ss|
@@ -112,7 +113,7 @@ Pod::Spec.new do |s|
     ss.source_files  = "Source/BMComponent/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMComponent/**/*.h"
     ss.requires_arc  = true
-    ss.resources = 'Source/BMComponent/Calendar/Resources/*.png','BMComponent/Chart/Resources/bm-chart.html','BMComponent/Chart/Resources/echarts.min.js'
+    ss.resources = 'Source/BMComponent/Calendar/Resources/*.png','Source/BMComponent/Chart/Resources/*'
     ss.dependency 'FSCalendar','2.7.8'
     ss.dependency 'YYText', '1.0.7'
   end

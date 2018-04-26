@@ -17,14 +17,5 @@
 @implementation BMPlatformModelGetui
 @end
 
-@implementation BMPlatformModelUmeng
-@end
-
-@implementation BMPlatformModelWechat
-@end
-
-@implementation BMPlatformModelAmap
-@end
-
 @implementation BMPlatformModel
 @end

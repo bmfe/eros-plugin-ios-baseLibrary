@@ -25,7 +25,7 @@
 @property (nonatomic, weak) UITabBarController *baseTabBarController;
 
 /* app启动后加载页面 */
-- (void)loadViewControllerWithWindow:(UIWindow *)_window;
+- (UIViewController *)loadHomeViewController;
 
 /**
  打开新的控制器方法

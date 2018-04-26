@@ -31,30 +31,10 @@
 @property (nonatomic, copy) NSString *appSecret;
 @end
 
-@interface BMPlatformModelUmeng : NSObject
-@property (nonatomic, assign) BOOL enabled;             /**< 是否启用友盟服务 */
-@property (nonatomic, copy) NSString *iOSAppKey;        /**< 友盟appKey */
-@end
-
-@interface BMPlatformModelWechat : NSObject
-@property (nonatomic, assign) BOOL enabled;             /**< 是否使用微信功能 */
-@property (nonatomic, copy) NSString *appId;            /**< 微信appid */
-@property (nonatomic, copy) NSString *appSecret;
-@end
-
-@interface BMPlatformModelAmap : NSObject
-@property (nonatomic, assign) BOOL enabled;             /**< 是否启用高德地图 */
-@property (nonatomic, copy) NSString *iOSAppKey;        /**< appkey */
-@end
-
-
 @interface BMPlatformModel : NSObject
 @property (nonatomic, copy) NSString *appName;          /**< appName 检测js更新时需要传给后端判断那哪个app */
 @property (nonatomic, copy) NSString *appBoard;         /**< native端需要注入的js代码路径 */
 @property (nonatomic, strong) BMPlatformModelPage *page;
 @property (nonatomic, strong) BMPlatformModelUrl *url;
 @property (nonatomic, strong) BMPlatformModelGetui *getui;
-@property (nonatomic, strong) BMPlatformModelUmeng *umeng;
-@property (nonatomic, strong) BMPlatformModelWechat *wechat;
-@property (nonatomic, strong) BMPlatformModelAmap *amap;
 @end

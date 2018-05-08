@@ -194,9 +194,8 @@
 
 - (void)toWebViewWithRouterInfo:(BMWebViewRouterModel *)routerInfo
 {
-    BMWebViewController *webView = [[BMWebViewController alloc] init];
+    BMWebViewController *webView = [[BMWebViewController alloc] initWithRouterModel:routerInfo];
     webView.hidesBottomBarWhenPushed = YES;
-    webView.routerInfo = routerInfo;
     [self.currentViewController.navigationController pushViewController:webView animated:YES];
 }
 

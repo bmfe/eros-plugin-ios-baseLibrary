@@ -491,6 +491,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
                 if (writeSuccess) {
                     WXLogInfo(@"写入配置文件成功");
                     
+                    self.bmWidgetJs = nil;
                     [[BMMediatorManager shareInstance] showJsResourceUpdatedAlert];
                     
                 }

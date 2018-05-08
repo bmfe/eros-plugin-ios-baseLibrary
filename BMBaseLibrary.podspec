@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/bmfe/Benmu-iOS-Library.git", :tag => s.version.to_s }
   s.requires_arc = true
-
+  
   s.dependency 'YYText', '1.0.7'
   s.dependency 'Masonry', '1.1.0'
   s.dependency 'YYModel', '1.0.4'
@@ -52,6 +52,7 @@ Pod::Spec.new do |s|
     ss.source_files  = "Source/BMExtension/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMExtension/**/*.h"
     ss.requires_arc  = true
+    ss.libraries = "bz2"
   end
 
   #对Weex系统类的拓展

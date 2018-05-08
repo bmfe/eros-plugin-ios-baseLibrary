@@ -63,20 +63,28 @@ typedef void(^BMNativeHandle)(void);
     NSLog(@"dealloc >>>>>>>>>>>>> BMWebViewController");
 }
 
-- (UIWebView *)webView
+- (instancetype)initWithRouterModel:(BMWebViewRouterModel *)model
 {
-    if (!_webView) {
-        
-        CGFloat height = K_SCREEN_HEIGHT - 64;
-        if (!self.routerInfo.navShow) {
-            height = K_SCREEN_HEIGHT;
-        }
-        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
-        _webView.backgroundColor = K_BACKGROUND_COLOR;
-        _webView.delegate = self;
-        [self.view addSubview:_webView];
+    if (self = [super init])
+    {
+        self.routerInfo = model;
+        [self subInit];
     }
-    return _webView;
+    return self;
+}
+
+- (void)subInit
+{
+    CGFloat height = K_SCREEN_HEIGHT - 64;
+    if (!self.routerInfo.navShow) {
+        height = K_SCREEN_HEIGHT;
+    }
+    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
+    self.webView.backgroundColor = K_BACKGROUND_COLOR;
+    self.webView.delegate = self;
+
+    self.urlStr = self.routerInfo.url;
+    [self reloadURL];
 }
 
 - (CAShapeLayer *)progressLayer
@@ -95,10 +103,7 @@ typedef void(^BMNativeHandle)(void);
         _progressLayer.strokeStart = 0.0f;
         _progressLayer.strokeEnd = 0.0f;
         
-        
         [self.navigationController.navigationBar.layer addSublayer:_progressLayer];
-        
-        //        [self.view.layer addSublayer:_progressLayer];
     }
     return _progressLayer;
 }
@@ -130,7 +135,6 @@ typedef void(^BMNativeHandle)(void);
     // Do any additional setup after loading the view.
     
     /* 解析 router 数据 */
-    self.urlStr = self.routerInfo.url;
     self.navigationItem.title = self.routerInfo.title;
     
     self.view.backgroundColor = K_BACKGROUND_COLOR;
@@ -150,14 +154,9 @@ typedef void(^BMNativeHandle)(void);
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"NavBar_BackItemIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(backItemClicked)];
     self.navigationItem.leftBarButtonItem = backItem;
 
-
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
+    [self.view addSubview:self.webView];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self reloadURL];
-        
-        _showProgress = YES;
-    });
+    _showProgress = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -191,21 +190,15 @@ typedef void(^BMNativeHandle)(void);
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)requestAgain
-{
-    [self reloadURL];
-}
-
 - (void)reloadURL
 {
-    
     if ([self.urlStr isHasChinese]) {
         self.urlStr = [self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
     NSString *loadURL = [NSString stringWithFormat:@"%@",self.urlStr];
     NSURL *url = [NSURL URLWithString:loadURL];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
 
@@ -214,6 +207,9 @@ typedef void(^BMNativeHandle)(void);
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+    if (!self.timer) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
+    }
     
     if (_showProgress) {
         
@@ -240,6 +236,7 @@ typedef void(^BMNativeHandle)(void);
     
     /* 获取js的运行环境 */
     _jsContext = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+   
     [self injectionJsMethod];
     
     return YES;
@@ -282,18 +279,13 @@ typedef void(^BMNativeHandle)(void);
     }
     
     WXLogInfo(@"\n******************** - WebView didFailLoad - ********************\n %@",webView.request.URL.absoluteString);
-    
-//    // 确保加载的是第一个url时显示
-//    if (!webView.request.URL || !webView.request.URL.absoluteString || webView.request.URL.absoluteString.length < 1) {
-//        [self showRequestAgainView];
-//    }
 }
 
 - (void)progressAnimation:(NSTimer *)timer
 {
     self.progressLayer.strokeEnd += 0.005f;
     
-    //    NSLog(@"%f",self.progressLayer.strokeEnd);
+    NSLog(@"%f",self.progressLayer.strokeEnd);
     
     if (self.progressLayer.strokeEnd >= 0.9f) {
         [_timer pauseTimer];

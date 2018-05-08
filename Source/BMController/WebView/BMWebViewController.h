@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) BMWebViewRouterModel *routerInfo;
 
+- (instancetype)initWithRouterModel:(BMWebViewRouterModel *)model;
+
 @end

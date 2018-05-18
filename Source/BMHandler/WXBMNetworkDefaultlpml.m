@@ -33,14 +33,25 @@ const NSString * md5Key = @"md5";
 
 
 @implementation WXBMNetworkDefaultlpml
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(instancetype)init
 {
     self = [super init];
     if (self) {
         _mimeTypes = @[@"js"];
         _interceptor = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearMd5Map) name:K_BMAppReStartNotification object:nil];
     }
     return self;
+}
+
+- (void)clearMd5Map
+{
+    _md5Maps = nil;
 }
 
 -(void)sendRequest:(WXResourceRequest *)request withDelegate:(id<WXResourceRequestDelegate>)delegate

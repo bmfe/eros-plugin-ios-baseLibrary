@@ -64,7 +64,6 @@
             id result = [request responseObject];
             [arr4ImagesUrl addObject:result ?: @""];
         }
-        
         if (self.callback) {
             NSDictionary *backData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:arr4ImagesUrl];
             self.callback(backData);

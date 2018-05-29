@@ -46,7 +46,11 @@
 - (CGFloat)weexViewHeight
 {
     /* 设置weex页面高度 */
-    CGFloat height = K_SCREEN_HEIGHT;
+    CGFloat height = self.view.height;
+    if (self.routerModel.isTabBarItem) {
+        height -= K_TABBAR_HEIGHT;
+    }
+    
     return height;
 }
 

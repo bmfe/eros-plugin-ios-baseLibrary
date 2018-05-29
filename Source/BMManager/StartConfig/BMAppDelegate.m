@@ -29,14 +29,6 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [UIViewController new];
-    
-    /** 点击推送消息唤起app时调用方法 */
-    NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (notificationPayload) {
-        [[CTMediator sharedInstance] CTMediator_addPushNotification:notificationPayload];
-    }
-    
     
     if (_isLoad == NO) {
         [self startApp];
@@ -48,18 +40,11 @@
     return YES;
 }
 
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    
-}
-
-
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
-
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -107,10 +92,10 @@
     WXLogInfo(@"%@",[error localizedDescription]);
 }
 
-- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    [[CTMediator sharedInstance] CTMediator_performFetchWithCompletionHandler:@{@"block":completionHandler}];
-}
+//- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+//{
+//    [[CTMediator sharedInstance] CTMediator_performFetchWithCompletionHandler:@{@"block":completionHandler}];
+//}
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
@@ -122,8 +107,7 @@
     if (completionHandler) {
         [dic setValue:completionHandler forKey:@"block"];
     }
-    [[CTMediator sharedInstance] CTMediator_receiveRemoteNotification:userInfo];
-    
+    [[CTMediator sharedInstance] CTMediator_receiveRemoteNotification:dic];
 }
 
 -(void)startApp
@@ -134,9 +118,8 @@
     [BMConfigManager configDefaultData];
     
     /** 加载页面 */
-    self.window.rootViewController = [[BMMediatorManager shareInstance] loadHomeViewController];;
+    self.window.rootViewController = [[BMMediatorManager shareInstance] loadHomeViewController];
     [self.window makeKeyAndVisible];
-    
 }
 
 @end

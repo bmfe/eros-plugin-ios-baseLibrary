@@ -82,7 +82,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     /* 设置背景颜色 */
-    [self.view setBackgroundColor:K_BACKGROUND_COLOR];
+    [self.view setBackgroundColor:self.routerModel.backgroundColor ? [UIColor colorWithHexString:self.routerModel.backgroundColor] : K_BACKGROUND_COLOR];
     
     // 设置backBarItem 不要文字
     UIBarButtonItem *_barBtnItem = [[UIBarButtonItem alloc] init];

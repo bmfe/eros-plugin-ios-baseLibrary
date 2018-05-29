@@ -130,7 +130,6 @@
     
     self.jsMediator = jsMediatorVc;
 }
-
 #pragma mark - Api Request
 
 #pragma mark - Public Method
@@ -141,13 +140,41 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
     BMPlatformModel *platformInfo = [BMConfigManager shareInstance].platform;
+    platformInfo.page.homePage = BM_GetUserDefaultData(K_HomePagePath)?:platformInfo.page.homePage;
     
     /* 加载js端的中介者 */
     [self loadJSMediator:YES];
+    
+    /* 加载tabBar */
+    if ([platformInfo.page.homePage isEqualToString:@"tabBar"]) {
+        
+        BMTabBarController *tabBarController = [[BMTabBarController alloc] init];
+        tabBarController.tabBarInfo = platformInfo.tabBar;
+        self.baseTabBarController = tabBarController;
+        
+        NSMutableArray *controllers = [NSMutableArray array];
+        for (BMTabBarItem *item in platformInfo.tabBar.list) {
+            BMBaseViewController *viewController = [[BMBaseViewController alloc] init];
+            BMRouterModel *routerInfo = [[BMRouterModel alloc] init];
+            routerInfo.url = item.pagePath;
+            routerInfo.navShow = item.navShow;
+            routerInfo.navTitle = item.navTitle;
+            routerInfo.canBack = NO;
+            routerInfo.isTabBarItem = YES;
+            viewController.routerModel = routerInfo;
+            viewController.url = [BMAppResource configJSFullURLWithPath:item.pagePath];
+            BMNavigationController *navc = [[BMNavigationController alloc] initWithRootViewController:viewController];
+            [controllers addObject:navc];
+            // 触发控制器生命周期
+            [viewController view];
+        }
+        
+        tabBarController.viewControllers = controllers;
+        return tabBarController;
+    }
 
     BMBaseViewController *firstVc = [[BMBaseViewController alloc] init];
-    NSString *homePage = BM_GetUserDefaultData(K_HomePagePath)?:platformInfo.page.homePage;
-    firstVc.url = [BMAppResource configJSFullURLWithPath:homePage];
+    firstVc.url = [BMAppResource configJSFullURLWithPath:platformInfo.page.homePage];
     BMNavigationController *firstNavc = [[BMNavigationController alloc] initWithRootViewController:firstVc];
     
     return firstNavc;

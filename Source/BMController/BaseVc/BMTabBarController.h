@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BMPlatformModel.h"
 
 @interface BMTabBarController : UITabBarController
+
+@property (nonatomic, strong) BMPlatformModelTabBar *tabBarInfo;
 
 @end

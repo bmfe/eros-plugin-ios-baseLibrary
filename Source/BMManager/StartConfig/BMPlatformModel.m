@@ -17,5 +17,17 @@
 @implementation BMPlatformModelGetui
 @end
 
+@implementation BMTabBarItem
+@end
+
+@implementation BMPlatformModelTabBar
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{@"list" : [BMTabBarItem class]};
+}
+
+@end
+
 @implementation BMPlatformModel
 @end
+

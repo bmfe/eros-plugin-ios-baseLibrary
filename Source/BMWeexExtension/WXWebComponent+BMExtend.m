@@ -47,4 +47,30 @@
     [self bm_setUrl:url];
 }
 
+/**
+ 这里主要判断是否是本地html，如果是本地html，则加载本地html
+ */
+-(void)bm_loadURL:(NSString *)url
+{
+    WXPerformBlockOnMainThread(^{
+        UIWebView * webview = (UIWebView *)self.view;
+        
+        if(webview){
+            NSURL *urlPath = [NSURL URLWithString:url];
+            if([urlPath.scheme isEqualToString:BM_LOCAL]){
+                if (BM_InterceptorOn()) {
+                    NSString *webPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,urlPath.host,urlPath.path];
+                    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSURL alloc]initFileURLWithPath:webPath]];
+                    [webview loadRequest:request];
+                }else {
+                    NSString *debugUrl = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,urlPath.host,urlPath.path];
+                    [self bm_loadURL:debugUrl];
+                }
+            }else {
+                [self bm_loadURL:url];
+            }
+        }
+    });
+}
+
 @end

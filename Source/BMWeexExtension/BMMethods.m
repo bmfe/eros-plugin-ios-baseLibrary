@@ -281,7 +281,6 @@
     Method originalMLoadUrl = class_getInstanceMethod([WXWebComponent class], @selector(loadURL:));
     Method exchangeMLoadUrl = class_getInstanceMethod([WXWebComponent class], @selector(bm_loadURL:));
     method_exchangeImplementations(originalMLoadUrl, exchangeMLoadUrl);
-    
 }
 
 + (void)exchangeRecyclerComponent

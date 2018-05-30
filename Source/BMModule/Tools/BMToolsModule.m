@@ -10,6 +10,13 @@
 #import "WatermarkView.h"
 #import "WXUtility.h"
 #import "BMScanQRViewController.h"
+#import <AFNetworking/AFNetworkReachabilityManager.h>
+
+@interface BMToolsModule ()
+
+@property (nonatomic, strong) AFNetworkReachabilityManager *reachability;
+
+@end
 
 @implementation BMToolsModule
 
@@ -20,6 +27,9 @@ WX_EXPORT_METHOD(@selector(resignKeyboard:));
 WX_EXPORT_METHOD(@selector(copyString:callback:));
 WX_EXPORT_METHOD(@selector(addWatermark:));
 WX_EXPORT_METHOD(@selector(env:));
+WX_EXPORT_METHOD_SYNC(@selector(networkStatus));
+WX_EXPORT_METHOD(@selector(watchNetworkStatus:));
+WX_EXPORT_METHOD(@selector(clearWatchNetworkStatus));
 
 /** 调用扫一扫 */
 - (void)scan:(WXModuleCallback)callback
@@ -64,6 +74,75 @@ WX_EXPORT_METHOD(@selector(env:));
     if (callback) {
         callback(resDic);
     }
+}
+
+/** 获取网络状态 */
+- (NSDictionary *)networkStatus
+{
+    AFNetworkReachabilityManager *reachability = [AFNetworkReachabilityManager sharedManager];
+    NSString *networkStatus = @"";
+    switch (reachability.networkReachabilityStatus) {
+        case AFNetworkReachabilityStatusUnknown:
+            networkStatus = @"Unknown";
+        break;
+        case AFNetworkReachabilityStatusNotReachable:
+            networkStatus = @"NotReachable";
+        break;
+        case AFNetworkReachabilityStatusReachableViaWiFi:
+            networkStatus = @"Wifi";
+        break;
+        case AFNetworkReachabilityStatusReachableViaWWAN:
+            networkStatus = @"3G/4G";
+        break;
+        default:
+            networkStatus = @"Unknown";
+        break;
+    }
+    
+    NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:networkStatus];
+    return resData;
+}
+
+/** 监听网络状态 */
+- (void)watchNetworkStatus:(WXModuleKeepAliveCallback)callback
+{
+    self.reachability = [AFNetworkReachabilityManager manager];
+    [self.reachability startMonitoring];
+    [self.reachability setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        
+        NSString *networkStatus = @"";
+        
+        switch (status) {
+            case AFNetworkReachabilityStatusUnknown:
+                networkStatus = @"Unknown";
+            break;
+            case AFNetworkReachabilityStatusNotReachable:
+                networkStatus = @"NotReachable";
+            break;
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+                networkStatus = @"Wifi";
+            break;
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+                networkStatus = @"3G/4G";
+            break;
+            default:
+                networkStatus = @"Unknown";
+            break;
+        }
+        
+        NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:networkStatus];
+        if (callback)
+        {
+            callback(resData,YES);
+        }
+    }];
+}
+
+/** 清楚网络监听 */
+- (void)clearWatchNetworkStatus
+{
+    [self.reachability stopMonitoring];
+    self.reachability = nil;
 }
 
 @end

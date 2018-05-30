@@ -14,8 +14,8 @@
 {
     NSMutableDictionary *resultDic = [[NSMutableDictionary alloc] init];
     
-    msg = msg ? msg : @"";
-    data = data ? data : @"";
+    msg = msg ?: @"";
+    data = data ?: @"";
     
     [resultDic setValue:[NSNumber numberWithInteger:resCode] forKey:@"status"];
     [resultDic setValue:msg forKey:@"errorMsg"];

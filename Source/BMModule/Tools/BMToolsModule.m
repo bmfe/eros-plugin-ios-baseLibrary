@@ -77,30 +77,23 @@ WX_EXPORT_METHOD(@selector(clearWatchNetworkStatus));
 }
 
 /** 获取网络状态 */
-- (NSDictionary *)networkStatus
+- (NSString *)networkStatus
 {
     AFNetworkReachabilityManager *reachability = [AFNetworkReachabilityManager sharedManager];
-    NSString *networkStatus = @"";
     switch (reachability.networkReachabilityStatus) {
-        case AFNetworkReachabilityStatusUnknown:
-            networkStatus = @"Unknown";
-        break;
         case AFNetworkReachabilityStatusNotReachable:
-            networkStatus = @"NotReachable";
+            return @"NOT_REACHABLE";
         break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
-            networkStatus = @"Wifi";
+            return @"WIFI";
         break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
-            networkStatus = @"3G/4G";
+            return @"3G/4G";
         break;
         default:
-            networkStatus = @"Unknown";
+            return @"UNKNOWN";
         break;
     }
-    
-    NSDictionary *resData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:networkStatus];
-    return resData;
 }
 
 /** 监听网络状态 */
@@ -113,20 +106,17 @@ WX_EXPORT_METHOD(@selector(clearWatchNetworkStatus));
         NSString *networkStatus = @"";
         
         switch (status) {
-            case AFNetworkReachabilityStatusUnknown:
-                networkStatus = @"Unknown";
-            break;
             case AFNetworkReachabilityStatusNotReachable:
-                networkStatus = @"NotReachable";
+                networkStatus = @"NOT_REACHABLE";
             break;
             case AFNetworkReachabilityStatusReachableViaWiFi:
-                networkStatus = @"Wifi";
+                networkStatus = @"WIFI";
             break;
             case AFNetworkReachabilityStatusReachableViaWWAN:
                 networkStatus = @"3G/4G";
             break;
             default:
-                networkStatus = @"Unknown";
+                networkStatus = @"UNKNOWN";
             break;
         }
         

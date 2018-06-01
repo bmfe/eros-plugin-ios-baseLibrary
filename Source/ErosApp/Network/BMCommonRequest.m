@@ -62,6 +62,14 @@
     return headers;
 }
 
+- (YTKRequestSerializerType)requestSerializerType
+{
+    if ([_model.header[@"Content-Type"] isEqualToString:@"application/x-www-form-urlencoded"]) {
+        return YTKRequestSerializerTypeHTTP;
+    }
+    return YTKRequestSerializerTypeJSON;
+}
+
 - (NSString *)requestUrl
 {
     return _model.url ?: @"";

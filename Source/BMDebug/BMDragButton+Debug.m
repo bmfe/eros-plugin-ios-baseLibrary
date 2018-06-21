@@ -20,7 +20,7 @@
 #import "BMDebugManager.h"
 
 
-@interface BMDragButton()<UIActionSheetDelegate>
+@interface BMDragButton()
 
 @end
 
@@ -70,66 +70,52 @@
 
 - (void)showDebug
 {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:nil
-                                  delegate:self
-                                  cancelButtonTitle:@"Cancel"
-                                  destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Setting",@"Refresh",@"Debug",
-                                  nil];
-    actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"Eros debugger" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *set = [UIAlertAction actionWithTitle:@"Setting" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        BMNavigationController * nav = [[BMNavigationController alloc] initWithRootViewController:[[DebugSettingVC alloc] init]];
+        UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
+        [controller presentViewController:nav animated:YES completion:nil];
+    }];
+    UIAlertAction *refresh = [UIAlertAction actionWithTitle:@"Refresh" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //刷新
+        [self refreshWeex];
+    }];
+    UIAlertAction *debug = [UIAlertAction actionWithTitle:@"Scan" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (TARGET_IPHONE_SIMULATOR) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"模拟器不支持此项功能，请使用真机调试" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:ok];
+            UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
+            [controller presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+        //扫一扫调试
+        WXScannerVC *scanVc = [[WXScannerVC alloc] init];
+        [[BMMediatorManager shareInstance].currentViewController.navigationController pushViewController:scanVc animated:YES];
+        //            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已正确配置‘debugUrl’并已开启‘weex debug’调试窗口" preferredStyle:UIAlertControllerStyleAlert];
+        //            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+        //            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Debug" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //                [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
+        //            }];
+        //            [alert addAction:cancel];
+        //            [alert addAction:ok];
+        //            [[BMMediatorManager shareInstance].currentViewController presentViewController:alert animated:YES completion:nil];
+    }];
     
+    [alert addAction:cancel];
+    [alert addAction:set];
+    [alert addAction:refresh];
+    [alert addAction:debug];
     
     UIViewController* topVC =  [[BMMediatorManager shareInstance] currentViewController];
-    [actionSheet showInView:topVC.view];
+    [topVC presentViewController:alert animated:YES completion:nil];
     
 }
 
 - (void)refreshWeex
 {
     [[BMDebugManager shareInstance] refreshWeex];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-        {
-            BMNavigationController * nav = [[BMNavigationController alloc] initWithRootViewController:[[DebugSettingVC alloc] init]];
-            UIViewController* controller =  [[BMMediatorManager shareInstance] currentViewController];
-            [controller presentViewController:nav animated:YES completion:nil];
-        }
-            break;
-        case 1:
-        {
-            //刷新
-            [self refreshWeex];
-        }
-            break;
-
-        case 2:
-        {
-            if (TARGET_IPHONE_SIMULATOR) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"模拟器不支持此项功能，请使用真机调试" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                [alert show];
-                return;
-            }
-            //扫一扫调试
-            WXScannerVC *scanVc = [[WXScannerVC alloc] init];
-            [[BMMediatorManager shareInstance].currentViewController.navigationController pushViewController:scanVc animated:YES];
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"开始调试之前请确保您已正确配置‘debugUrl’并已开启‘weex debug’调试窗口" preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-//            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Debug" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [WXDevTool launchDevToolDebugWithUrl:TK_PlatformInfo().url.debugServer];
-//            }];
-//            [alert addAction:cancel];
-//            [alert addAction:ok];
-//            [[BMMediatorManager shareInstance].currentViewController presentViewController:alert animated:YES completion:nil];
-     }
-            break;
-        default:
-            break;
-    }
 }
 @end
 #endif

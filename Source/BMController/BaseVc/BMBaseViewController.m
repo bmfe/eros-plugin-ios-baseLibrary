@@ -283,7 +283,9 @@
         }
         
         /* 在中介者中保留 instance 的引用 */
-        [[BMMediatorManager shareInstance] setCurrentWXInstance:weakSelf.instance];
+        if (![weakSelf currentVcIs:TK_PlatformInfo().page.mediatorPage]) {
+            [[BMMediatorManager shareInstance] setCurrentWXInstance:weakSelf.instance];
+        }
         // 通知 js 页面生命周期方法
         [BMGlobalEventManager sendViewLifeCycleEventWithInstance:weakSelf.instance event:BMViewWillAppear controllerState:weakSelf.controllerState];
         [BMGlobalEventManager sendViewLifeCycleEventWithInstance:weakSelf.instance event:BMViewDidAppear controllerState:weakSelf.controllerState];

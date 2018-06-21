@@ -74,6 +74,10 @@
     controller.routerModel = routerModel;
     controller.hidesBottomBarWhenPushed = YES;
     
+    if (weexInstance == self.jsMediator) {
+        weexInstance = self.currentWXInstance;
+    }
+    
     /* 页面展现方式 */
     if (!routerModel.type || [routerModel.type isEqualToString:K_ANIMATE_PUSH])
     {
@@ -217,6 +221,34 @@
         if (disVc) [weexInstance.viewController.navigationController popToViewController:disVc animated:YES];
     }
     
+}
+
+- (void)backToHomeIndex:(NSUInteger)index
+{
+    if (!self.baseTabBarController) {
+        return;
+    }
+    
+    NSArray *arr4Controller = [self.baseTabBarController viewControllers];
+    
+    for (UINavigationController *nav in arr4Controller) {
+        
+        [nav dismissViewControllerAnimated:YES completion:nil];
+        [nav popToRootViewControllerAnimated:YES];
+        
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.baseTabBarController) {
+            
+            if (index >= self.baseTabBarController.viewControllers.count ) {
+                WXLogError(@"返回首页idnex参数错误：index = %lu",(unsigned long)index);
+                return;
+            }
+            
+            self.baseTabBarController.selectedIndex = index;
+        }
+    });
 }
 
 - (void)toWebViewWithRouterInfo:(BMWebViewRouterModel *)routerInfo

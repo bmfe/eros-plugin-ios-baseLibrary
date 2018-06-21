@@ -9,6 +9,6 @@
 
 @interface UITabBar (Badge)
 
-- (void)showBadgeOnItenIndex:(int)index value:(NSString *)value;
+- (void)showBadgeOnItenIndex:(int)index value:(NSString *)value backgroundColor:(UIColor *)bgColor textColor:(UIColor *)textColor;
 - (void)hideBadgeOnItenIndex:(int)index;
 @end

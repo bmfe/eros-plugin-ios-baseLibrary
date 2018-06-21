@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, AlertType) {
     AlertTypeOpenURL
 };
 
-@interface BMScanQRViewController ()<UIAlertViewDelegate, AVCaptureMetadataOutputObjectsDelegate>
+@interface BMScanQRViewController ()<AVCaptureMetadataOutputObjectsDelegate>
 
 @property (strong,nonatomic)AVCaptureDevice * device;
 @property (strong,nonatomic)AVCaptureDeviceInput * input;
@@ -67,10 +67,14 @@ typedef NS_ENUM(NSInteger, AlertType) {
         
         [SVProgressHUD dismiss];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"当前设备不支持此项功能" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-        [alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"当前设备不支持此项功能" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
         
-        [self.navigationController popViewControllerAnimated:YES];
+        [alert addAction:action];
+        
+        [self presentViewController:alert animated:YES completion:nil];
         
         return;
     }
@@ -110,10 +114,21 @@ typedef NS_ENUM(NSInteger, AlertType) {
     AVAuthorizationStatus authStatus= [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (authStatus == AVAuthorizationStatusDenied) {
         
-        // 无相机权限 做一个友好的提示
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法使用相机" message:@"请在iPhone的""设置-隐私-相机""中允许访问相机" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
-        alert.tag = AlertTypeNoAuthorization;
-        [alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"无法使用相机" message:@"请在iPhone的""设置-隐私-相机""中允许访问相机" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            });
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        
+        [alert addAction:cancel];
+        [alert addAction:ok];
+        
+        [self presentViewController:alert animated:YES completion:nil];
         
         return;
     }
@@ -248,66 +263,21 @@ typedef NS_ENUM(NSInteger, AlertType) {
     [_session stopRunning];
     [self.shadowView stopAnimation];
     
-    if ([_content4QRCode hasPrefix:@"http"]) {
-        //
-        //  Other QR Code Operation
-        //
-        UIAlertView *tmpAlert = [[UIAlertView alloc] initWithTitle:@"是否打开链接" message:self.content4QRCode delegate:self cancelButtonTitle:nil otherButtonTitles:@"取消",@"打开", nil];
-        tmpAlert.tag = AlertTypeOpenURL;
-        [tmpAlert show];
-    } else {
+    WXLogInfo(@"qr>>>>>>>>>>>>>>>%@",_content4QRCode);
+    
+    if (self.callback) {
         
-        WXLogInfo(@"qr>>>>>>>>>>>>>>>%@",_content4QRCode);
+        NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:_content4QRCode];
         
+        /* 将扫码结果回传给js */
         if (self.callback) {
-            
-            NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:@{@"text": _content4QRCode}];
-            
-            /* 将扫码结果回传给js */
-            if (self.callback) {
-                self.callback(resultData);
-                self.callback = nil;
-            }
-            
+            self.callback(resultData);
+            self.callback = nil;
         }
-        
-        [self.navigationController popViewControllerAnimated:YES];
-        return;
         
     }
     
-    
+    [self.navigationController popViewControllerAnimated:YES];
 }
-
-
-#pragma mark -  UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == AlertTypeNoAuthorization) {
-        if (buttonIndex == 1) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-            });
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-        return;
-    } else if (alertView.tag == AlertTypeOpenURL) {
-        if (buttonIndex == 1) {
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_content4QRCode]];
-            });
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    }
-    
-    //
-    //  Carry on 2 Scan
-    //
-    // Start
-    [_session startRunning];
-    [self.shadowView showAnimation];
-}
-
 
 @end

@@ -11,21 +11,21 @@
 
 @implementation UITabBar (Badge)
 
-- (void)showBadgeOnItenIndex:(int)index value:(NSString *)value
+- (void)showBadgeOnItenIndex:(int)index value:(NSString *)value backgroundColor:(UIColor *)bgColor textColor:(UIColor *)textColor
 {
     [self hideBadgeOnItenIndex:index];
 
     UIView *badgeView = [[UIView alloc] init];
     badgeView.userInteractionEnabled = YES;
     badgeView.tag = K_BadgeViewTag + index;
-    badgeView.backgroundColor = [UIColor redColor];
+    badgeView.backgroundColor = bgColor ?: [UIColor redColor];
     
     float width = 8;
     if (value) {
         width = 15;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, width)];
         label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor whiteColor];
+        label.textColor = textColor ?: [UIColor whiteColor];
         label.font = [UIFont systemFontOfSize:10];
         label.text = [NSString stringWithFormat:@"%@",value];
         label.userInteractionEnabled = YES;

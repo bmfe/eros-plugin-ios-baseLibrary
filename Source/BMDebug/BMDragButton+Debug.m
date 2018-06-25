@@ -109,6 +109,12 @@
     [alert addAction:debug];
     
     UIViewController* topVC =  [[BMMediatorManager shareInstance] currentViewController];
+    
+    // 修复iPad崩溃问题
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        alert.popoverPresentationController.sourceView = self;
+        alert.popoverPresentationController.sourceRect = self.bounds;
+    }
     [topVC presentViewController:alert animated:YES completion:nil];
     
 }

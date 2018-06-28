@@ -71,12 +71,12 @@
             UIImage *img = nil;
             NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
             NSData *imgData = [NSData dataWithContentsOfFile:imgPath];
-            if ([[NSData sd_contentTypeForImageData:imgData] isEqualToString:@"image/gif"]) {
+            if ([NSData sd_imageFormatForImageData:imgData] == SDImageFormatGIF) {
                 img = [UIImage sd_animatedGIFWithData:imgData];
             } else {
                 img = [UIImage imageWithContentsOfFile:imgPath];
             }
-            [[SDImageCache sharedImageCache] setShouldDisableiCloud:NO];
+            
             NSError *error = nil;
             
             if (!img) {
@@ -113,17 +113,15 @@
         return nil;
     }
     
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        
-        
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-        
-        if (completedBlock) {
-            completedBlock(image,error,finished);
-        }
-        
-    }];
-    
+    [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:url]
+                                                options:0
+                                               progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+                                                   
+                                               } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                                                   if (completedBlock) {
+                                                       completedBlock(image,error,finished);
+                                                   }
+                                               }];
     return nil;
     
     

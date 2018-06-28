@@ -108,9 +108,8 @@
     BMPlatformModel *platformInfo = TK_PlatformInfo();
     
     /** 设置sdimage减小内存占用 */
-    [[SDImageCache sharedImageCache] setShouldDecompressImages:NO];
     [[SDWebImageDownloader sharedDownloader] setShouldDecompressImages:NO];
-    [[SDImageCache sharedImageCache] setShouldCacheImagesInMemory:NO];
+  
     
     /** 设置统一请求url */
     [[YTKNetworkConfig sharedConfig] setBaseUrl:platformInfo.url.request];

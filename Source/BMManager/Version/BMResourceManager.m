@@ -17,6 +17,8 @@
 #import "BMResourceCheck.h"
 #import "BMMediatorManager.h"
 #import "BMConfigManager.h"
+#import "BMHandlerFactory.h"
+#import "BMCheckUpdateProtocol.h"
 
 
 #define JS_VERSION @"jsVersion"
@@ -113,6 +115,12 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 /** 检查js资源文件是否有新版本 */
 - (void)checkNewVersion:(BOOL)isDiff
 {
+    id<BMCheckUpdateProtocol> checkUpdateHandler = [BMHandlerFactory handlerForProtocol:@protocol(BMCheckUpdateProtocol)];
+    if (checkUpdateHandler && [checkUpdateHandler respondsToSelector:@selector(checkUpdate)]) {
+        [checkUpdateHandler checkUpdate];
+        return;
+    }
+    
     if (![BMConfigManager shareInstance].platform.url.bundleUpdate.length) return;
     
     NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];

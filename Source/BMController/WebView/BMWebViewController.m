@@ -15,35 +15,14 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "UIWebView+BMExtend.h"
 #import "BMUserInfoModel.h"
-
-@protocol BMJSExport <JSExport>
-
-- (void)closePage;
-
-@end
-
-typedef void(^BMNativeHandle)(void);
-
-@interface BMNative : NSObject <BMJSExport>
-@property (nonatomic, copy)BMNativeHandle closePageBlock;
-@end
-
-@implementation BMNative
-
-- (void)closePage
-{
-    if (self.closePageBlock) {
-        self.closePageBlock();
-    }
-}
-
-@end
+#import "BMNative.h"
 
 @interface BMWebViewController () <UIWebViewDelegate, JSExport>
 {
     BOOL _showProgress;
-    JSContext *_jsContext;
 }
+
+@property (nonatomic, strong) JSContext *jsContext;
 @property (nonatomic, strong) UIWebView *webView;
 
 /** 伪进度条 */
@@ -61,6 +40,10 @@ typedef void(^BMNativeHandle)(void);
 - (void)dealloc
 {
     NSLog(@"dealloc >>>>>>>>>>>>> BMWebViewController");
+    if (_jsContext) {
+        _jsContext[@"bmnative"] = nil;
+        _jsContext = nil;
+    }
 }
 
 - (instancetype)initWithRouterModel:(BMWebViewRouterModel *)model
@@ -85,6 +68,10 @@ typedef void(^BMNativeHandle)(void);
 
     self.urlStr = self.routerInfo.url;
     [self reloadURL];
+    
+    /* 获取js的运行环境 */
+    self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    [self injectionJsMethod];
 }
 
 - (CAShapeLayer *)progressLayer
@@ -187,7 +174,9 @@ typedef void(^BMNativeHandle)(void);
 
 - (void)closeItemClicked
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 - (void)reloadURL
@@ -195,9 +184,20 @@ typedef void(^BMNativeHandle)(void);
     if ([self.urlStr isHasChinese]) {
         self.urlStr = [self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
-    
     NSString *loadURL = [NSString stringWithFormat:@"%@",self.urlStr];
     NSURL *url = [NSURL URLWithString:loadURL];
+    if ([url.scheme isEqualToString:BM_LOCAL])
+    {
+        // 拦截器
+        if (BM_InterceptorOn()) {
+            // 从jsbundle读取html
+            NSString *urlPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,url.host,url.path];
+            url = [NSURL fileURLWithPath:urlPath];
+        } else {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,url.host,url.path]];
+        }
+    }
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
@@ -233,11 +233,6 @@ typedef void(^BMNativeHandle)(void);
     }
     
     WXLogInfo(@"%@",request.URL.absoluteString);
-    
-    /* 获取js的运行环境 */
-    _jsContext = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-   
-    [self injectionJsMethod];
     
     return YES;
 }
@@ -300,12 +295,7 @@ typedef void(^BMNativeHandle)(void);
 {
     /* 注入一个关闭当前页面的方法 */
     BMNative *bmnative = [[BMNative alloc] init];
-    @weakify(self);
-    bmnative.closePageBlock = ^{
-        @strongify(self);
-        [self closeItemClicked];
-    };
-    _jsContext[@"bmnative"] = bmnative;
+    self.jsContext[@"bmnative"] = bmnative;
 }
 
 @end

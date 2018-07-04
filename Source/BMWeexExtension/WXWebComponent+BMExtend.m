@@ -8,6 +8,9 @@
 
 #import "WXWebComponent+BMExtend.h"
 #import <WeexSDK/WXUtility.h>
+#import "BMNative.h"
+#import <JavaScriptCore/JavaScriptCore.h>
+
 @class WXWebView;
 
 @implementation WXWebComponent (BMExtend)
@@ -30,6 +33,10 @@
     UIWebView * webview = (UIWebView *)self.view;
     webview.opaque = NO;
     webview.backgroundColor = [UIColor clearColor];
+    
+    JSContext *jsContext = [self valueForKey:@"jsContext"];
+    BMNative *bmnative = [[BMNative alloc] init];
+    jsContext[@"bmnative"] = bmnative;
     
     if (self.attributes[@"scrollEnabled"] && NO == [self.attributes[@"scrollEnabled"] boolValue]) {
         webview.scrollView.scrollEnabled = NO;

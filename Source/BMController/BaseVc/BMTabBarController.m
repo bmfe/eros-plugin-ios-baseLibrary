@@ -103,8 +103,9 @@
     
     /* line */
     UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, 0.5)];
-    topLine.backgroundColor = UIColorFromValue(0xdfe1eb);
-    [self.tabBar addSubview:topLine];
+    topLine.backgroundColor = [UIColor colorWithHexString:self.tabBarInfo.borderColor? self.tabBarInfo.borderColor: @"0xdfe1eb"];
+    // 插入最底层，解决异形tabBar被遮挡的问题
+    [self.tabBar insertSubview:topLine atIndex:0];
  
     [self setItemFontSize];
 

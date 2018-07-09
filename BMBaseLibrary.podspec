@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.dependency 'SSZipArchive', '1.6.2'
   s.dependency 'YTKNetwork', '2.0.3'
   s.dependency 'SocketRocket', '0.4.2'
-  s.dependency 'SDWebImage', '3.7.5'
+  s.dependency 'SDWebImage', '3.7.6'
   s.dependency 'MJRefresh', '3.1.12'
   s.dependency 'CTMediator', '13'
 

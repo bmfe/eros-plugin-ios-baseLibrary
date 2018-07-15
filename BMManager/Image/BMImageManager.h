@@ -18,6 +18,8 @@
 
 + (void)uploadImageWithInfo:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
 
++ (void)chooseImageWithInfo:(BMUploadImageModel *)model weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
+
 + (void)uploadImage:(NSArray *)images uploadImageModel:(BMUploadImageModel *)model callback:(WXModuleCallback)callback;
 
 @end

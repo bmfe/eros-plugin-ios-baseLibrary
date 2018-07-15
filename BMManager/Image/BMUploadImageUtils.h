@@ -21,6 +21,9 @@
 /** 拍照或者从相册选择图片后直接上传服务器后返回 url */
 - (void)uploadImageWithInfo:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
 
+/** 拍照或者从相册选择图片后直接上传服务器后返回 url */
+- (void)chooseImageWithInfo:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback;
+
 
 /**
  上传图片 支持多张

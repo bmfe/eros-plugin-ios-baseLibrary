@@ -314,15 +314,6 @@
     [self selectImage];
 }
 
-- (void)chooseImageWithInfo:(BMUploadImageModel *)info weexInstance:(WXSDKInstance *)weexInstance callback:(WXModuleCallback)callback
-{
-    self.isLocal = YES;
-    self.imageInfo = info;
-    self.weexInstance = weexInstance;
-    self.callback = callback;
-    [self selectImage];
-}
-
 - (void)uploadImage:(NSArray *)images uploadImageModel:(BMUploadImageModel *)info callback:(WXModuleCallback)callback
 {
     self.isLocal = NO;

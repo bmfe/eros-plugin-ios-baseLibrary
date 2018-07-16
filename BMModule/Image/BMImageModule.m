@@ -67,13 +67,6 @@ WX_EXPORT_METHOD(@selector(chooseImage::))
     [BMImageManager uploadImageWithInfo:model weexInstance:weexInstance callback:callback];
 }
 
-/** 可选择拍照或者从相册选择图片返回本地图片 */
-- (void)chooseImage:(NSDictionary *)info :(WXModuleCallback)callback
-{
-    BMUploadImageModel *model = [BMUploadImageModel yy_modelWithJSON:info];
-    [BMImageManager chooseImageWithInfo:model weexInstance:weexInstance callback:callback];
-}
-
 /** 将刚刚的截屏图片上传到服务器 */
 - (void)uploadScreenshot:(WXModuleCallback)callback
 {

@@ -43,6 +43,8 @@ WX_EXPORT_METHOD(@selector(pick::))
 WX_EXPORT_METHOD(@selector(uploadImage::))
 WX_EXPORT_METHOD(@selector(uploadScreenshot:))
 WX_EXPORT_METHOD(@selector(preview::))
+WX_EXPORT_METHOD(@selector(scanImage::))
+
 
 /** 拍照 */
 - (void)camera:(NSDictionary *)info :(WXModuleCallback)callback

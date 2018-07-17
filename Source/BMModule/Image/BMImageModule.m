@@ -24,6 +24,7 @@ static NSString * indexKey = @"index";
 static NSString * imagesKey = @"images";
 static NSString * localKey = @"local";
 static NSString * networkKey = @"network";
+static NSString * pathKey = @"path";
 
 @interface BMImageModule () <PBViewControllerDelegate,PBViewControllerDataSource>
 {
@@ -42,6 +43,8 @@ WX_EXPORT_METHOD(@selector(pick::))
 WX_EXPORT_METHOD(@selector(uploadImage::))
 WX_EXPORT_METHOD(@selector(uploadScreenshot:))
 WX_EXPORT_METHOD(@selector(preview::))
+WX_EXPORT_METHOD(@selector(scanImage::))
+
 
 /** 拍照 */
 - (void)camera:(NSDictionary *)info :(WXModuleCallback)callback
@@ -76,6 +79,30 @@ WX_EXPORT_METHOD(@selector(preview::))
     }
     NSArray *images = @[[[BMScreenshotEventManager shareInstance] snapshotImage]];
     [BMImageManager uploadImage:images uploadImageModel:nil callback:callback];
+}
+
+/** 识别图片二维码 */
+- (void)scanImage:(NSDictionary *)info :(WXModuleCallback)callback
+{
+    if ([info isKindOfClass:[NSDictionary class]]) {
+
+        NSString *path = [(NSDictionary*)info objectForKey:pathKey];
+
+        UIImage *image = [UIImage imageWithContentsOfFile:path];
+
+        //识别二维码
+        CIImage *ciImage = [[CIImage alloc] initWithCGImage:image.CGImage options:nil];
+        CIContext *ciContext = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer : @(YES)}]; // 软件渲染
+        CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:ciContext options:@{CIDetectorAccuracy : CIDetectorAccuracyHigh}];// 二维码识别
+        NSArray *features = [detector featuresInImage:ciImage];
+
+        CIQRCodeFeature *feature = [features firstObject];
+
+        if (callback) {
+            NSDictionary *resultData = [NSDictionary configCallbackDataWithResCode:BMResCodeSuccess msg:nil data:feature.messageString];
+            callback(resultData);
+        }
+    }
 }
 
 /** 预览图片 */

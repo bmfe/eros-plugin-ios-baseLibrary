@@ -31,7 +31,7 @@ WX_EXPORT_METHOD(@selector(watchIndex:))
 WX_EXPORT_METHOD(@selector(clearWatch))
 WX_EXPORT_METHOD_SYNC(@selector(getInfo))
 WX_EXPORT_METHOD_SYNC(@selector(setInfo:))
-WX_EXPORT_METHOD(@selector(clearTabbarInfo))
+WX_EXPORT_METHOD(@selector(clearInfo))
 
 - (void)dealloc
 {
@@ -112,7 +112,7 @@ WX_EXPORT_METHOD(@selector(clearTabbarInfo))
 }
 
 /** 删除存储信息 */
-- (void)clearTabbarInfo
+- (void)clearInfo
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:K_BMTabbarInfo];
 }

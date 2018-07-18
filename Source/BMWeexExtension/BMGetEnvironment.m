@@ -23,6 +23,7 @@
 #define BMStatusBarHeight @"statusBarHeight"
 #define BMNavBarHeight @"navBarHeight"
 #define BMTouchBarHeight @"touchBarHeight"
+#define BMTabbarHeight @"tabbarHeight"
 #define BMJsVersion @"jsVersion"
 
 
@@ -120,6 +121,8 @@
         [bmData setValue:[NSNumber numberWithFloat:K_NAVBAR_HEIGHT / [WXUtility defaultPixelScaleFactor]] forKey:BMNavBarHeight];
         //touchBar高度
         [bmData setValue:[NSNumber numberWithFloat:K_TOUCHBAR_HEIGHT / [WXUtility defaultPixelScaleFactor]] forKey:BMTouchBarHeight];
+        //原生tababr高度
+        [bmData setValue:[NSNumber numberWithFloat:K_TABBAR_HEIGHT / [WXUtility defaultPixelScaleFactor]] forKey:BMTabbarHeight];
         //JSVersion
         NSDictionary * userInfo = [[BMResourceManager sharedInstance] loadConfigData:K_JS_VERSION_PATH];
         NSString *jsVersion = @"jsVersion 取不到";

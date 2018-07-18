@@ -192,9 +192,16 @@
         if (BM_InterceptorOn()) {
             // 从jsbundle读取html
             NSString *urlPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,url.host,url.path];
-            url = [NSURL fileURLWithPath:urlPath];
+            if (url.query) {
+                urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
+            }
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[urlPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
         } else {
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,url.host,url.path]];
+            NSString *urlPath = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,url.host,url.path];
+            if (url.query) {
+                urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
+            }
+            url = [NSURL URLWithString:urlPath];
         }
     }
     

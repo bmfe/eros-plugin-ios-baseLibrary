@@ -20,7 +20,7 @@
 //
 //@end
 
-
+typedef void(^BMNewJsBundleResPreparedBlock)(BOOL success, NSString *msg);
 
 @interface BMResourceManager : NSObject
 
@@ -35,5 +35,8 @@
 
 /** 比较工程中、cache、当前加载的js版本，应用最新的资源文件 */
 -(void)compareVersion;
+
+/** 下载jsbundle 资源 */
+-(void)downloadJsBundle:(NSDictionary *)info completed:(BMNewJsBundleResPreparedBlock)completedBlock;
 
 @end

@@ -11,7 +11,7 @@
 #import "BMMediatorManager.h"
 #import "UITabBar+Badge.h"
 
-@interface BMTabBarController ()
+@interface BMTabBarController () <UITabBarDelegate>
 
 @property (nonatomic, assign) BOOL isLoadImage;
 
@@ -153,6 +153,18 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+/** tabbar index change */
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    for (int i = 0; i < self.tabBar.items.count; i++) {
+        UITabBarItem *tmpItem = [self.tabBar.items objectAtIndex:i];
+        if (item == tmpItem) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:K_BMTabbarChangeIndex object:@(i)];
+            return;
+        }
+    }
 }
 
 - (void)dealloc

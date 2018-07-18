@@ -53,9 +53,11 @@
 
 /**----------------------------- BMNotification ------------------------------------*/
 #define K_BMAppReStartNotification          @"BMAppReStartNotification"
+#define K_BMTabbarChangeIndex               @"BMTabbarChangeIndex"
 
 /**----------------------------- key ------------------------------------*/
 #define K_HomePagePath @"HomePagePathKey"
+#define K_BMTabbarInfo @"BMTabbarInfo"
 #define BM_LOCAL @"bmlocal"
 
 /** 获取配置信息 */

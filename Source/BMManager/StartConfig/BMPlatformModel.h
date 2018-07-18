@@ -52,6 +52,7 @@
 @interface BMPlatformModel : NSObject
 @property (nonatomic, copy) NSString *appName; /**< appName 检测js更新时需要传给后端判断那哪个app */
 @property (nonatomic, copy) NSString *appBoard; /**< native端需要注入的js代码路径 */
+@property (nonatomic, assign) BOOL customBundleUpdate; /**< 用户自定义jsbundle更新逻辑，为 true 时不走默认的更新逻辑 */
 @property (nonatomic, strong) BMPlatformModelPage *page;
 @property (nonatomic, strong) BMPlatformModelUrl *url;
 @property (nonatomic, strong) BMPlatformModelGetui *getui;

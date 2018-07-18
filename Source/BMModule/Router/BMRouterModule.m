@@ -32,6 +32,7 @@ WX_EXPORT_METHOD(@selector(toWebView:))
 WX_EXPORT_METHOD(@selector(callPhone:))
 WX_EXPORT_METHOD(@selector(openBrowser:))
 WX_EXPORT_METHOD(@selector(setHomePage:))
+WX_EXPORT_METHOD(@selector(clearHomePage))
 
 - (void)open:(NSDictionary *)info callback:(WXModuleCallback)callback
 {
@@ -111,6 +112,12 @@ WX_EXPORT_METHOD(@selector(setHomePage:))
     }
     BM_SetUserDefaultData(K_HomePagePath, path);
     [[NSNotificationCenter defaultCenter] postNotificationName:K_BMAppReStartNotification object:nil];
+}
+
+/** 清除设置的 HomePage 信息 */
+- (void)clearHomePage
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:K_HomePagePath];
 }
 
 @end

@@ -74,7 +74,7 @@
     controller.routerModel = routerModel;
     controller.hidesBottomBarWhenPushed = YES;
     
-    if (weexInstance == self.jsMediator) {
+    if (weexInstance == self.jsMediator.instance) {
         weexInstance = self.currentWXInstance;
     }
     
@@ -148,6 +148,11 @@
     
     /* 加载js端的中介者 */
     [self loadJSMediator:YES];
+    
+    if (BM_GetUserDefaultData(K_BMTabbarInfo)) {
+        BMPlatformModelTabBar *tabbar = [BMPlatformModelTabBar yy_modelWithJSON:BM_GetUserDefaultData(K_BMTabbarInfo)];
+        platformInfo.tabBar = tabbar;
+    }
     
     /* 加载tabBar */
     if ([platformInfo.page.homePage isEqualToString:@"tabBar"]) {
@@ -268,19 +273,22 @@
 - (void)showJsResourceUpdatedAlert
 {
 
-    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:@"更新提示" message:@"更新数据已准备就绪，完成更新获得完整功能体验。" preferredStyle:UIAlertControllerStyleAlert];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:@"更新提示" message:@"更新数据已准备就绪，完成更新获得完整功能体验。" preferredStyle:UIAlertControllerStyleAlert];
+        
+//        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"稍后升级" style:UIAlertActionStyleDefault handler:nil];
+        
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"立即更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            [[BMResourceManager sharedInstance] compareVersion];
+            [[NSNotificationCenter defaultCenter] postNotificationName:K_BMAppReStartNotification object:nil];
+        }];
+        
+//        [alertVc addAction:cancelAction];
+        [alertVc addAction:confirmAction];
+        
+        [self.currentViewController presentViewController:alertVc animated:YES completion:nil];
+    });
     
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"稍后升级" style:UIAlertActionStyleDefault handler:nil];
-    
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"立即更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [[BMResourceManager sharedInstance] compareVersion];
-        [[NSNotificationCenter defaultCenter] postNotificationName:K_BMAppReStartNotification object:nil];
-    }];
-    
-//    [alertVc addAction:cancelAction];
-    [alertVc addAction:confirmAction];
-    
-    [self.currentViewController presentViewController:alertVc animated:YES completion:nil];
 }
 
 @end

@@ -57,27 +57,17 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 
 @interface BMResourceManager()
 
-
 @property (nonatomic, strong) BMJSVersionModel *jsVModel;
 @property (nonatomic,readwrite) BMResourceVersion lastVerionType;
-
 @property (nonatomic,weak)BMUpdateBundlejsRequest * updateBundleRequest;
 @property (nonatomic, copy) NSString *updateBundleJsUrl;
+@property (nonatomic, copy) BMNewJsBundleResPreparedBlock newJsBundleResPreparedBlock; /**< 更新资源准备完毕block */
+
 @end
 
 
 
 @implementation BMResourceManager
-
-+ (instancetype)sharedInstance
-{
-    static BMResourceManager *_instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[BMResourceManager alloc] init];
-    });
-    return _instance;
-}
 
 - (instancetype)init
 {
@@ -110,69 +100,6 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
     /** 检查js更新 */
     [self checkNewVersion:YES];
     
-}
-
-/** 检查js资源文件是否有新版本 */
-- (void)checkNewVersion:(BOOL)isDiff
-{
-    id<BMCheckUpdateProtocol> checkUpdateHandler = [BMHandlerFactory handlerForProtocol:@protocol(BMCheckUpdateProtocol)];
-    if (checkUpdateHandler && [checkUpdateHandler respondsToSelector:@selector(checkUpdate)]) {
-        [checkUpdateHandler checkUpdate];
-        return;
-    }
-    
-    if (![BMConfigManager shareInstance].platform.url.bundleUpdate.length) return;
-    
-    NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
-//    WXLogInfo(@"currentConfig is %@",currentConfig);
-    
-//    NSString * appName = currentConfig[APP_NAME_KEY]?currentConfig[APP_NAME_KEY]:@"app-benmu-health";
-    NSString * jsVersion = currentConfig[JS_VERSION]?currentConfig[JS_VERSION]:@"";
-        
-    
-    
-    __weak typeof(self) weakSelf = self;
-    
-    /* 线上js版本 */
-    BMCheckJsVersionRequest *checkVersionApi = [[BMCheckJsVersionRequest alloc] initWithAppName:[BMConfigManager shareInstance].platform.appName appVersion:K_APP_VERSION jsVersion:jsVersion isDiff:isDiff];
-    
-    
-    
-    [checkVersionApi startWithCompletionBlockWithSuccess:^(__kindof YTKBaseRequest * _Nonnull request) {
-        
-        WXLogInfo(@"%@ Request_Success >>>>>>>>>>>>>>>>:%@",NSStringFromClass([self class]),request.requestTask.originalRequest);
-        
-        NSDictionary *result = [request responseObject];
-        NSString *resCode = [NSString stringWithFormat:@"%@",result[@"resCode"]];
-        NSDictionary *data = result[@"data"];
-        
-        if ([resCode intValue] == BMResourceCheckUpdateSuccess && data) {
-            
-            // 有更新版本
-            [weakSelf downloadRemoteJSResource:data];
-            
-        }
-        else if([resCode intValue] == BMResourceCheckUpdateFail){
-            
-            // 检测失败无对应版本
-
-        }else if ([resCode intValue] == BMResourceCheckUpdateLasted){
-        
-            // 已是最新版本
-        }
-        else{
-            
-        
-        }
-        
-        WXLogInfo(@"%@",result[@"msg"]);
-        
-    } failure:^(__kindof YTKBaseRequest * _Nonnull request) {
-        
-        WXLogError(@"%@ Request_Error >>>>>>>>>>>>>>>>:%@",NSStringFromClass([request class]),request.requestTask.originalRequest);
-        
-    }];
-
 }
 
 #pragma mark 添加不同步iCould属性
@@ -222,82 +149,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         [fm createDirectoryAtPath:K_JS_CACHE_PATH withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
-#pragma mark 版本比较
--(void)compareVersion
-{
-    /* 读取当前工程包的js版本信息 */
-    NSString *configFile = [[NSBundle mainBundle] pathForResource:configFileName ofType:nil];
-    
-    NSDictionary * info = [self loadConfigData:configFile];
-    
-    if ([info isKindOfClass:[NSDictionary class]]) {
-       
-        /* 首次运行将工程目录中js包解压到page目录下 */
-        if (NO == [[NSFileManager defaultManager] fileExistsAtPath:K_JS_PAGES_PATH] && NO == [[NSFileManager defaultManager] fileExistsAtPath:K_JS_VERSION_PATH]) {
-            
-            [self copyBundleResourceToLibrary];
-        }
-        else{
-            
-            NSDictionary * bundleConfig = [self loadConfigData:configFile];
-            NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
-            NSDictionary * cacheConfig = [self loadConfigData:K_JS_CACHE_VERSION_PATH];
-        
-            NSString * bundleVersion = [NSString stringWithFormat:@"%@",bundleConfig?bundleConfig[TIMESTAMP]:@""];
-            NSString * currentVersion = [NSString stringWithFormat:@"%@",currentConfig?currentConfig[TIMESTAMP]:@""];
-            NSString * cacheVersion = [NSString stringWithFormat:@"%@",cacheConfig?cacheConfig[TIMESTAMP]:@""];
-            
-            NSString * lasetVersion = currentVersion;
-            
-            if (bundleVersion && currentVersion) {
-                /* 如果当前工程里面的js版本大于当前本地的js版本 则 将工程里面的js资源解压到本地 */
-                if ([lasetVersion compare:bundleVersion] == NSOrderedAscending) {
-                    self.lastVerionType = BMBundleVersion;
-                    lasetVersion = bundleVersion;
-                }
-            }
-            
-            if(lasetVersion && cacheVersion){
-                if ([lasetVersion compare:cacheVersion] == NSOrderedAscending) {
-                    self.lastVerionType = BMCacheVersion;
-                    lasetVersion = cacheVersion;
-                }
-            }
-            
-            //得到版本目前最新的版本
-            switch (self.lastVerionType) {
-                case BMBundleVersion:
-                {
-                    [self copyBundleResourceToLibrary];
-                    
-                }
-                    break;
-                    
-                case BMCacheVersion:
-                {
-                    [self copyDownloadResourceToLibrary];
-                    
-                }
-                    break;
-                    
-                default:
-                    break;
-            }
-        }
-    }
-}
 
--(NSDictionary*)loadConfigData:(NSString*)configPath
-{
-    NSData * data = [NSData dataWithContentsOfFile:configPath];
-    if (data.length > 0) {
-        id info = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-        if ([info isKindOfClass:[NSDictionary class]]) {
-            return info;
-        }
-    }
-    return nil;
-}
 
 -(void)copyBundleResourceToLibrary
 {
@@ -458,6 +310,10 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         }
     } failure:^(__kindof YTKBaseRequest * _Nonnull request) {
         
+        if (weakSelf.newJsBundleResPreparedBlock) {
+            weakSelf.newJsBundleResPreparedBlock(NO, @"资源下载失败");
+        }
+        
         WXLogError(@"%@ Request_URL>>>>>>>>>>>>>>>>:%@",NSStringFromClass([request class]),request.requestTask.originalRequest);
         
 #ifdef DEBUG
@@ -470,6 +326,9 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         if (isDiff) {
             //如果diff 包下载失败 再次查询全量包 下载
             [weakSelf checkNewVersion:NO];
+            if (weakSelf.newJsBundleResPreparedBlock) {
+                weakSelf.newJsBundleResPreparedBlock(NO, @"差分包下载失败，已请求全量包");
+            }
         }
     }];
 }
@@ -497,11 +356,16 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
                 
                 BOOL writeSuccess = [configData writeToFile:K_JS_CACHE_VERSION_PATH atomically:YES];
                 if (writeSuccess) {
-                    WXLogInfo(@"写入配置文件成功");
                     
-                    self.bmWidgetJs = nil;
-                    [[BMMediatorManager shareInstance] showJsResourceUpdatedAlert];
+                    WXLogInfo(@"写入配置文件成功，更新准备完毕");
                     
+                    if (self.newJsBundleResPreparedBlock) {
+                        self.newJsBundleResPreparedBlock(YES,@"更新资源准备就绪");
+                    }
+                    
+                    if (!TK_PlatformInfo().customBundleUpdate) {
+                        [[BMMediatorManager shareInstance] showJsResourceUpdatedAlert];
+                    }
                 }
             }
         }
@@ -512,13 +376,18 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         [SVProgressHUD showInfoWithStatus:@"js资源文件更新完毕但是校验失败，请程序员哥哥查一下有啥Bug"];
 #endif
         
+        if (self.newJsBundleResPreparedBlock) {
+            self.newJsBundleResPreparedBlock(NO,@"资源校验失败，请检查更新包");
+        }
+        
         //校验失败  删除下载的全量包或者patch出的全量包
         if ([[NSFileManager defaultManager] fileExistsAtPath:pagesPath]) {
             [[NSFileManager defaultManager] removeItemAtPath:pagesPath error:nil];
         }
     }
 }
-#pragma mark 校验包
+
+/** 开始校验包 */
 -(void)checkDownloadZips:(NSString*)zipPath downloadPath:(NSString*)downloadPath
 {
  
@@ -549,6 +418,171 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         _bmWidgetJs = widgetJs;
     }
     return _bmWidgetJs;
+}
+
+#pragma mark - Public Methods
++ (instancetype)sharedInstance
+{
+    static BMResourceManager *_instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[BMResourceManager alloc] init];
+    });
+    return _instance;
+}
+
+/** 检查js资源文件是否有新版本 */
+- (void)checkNewVersion:(BOOL)isDiff
+{
+    id<BMCheckUpdateProtocol> checkUpdateHandler = [BMHandlerFactory handlerForProtocol:@protocol(BMCheckUpdateProtocol)];
+    if (checkUpdateHandler && [checkUpdateHandler respondsToSelector:@selector(checkUpdate)]) {
+        [checkUpdateHandler checkUpdate];
+        return;
+    }
+    
+    if (TK_PlatformInfo().customBundleUpdate) {
+        WXLogInfo(@"用户自定义更新jsbundle逻辑");
+        return;
+    }
+    
+    if (![BMConfigManager shareInstance].platform.url.bundleUpdate.length) return;
+    
+    NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
+    //    WXLogInfo(@"currentConfig is %@",currentConfig);
+    
+    //    NSString * appName = currentConfig[APP_NAME_KEY]?currentConfig[APP_NAME_KEY]:@"app-benmu-health";
+    NSString * jsVersion = currentConfig[JS_VERSION]?currentConfig[JS_VERSION]:@"";
+    
+    
+    
+    __weak typeof(self) weakSelf = self;
+    
+    /* 线上js版本 */
+    BMCheckJsVersionRequest *checkVersionApi = [[BMCheckJsVersionRequest alloc] initWithAppName:[BMConfigManager shareInstance].platform.appName appVersion:K_APP_VERSION jsVersion:jsVersion isDiff:isDiff];
+    
+    
+    
+    [checkVersionApi startWithCompletionBlockWithSuccess:^(__kindof YTKBaseRequest * _Nonnull request) {
+        
+        WXLogInfo(@"%@ Request_Success >>>>>>>>>>>>>>>>:%@",NSStringFromClass([self class]),request.requestTask.originalRequest);
+        
+        NSDictionary *result = [request responseObject];
+        NSString *resCode = [NSString stringWithFormat:@"%@",result[@"resCode"]];
+        NSDictionary *data = result[@"data"];
+        
+        if ([resCode intValue] == BMResourceCheckUpdateSuccess && data) {
+            
+            // 有更新版本
+            [weakSelf downloadRemoteJSResource:data];
+            
+        }
+        else if([resCode intValue] == BMResourceCheckUpdateFail){
+            
+            // 检测失败无对应版本
+            
+        }else if ([resCode intValue] == BMResourceCheckUpdateLasted){
+            
+            // 已是最新版本
+        }
+        else{
+            
+            
+        }
+        
+        WXLogInfo(@"%@",result[@"msg"]);
+        
+    } failure:^(__kindof YTKBaseRequest * _Nonnull request) {
+        
+        WXLogError(@"%@ Request_Error >>>>>>>>>>>>>>>>:%@",NSStringFromClass([request class]),request.requestTask.originalRequest);
+        
+    }];
+    
+}
+
+-(NSDictionary*)loadConfigData:(NSString*)configPath
+{
+    NSData * data = [NSData dataWithContentsOfFile:configPath];
+    if (data.length > 0) {
+        id info = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        if ([info isKindOfClass:[NSDictionary class]]) {
+            return info;
+        }
+    }
+    return nil;
+}
+
+/** 比较工程内置包，当前应用目录包，cache包版本信息，应用最新的 jsbundle 资源 */
+-(void)compareVersion
+{
+    self.bmWidgetJs = nil;
+    
+    /* 读取当前工程包的js版本信息 */
+    NSString *configFile = [[NSBundle mainBundle] pathForResource:configFileName ofType:nil];
+    
+    NSDictionary * info = [self loadConfigData:configFile];
+    
+    if ([info isKindOfClass:[NSDictionary class]]) {
+        
+        /* 首次运行将工程目录中js包解压到page目录下 */
+        if (NO == [[NSFileManager defaultManager] fileExistsAtPath:K_JS_PAGES_PATH] && NO == [[NSFileManager defaultManager] fileExistsAtPath:K_JS_VERSION_PATH]) {
+            
+            [self copyBundleResourceToLibrary];
+        }
+        else{
+            
+            NSDictionary * bundleConfig = [self loadConfigData:configFile];
+            NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
+            NSDictionary * cacheConfig = [self loadConfigData:K_JS_CACHE_VERSION_PATH];
+            
+            NSString * bundleVersion = [NSString stringWithFormat:@"%@",bundleConfig?bundleConfig[TIMESTAMP]:@""];
+            NSString * currentVersion = [NSString stringWithFormat:@"%@",currentConfig?currentConfig[TIMESTAMP]:@""];
+            NSString * cacheVersion = [NSString stringWithFormat:@"%@",cacheConfig?cacheConfig[TIMESTAMP]:@""];
+            
+            NSString * lasetVersion = currentVersion;
+            
+            if (bundleVersion && currentVersion) {
+                /* 如果当前工程里面的js版本大于当前本地的js版本 则 将工程里面的js资源解压到本地 */
+                if ([lasetVersion compare:bundleVersion] == NSOrderedAscending) {
+                    self.lastVerionType = BMBundleVersion;
+                    lasetVersion = bundleVersion;
+                }
+            }
+            
+            if(lasetVersion && cacheVersion){
+                if ([lasetVersion compare:cacheVersion] == NSOrderedAscending) {
+                    self.lastVerionType = BMCacheVersion;
+                    lasetVersion = cacheVersion;
+                }
+            }
+            
+            //得到版本目前最新的版本
+            switch (self.lastVerionType) {
+                case BMBundleVersion:
+                {
+                    [self copyBundleResourceToLibrary];
+                    
+                }
+                    break;
+                    
+                case BMCacheVersion:
+                {
+                    [self copyDownloadResourceToLibrary];
+                    
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+/** 下载jsbundle资源 */
+- (void)downloadJsBundle:(NSDictionary *)info completed:(BMNewJsBundleResPreparedBlock)completedBlock
+{
+    self.newJsBundleResPreparedBlock = completedBlock;
+    [self downloadRemoteJSResource:info];
 }
 
 @end

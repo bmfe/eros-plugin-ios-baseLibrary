@@ -66,14 +66,13 @@
             NSURL *urlPath = [NSURL URLWithString:url];
             if([urlPath.scheme isEqualToString:BM_LOCAL]){
                 if (BM_InterceptorOn()) {
-                    NSString *webPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,urlPath.host,urlPath.path];
-                    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSURL alloc]initFileURLWithPath:webPath]];
+                    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSURL alloc]initFileURLWithPath:TK_RewriteBMLocalURL(urlPath)]];
                     [webview loadRequest:request];
                 }else {
-                    NSString *debugUrl = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,urlPath.host,urlPath.path];
+                    NSString *debugUrl = TK_RewriteBMLocalURL(urlPath).absoluteString;
                     [self bm_loadURL:debugUrl];
                 }
-            }else {
+            } else {
                 [self bm_loadURL:url];
             }
         }

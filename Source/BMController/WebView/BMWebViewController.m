@@ -186,25 +186,7 @@
     }
     NSString *loadURL = [NSString stringWithFormat:@"%@",self.urlStr];
     NSURL *url = [NSURL URLWithString:loadURL];
-    if ([url.scheme isEqualToString:BM_LOCAL])
-    {
-        // 拦截器
-        if (BM_InterceptorOn()) {
-            // 从jsbundle读取html
-            NSString *urlPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,url.host,url.path];
-            if (url.query) {
-                urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
-            }
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[urlPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-        } else {
-            NSString *urlPath = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,url.host,url.path];
-            if (url.query) {
-                urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
-            }
-            url = [NSURL URLWithString:urlPath];
-        }
-    }
-    
+    url = [url.scheme isEqualToString:BM_LOCAL] ? TK_RewriteBMLocalURL(loadURL) : url;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }

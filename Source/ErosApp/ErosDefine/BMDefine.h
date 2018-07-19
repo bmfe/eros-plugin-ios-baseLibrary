@@ -86,4 +86,28 @@ CG_INLINE BOOL BM_InterceptorOn() {
 #endif
 }
 
+/** 将 bmlocal url 转换为正确的访问url */
+CG_INLINE NSURL* TK_RewriteBMLocalURL(NSString *orginUrl) {
+    
+    NSURL *url = [NSURL URLWithString:orginUrl];
+    
+    // 拦截器
+    if (BM_InterceptorOn()) {
+        // 从jsbundle读取html
+        NSString *urlPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,url.host,url.path];
+        if (url.query) {
+            urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
+        }
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[urlPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+    } else {
+        NSString *urlPath = [NSString stringWithFormat:@"%@/dist/%@%@",TK_PlatformInfo().url.jsServer,url.host,url.path];
+        if (url.query) {
+            urlPath = [NSString stringWithFormat:@"%@?%@",urlPath,url.query];
+        }
+        url = [NSURL URLWithString:urlPath];
+    }
+    
+    return url;
+}
+
 #endif /* BMDefine_h */

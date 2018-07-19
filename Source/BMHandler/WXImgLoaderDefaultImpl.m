@@ -114,7 +114,7 @@
     }
     
     [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url]
-                                                    options:0
+                                                    options:SDWebImageRetryFailed | SDWebImageAllowInvalidSSLCertificates
                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                                                        
                                                    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {

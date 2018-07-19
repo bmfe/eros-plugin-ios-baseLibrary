@@ -52,10 +52,7 @@
         
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"bm-chart" ofType:@"html"];
         NSString *htmlStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [webview loadHTMLString:htmlStr baseURL:[NSURL URLWithString:htmlStr]];
-        WXLogInfo(@"\n【webView】loadHTMLString");
-//        NSURL *url = [NSURL fileURLWithPath:filePath];
-//        [webview loadRequest:[NSURLRequest requestWithURL:url]];
+        [webview loadHTMLString:htmlStr baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
         
         self.webview = webview;
     });
@@ -141,9 +138,9 @@
         return;
     }
     
-    NSString *echartJsPath = [[NSBundle mainBundle] pathForResource:@"echarts.min" ofType:@"js"];
-    NSString *echartJsStr = [NSString stringWithContentsOfFile:echartJsPath encoding:NSUTF8StringEncoding error:nil];
-    [self webViewRunScript:echartJsStr];
+//    NSString *echartJsPath = [[NSBundle mainBundle] pathForResource:@"echarts.min" ofType:@"js"];
+//    NSString *echartJsStr = [NSString stringWithContentsOfFile:echartJsPath encoding:NSUTF8StringEncoding error:nil];
+//    [self webViewRunScript:echartJsStr];
 
     //    NSString *script = @"setOption({'tooltip':{'show':true},'legend':{'data':['数量（吨）']},'xAxis':[{'type':'category','data':['桔子','香蕉','苹果','西瓜']}],'yAxis':[{'type':'value'}],'series':[{'name':'数量（吨）','type':'bar','data':[100,200,300,400]}]})";
     

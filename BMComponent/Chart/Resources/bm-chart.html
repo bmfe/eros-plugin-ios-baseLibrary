@@ -8,11 +8,26 @@
             <meta name="apple-mobile-web-app-status-bar-style" content="black" />
             <meta name="format-detection" content="telephone=no,email=no" />
             <title>ECharts</title>
+            <script type="text/javascript">
+                /*
+                 *通过网络加载自定义样式，加载模板
+                 *<bmchart useStyle="https://www.sinomarinetech.com/utils/tjCurve.js" useStyleName="tjCurve" :options="$format(chertInfo)" @finish='finish'></bmchart>
+                 **/
+            function setUrl(url){
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = url;
+                script.onload = function(){
+                    window.webkit.messageHandlers.callMessage.postMessage('setTheme');
+                };
+                document.body.appendChild(script);
+            }
+            </script>
     </head>
     
-    <body style="margin:0; padding:0;">
+    <body style="margin:0; padding:0;background-color: transparent;">
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-        <div id="main" style="height:260px;width: 100%;"></div>
+        <div id="main" style="height:260px;width: 100%;background-color: transparent;"></div>
         <!-- ECharts单文件引入 -->
         <script type="text/javascript">
             
@@ -25,7 +40,7 @@
         /*
          
          */
-        function setOption(options) {
+        function setOption(options,name) {
             var formatOptions = JSON.parse(options,function(k,v){
                                            
                                            if(v.indexOf&&v.indexOf('function')>-1){
@@ -37,14 +52,13 @@
                                            return v;
                                            
                                            });
-                                           var myChart = echarts.init(mainDom);
+                                           var myChart = echarts.init(mainDom,name);
                                            // 使用刚指定的配置项和数据显示图表。
                                            myChart.setOption(formatOptions);
                                            
         }
-        </script>
-        <script type="text/javascript" src="echarts.min.js"></script>
         
+            </script>
+        <script type="text/javascript" src="echarts.min.js"></script>
     </body>
     
-</html>

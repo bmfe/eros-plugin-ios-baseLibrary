@@ -122,6 +122,7 @@
     [[YTKNetworkConfig sharedConfig] setCdnUrl:platformInfo.url.image];
     
     /** 应用最新js资源文件 */
+    [BMResourceManager sharedInstance].bmWidgetJs = nil;
     [[BMResourceManager sharedInstance] compareVersion];
     
     /** 初始化数据库 */

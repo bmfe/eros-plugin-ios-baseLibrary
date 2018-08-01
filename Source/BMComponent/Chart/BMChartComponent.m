@@ -12,12 +12,14 @@
 #import "WXUtility.h"
 #import "YYModel.h"
 
-#define ChartInfo @"options"
+
+NSString * const ChartInfo = @"options";
 
 @interface BMChartComponent()<WKNavigationDelegate>
 
 @property (nonatomic,strong) WKWebView *webview;    /**< webView */
 @property (nonatomic,copy) NSString *chartInfo;     /**< 图标数据 */
+@property (nonatomic, copy) NSString *src; /**< html文件路径 */
 
 /** event */
 @property (nonatomic,assign) BOOL finishEvent; /**< 图表加载完毕事件 */
@@ -36,6 +38,10 @@
             _chartInfo = [NSString stringWithFormat:@"%@",attributes[ChartInfo]];
         }
         
+        if (attributes[@"src"]) {
+            self.src = [WXConvert NSString:attributes[@"src"]];
+        }
+        
         [self createWebView];
         
     }
@@ -49,13 +55,28 @@
         webview.navigationDelegate = self;
         webview.scrollView.scrollEnabled = NO;
         webview.opaque = NO;
-        
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"bm-chart" ofType:@"html"];
-        NSString *htmlStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [webview loadHTMLString:htmlStr baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
-        
         self.webview = webview;
+        
+        if (!self.src) {
+            [self loadHtmlFormBundle];
+            return;
+        }
+        
+        NSURL *htmlURL = [NSURL URLWithString:self.src];
+        if ([htmlURL.scheme isEqualToString:BM_LOCAL]) {
+            NSURL *htmlURL = TK_RewriteBMLocalURL(self.src);
+            NSString *htmlStr = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:nil];
+            [self.webview loadHTMLString:htmlStr baseURL:htmlURL];
+        }
     });
+}
+
+/** 从工程中加载 html */
+- (void)loadHtmlFormBundle
+{
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"bm-chart" ofType:@"html"];
+    NSString *htmlStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    [self.webview loadHTMLString:htmlStr baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
 }
 
 - (void)fillAttributes:(NSDictionary *)attributes

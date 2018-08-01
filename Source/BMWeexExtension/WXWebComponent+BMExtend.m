@@ -66,10 +66,10 @@
             NSURL *urlPath = [NSURL URLWithString:url];
             if([urlPath.scheme isEqualToString:BM_LOCAL]){
                 if (BM_InterceptorOn()) {
-                    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSURL alloc]initFileURLWithPath:TK_RewriteBMLocalURL(urlPath)]];
+                    NSURLRequest *request = [NSURLRequest requestWithURL:TK_RewriteBMLocalURL(url)];
                     [webview loadRequest:request];
                 }else {
-                    NSString *debugUrl = TK_RewriteBMLocalURL(urlPath).absoluteString;
+                    NSString *debugUrl = TK_RewriteBMLocalURL(url).absoluteString;
                     [self bm_loadURL:debugUrl];
                 }
             } else {

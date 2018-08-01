@@ -19,6 +19,7 @@ WX_PlUGIN_EXPORT_MODULE(bmBundleUpdate, BMBundleUpdateModule)
 
 WX_EXPORT_METHOD(@selector(download::))
 WX_EXPORT_METHOD(@selector(update))
+WX_EXPORT_METHOD(@selector(getJsVersion:))
 
 @synthesize weexInstance;
 
@@ -45,6 +46,20 @@ WX_EXPORT_METHOD(@selector(update))
 - (void)update
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:K_BMAppReStartNotification object:nil];
+}
+
+/** 获取当前jsVersion */
+- (void)getJsVersion:(WXModuleCallback)callback
+{
+    NSDictionary * userInfo = [[BMResourceManager sharedInstance] loadConfigData:K_JS_VERSION_PATH];
+    NSString *jsVerson = @"";
+    if ([userInfo isKindOfClass:[NSDictionary class]]) {
+        jsVerson = userInfo[@"jsVersion"] ? userInfo[@"jsVersion"]:@"";
+    }
+    
+    if (callback) {
+        callback(jsVerson);
+    }
 }
 
 @end

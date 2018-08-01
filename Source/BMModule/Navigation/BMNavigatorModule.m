@@ -38,6 +38,7 @@ WX_EXPORT_METHOD(@selector(setRightItem:callback:))
 WX_EXPORT_METHOD(@selector(setLeftItem:callback:))
 WX_EXPORT_METHOD(@selector(setCenterItem:callback:))
 WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
+WX_EXPORT_METHOD(@selector(statusBarHidden:))
 
 
 #pragma mark - Public Method
@@ -336,5 +337,12 @@ WX_EXPORT_METHOD(@selector(setNavigationInfo:callback:))
         self.centerItemCallback(nil, YES);
     }
 }
+
+/** 是否显示状态栏 */
+- (void)statusBarHidden:(BOOL)hidden
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:UIStatusBarAnimationNone];
+}
+
 
 @end

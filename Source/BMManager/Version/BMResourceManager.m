@@ -360,7 +360,9 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
                     WXLogInfo(@"写入配置文件成功，更新准备完毕");
                     
                     if (self.newJsBundleResPreparedBlock) {
-                        self.newJsBundleResPreparedBlock(YES,@"更新资源准备就绪");
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.newJsBundleResPreparedBlock(YES,@"更新资源准备就绪");
+                        });
                     }
                     
                     if (!TK_PlatformInfo().customBundleUpdate) {

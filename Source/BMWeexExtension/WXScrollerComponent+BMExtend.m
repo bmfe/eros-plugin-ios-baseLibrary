@@ -25,8 +25,16 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
         objc_setAssociatedObject(self, "bm_showRefresh", [NSNumber numberWithBool:[WXConvert BOOL:attributes[@"showRefresh"]]], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
+    if (attributes[@"refreshingTitle"]) {
+        objc_setAssociatedObject(self, "bm_refreshingTitle", [WXConvert NSString:attributes[@"refreshingTitle"]], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
     if (attributes[@"showLoadMore"]) {
         objc_setAssociatedObject(self, "bm_showLoadMore", [NSNumber numberWithBool:[WXConvert BOOL:attributes[@"showLoadMore"]]], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    if (attributes[@"loadingMoreTitle"]) {
+        objc_setAssociatedObject(self, "bm_loadingMoreTitle", [WXConvert NSString:attributes[@"loadingMoreTitle"]], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     
     return [self bmScroller_initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
@@ -87,7 +95,12 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
         }];
 
         header.lastUpdatedTimeLabel.hidden = YES;
-        header.stateLabel.hidden = YES;
+        NSString *refreshingTitle = objc_getAssociatedObject(self, "bm_refreshingTitle");
+        if (refreshingTitle) {
+            [header setTitle:refreshingTitle forState:MJRefreshStateRefreshing];
+        }else{
+            header.stateLabel.hidden = YES;
+        }
         scrollView.mj_header = header;
     }
 }
@@ -100,9 +113,15 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
     
     NSNumber *showLoadMore = objc_getAssociatedObject(self, "bm_showLoadMore");
     if (showLoadMore && [showLoadMore boolValue]) {
-        scrollView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
             [self loadMore];
         }];
+        NSString *loadingMoreTitle = objc_getAssociatedObject(self, "bm_loadingMoreTitle");
+        if (loadingMoreTitle) {
+            [footer setTitle:loadingMoreTitle forState:MJRefreshStateRefreshing];
+            [footer setTitle:loadingMoreTitle forState:MJRefreshStateIdle];
+        }
+        scrollView.mj_footer = footer;
     }
 }
 

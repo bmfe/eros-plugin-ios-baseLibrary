@@ -38,10 +38,7 @@ WX_EXPORT_METHOD(@selector(onclose:))
 
 - (void)webSocket:(NSString *)url protocol:(NSString *)protocol
 {
-    if(loader)
-    {
-        [loader clear];
-    }
+    if (loader) [loader clear];
     loader = [[BMWebSocketLoader alloc] initWithUrl:url protocol:protocol];
     __weak typeof(self) weakSelf = self;
     loader.onReceiveMessage = ^(id message) {

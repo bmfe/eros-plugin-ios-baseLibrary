@@ -13,7 +13,7 @@
 
 - (BOOL)currentVcIs:(NSString *)url
 {
-    return [self.url.absoluteString rangeOfString:url].location != NSNotFound;
+    return ![url isEqualToString:@"tabBar"] && [self.url.absoluteString rangeOfString:url].location != NSNotFound;
 }
 
 /* 判断是否隐藏导航栏 */

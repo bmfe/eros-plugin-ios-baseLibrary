@@ -278,9 +278,9 @@
 //获取图片完整路径
 - (NSString *)getImagePath{
     
-    NSString* path=NSHomeDirectory();
-    path=[path stringByAppendingPathComponent:@"Library/Caches/images"];
-    NSFileManager *fm=[NSFileManager defaultManager];
+    NSString *path = NSHomeDirectory();
+    path = [path stringByAppendingPathComponent:@"Library/Caches/images"];
+    NSFileManager *fm = [NSFileManager defaultManager];
     
     if (![fm fileExistsAtPath:path]) {
         [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
@@ -294,7 +294,6 @@
 - (NSString *)saveImage2Disk:(UIImage *)tempImage
 {
     NSData *imageData=UIImageJPEGRepresentation(tempImage, 1);
-    // and then we write it out
     NSString *path=[self getImagePath];
     if ([imageData writeToFile:path atomically:YES]) {
         return path;

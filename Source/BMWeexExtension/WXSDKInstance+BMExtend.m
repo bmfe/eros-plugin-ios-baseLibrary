@@ -26,7 +26,7 @@
 
 - (void)bm__renderWithMainBundleString:(NSString *)mainBundleString
 {
-    /** 注入本地的base js */
+    /** 注入本地公共的 base js */
     NSString *baseScript = [BMResourceManager sharedInstance].bmWidgetJs;
     
     if (baseScript.length) {

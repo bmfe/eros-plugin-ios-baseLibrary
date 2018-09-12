@@ -66,11 +66,12 @@
 }
 
 
-+(void)exchangeWeexDefault
++ (void)exchangeWeexDefault
 {
-    [self bm_swizzle:[WXSDKEngine class] Method:@selector(_registerDefaultHandlers) withMethod:@selector(bm_registerDefaultHandlers)];
+    [self bm_swizzleClassMethod:[WXSDKEngine class] Method:@selector(_registerDefaultHandlers) withMethod:@selector(bm_registerDefaultHandlers)];
 }
-+(void)exchangeWeexAddRule
+
++ (void)exchangeWeexAddRule
 {
     /** 获取原始addRule方法 */
     Method originalM = class_getInstanceMethod([WXRuleManager class], @selector(addRule:rule:));
@@ -84,7 +85,6 @@
 
 + (void)exchangeWeexEditComponent
 {
-    [self bm_swizzle:[WXEditComponent class] Method:@selector(setType) withMethod:@selector(bmSetType)];
     [self bm_swizzle:[WXEditComponent class] Method:@selector(setAutofocus:) withMethod:@selector(bmEdit_setAutofocus:)];
     [self bm_swizzle:[WXEditComponent class] Method:@selector(initWithRef:type:styles:attributes:events:weexInstance:) withMethod:@selector(bmEdit_initWithRef:type:styles:attributes:events:weexInstance:)];
     [self bm_swizzle:[WXEditComponent class] Method:@selector(viewDidLoad) withMethod:@selector(bmEdit_viewDidLoad)];

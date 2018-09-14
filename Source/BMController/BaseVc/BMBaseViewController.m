@@ -218,7 +218,7 @@
 
 - (void)dealloc
 {
-    WXLogInfo(@"dealloc >>>>>>>>>>>>>>>>>>>>>> %@",self.navigationItem.title);
+    WXLogInfo(@"dealloc >>>>>>>>>>>>>>>>>>>>>> %@",self.url.absoluteString);
     
     [_instance destroyInstance];
     [[NSNotificationCenter defaultCenter] removeObserver:self];

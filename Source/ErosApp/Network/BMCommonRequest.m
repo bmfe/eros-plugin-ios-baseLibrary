@@ -64,9 +64,10 @@
 
 - (YTKRequestSerializerType)requestSerializerType
 {
-    if ([_model.header[@"Content-Type"] isEqualToString:@"application/x-www-form-urlencoded"]) {
+    if ([_model.header[@"Content-Type"] rangeOfString:@"application/x-www-form-urlencoded"].location != NSNotFound) {
         return YTKRequestSerializerTypeHTTP;
     }
+    
     return YTKRequestSerializerTypeJSON;
 }
 

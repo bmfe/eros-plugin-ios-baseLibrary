@@ -9,18 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @class BMJSVersionModel;
-//@interface BMJSVersionModel : NSObject
-//
-//@property (nonatomic, copy) NSString *jsPath;           // js资源包下载地址
-//@property (nonatomic, copy) NSString *jsVersion;        // js版本号
-//
-//@end
-//
-//@implementation BMJSVersionModel
-//
-//@end
 
-typedef void(^BMNewJsBundleResPreparedBlock)(BOOL success, NSString *msg);
+typedef void(^BMUpdateBundleJsBlock)(BOOL success, NSString *msg);
 
 @interface BMResourceManager : NSObject
 
@@ -37,6 +27,6 @@ typedef void(^BMNewJsBundleResPreparedBlock)(BOOL success, NSString *msg);
 -(void)compareVersion;
 
 /** 下载jsbundle 资源 */
--(void)downloadJsBundle:(NSDictionary *)info completed:(BMNewJsBundleResPreparedBlock)completedBlock;
+-(void)downloadJsBundle:(NSDictionary *)info completed:(BMUpdateBundleJsBlock)completedBlock;
 
 @end

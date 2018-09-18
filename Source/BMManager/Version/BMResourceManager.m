@@ -61,7 +61,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 @property (nonatomic,readwrite) BMResourceVersion lastVerionType;
 @property (nonatomic,weak)BMUpdateBundlejsRequest * updateBundleRequest;
 @property (nonatomic, copy) NSString *updateBundleJsUrl;
-@property (nonatomic, copy) BMNewJsBundleResPreparedBlock newJsBundleResPreparedBlock; /**< 更新资源准备完毕block */
+@property (nonatomic, copy) BMUpdateBundleJsBlock newJsBundleResPreparedBlock; /**< 更新资源准备完毕block */
 
 @end
 
@@ -371,8 +371,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
                 }
             }
         }
-    }
-    else{
+    } else {
         
 #ifdef DEBUG
         [SVProgressHUD showInfoWithStatus:@"js资源文件更新完毕但是校验失败，请程序员哥哥查一下有啥Bug"];
@@ -581,7 +580,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
 }
 
 /** 下载jsbundle资源 */
-- (void)downloadJsBundle:(NSDictionary *)info completed:(BMNewJsBundleResPreparedBlock)completedBlock
+- (void)downloadJsBundle:(NSDictionary *)info completed:(BMUpdateBundleJsBlock)completedBlock
 {
     self.newJsBundleResPreparedBlock = completedBlock;
     [self downloadRemoteJSResource:info];

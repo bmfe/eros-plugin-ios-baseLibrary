@@ -10,6 +10,7 @@
 
 @interface UINavigationBar (NavigationBarExtend)
 
+/** 设置导航栏背景颜色 */
 - (void)ex_setBackgroundColor:(UIColor *)color;
 
 @end

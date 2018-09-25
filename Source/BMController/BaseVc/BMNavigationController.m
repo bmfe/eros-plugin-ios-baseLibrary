@@ -31,8 +31,6 @@
     UIColor *setColor = [UIColor colorWithHexString:TK_PlatformInfo().page.navBarColor];
     [self.navigationBar ex_setBackgroundColor:setColor?:K_NAV_BAR_COLOR];
     
-    
-    
     [self setTitleFontSize];
     
     // 注册改变字体的通知

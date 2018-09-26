@@ -451,7 +451,6 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
     NSDictionary * currentConfig = [self loadConfigData:K_JS_VERSION_PATH];
     //    WXLogInfo(@"currentConfig is %@",currentConfig);
     
-    //    NSString * appName = currentConfig[APP_NAME_KEY]?currentConfig[APP_NAME_KEY]:@"app-benmu-health";
     NSString * jsVersion = currentConfig[JS_VERSION]?currentConfig[JS_VERSION]:@"";
     
     

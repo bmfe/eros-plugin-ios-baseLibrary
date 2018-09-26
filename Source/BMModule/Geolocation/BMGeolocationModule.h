@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BMModuleProtocol.h"
+#import <WeexSDK.h>
 
-@interface BMGeolocationModule : NSObject <BMModuleProtocol,WXModuleProtocol>
+@interface BMGeolocationModule : NSObject <WXModuleProtocol>
 
 @end

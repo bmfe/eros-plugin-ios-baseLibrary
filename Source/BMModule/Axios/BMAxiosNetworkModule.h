@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BMModuleProtocol.h"
+#import <WeexSDK.h>
 
 @interface BMAxiosNetworkModule : NSObject <WXModuleProtocol>
 

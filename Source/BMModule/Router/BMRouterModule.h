@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BMModuleProtocol.h"
+#import <WeexSDK.h>
 
 
-@interface BMRouterModule : NSObject <WXModuleProtocol, BMModuleProtocol>
+@interface BMRouterModule : NSObject <WXModuleProtocol>
 
 @end

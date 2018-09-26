@@ -6,11 +6,11 @@
 //
 
 #import "BMAppDelegate.h"
-#import <BMBaseLibrary/BMConfigManager.h>
-#import <BMBaseLibrary/BMMediatorManager.h>
+#import <ErosPluginBaseLibrary/BMConfigManager.h>
+#import <ErosPluginBaseLibrary/BMMediatorManager.h>
 
-#import <BMBaseLibrary/BMRouterManager.h>
-#import <BMBaseLibrary/BMDefine.h>
+#import <ErosPluginBaseLibrary/BMRouterManager.h>
+#import <ErosPluginBaseLibrary/BMDefine.h>
 
 #import <CTMediator+BMPushActions.h>
 #import <CTMediator+BMShareActions.h>

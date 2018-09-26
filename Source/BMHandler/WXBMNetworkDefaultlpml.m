@@ -127,8 +127,6 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma mark 替换链接
 -(NSString*)path:(NSURL*)url
 {
-    //    fe.benmu-health.com/app-benmu-health/dist/js/pages/
-    
     NSString * path  =[url path];
     WXLogInfo(@" path %@",path);
     
@@ -215,7 +213,7 @@ didReceiveResponse:(NSURLResponse *)response
         }
     }
     
-    WXLogInfo(@"本木拦截器 类型 is %@",request.URL.absoluteString);
+    WXLogInfo(@"拦截器 类型 is %@",request.URL.absoluteString);
     NSString * localPath =  [self convertRemoteURLToLocal:request.URL];
     WXResourceLoader * loader = (WXResourceLoader*)delegate;
     if([WXUtility isFileExist:localPath]){

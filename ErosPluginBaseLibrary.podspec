@@ -1,19 +1,19 @@
 # coding: utf-8
 Pod::Spec.new do |s|
-  s.name         = "BMBaseLibrary"
-  s.version      = "1.3.0"
+  s.name         = "ErosPluginBaseLibrary"
+  s.version      = "1.3.1"
   s.summary      = "WeexEros iOS App base library"
   s.description  = <<-DESC
                    WeexEros iOS App base library
                    DESC
 
-  s.homepage     = "https://github.com/bmfe/Benmu-iOS-Library"
+  s.homepage     = "https://github.com/bmfe/eros-plugin-ios-baseLibrary"
   s.license      = "MIT"
   s.author       = { "xionghuayu" => "18601949015@163.com" }
 
   s.platform     = :ios, "8.0"
   s.ios.deployment_target = "8.0"
-  s.source       = { :git => "https://github.com/bmfe/Benmu-iOS-Library.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/bmfe/eros-plugin-ios-baseLibrary.git", :tag => s.version.to_s }
   s.requires_arc = true
   
   s.dependency 'YYText', '1.0.7'
@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
     ss.requires_arc  = false
   end
 
-  #本木自定义转场动画
+  #自定义转场动画
   s.subspec 'BMTransition' do |ss|
     ss.source_files  = "Source/BMTransition/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMTransition/*.h"
@@ -63,21 +63,21 @@ Pod::Spec.new do |s|
     ss.requires_arc  = true
   end
 
-  #本木Controller类
+  #Controller类
   s.subspec 'BMController' do |ss|
     ss.source_files  = "Source/BMController/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMController/**/*.h"
     ss.requires_arc  = true
   end
 
-  #本木Network类
+  #Network类
   s.subspec 'BMNetwork' do |ss|
     ss.source_files  = "Source/BMNetwork/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMNetwork/**/*.h"
     ss.requires_arc  = true
   end
 
-  #本木Weex Module
+  #Weex Module
   s.subspec 'BMModule' do |ss|
     ss.source_files  = "Source/BMModule/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMModule/**/*.h"
@@ -88,28 +88,28 @@ Pod::Spec.new do |s|
     ss.dependency 'TZImagePickerController', '1.9.8'
   end
 
-  #本木Weex BMManager
+  #Weex BMManager
   s.subspec 'BMManager' do |ss|
     ss.source_files  = "Source/BMManager/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMManager/**/*.h"
     ss.requires_arc  = true
   end
 
-  #本木自定义Handler
+  #自定义Handler
   s.subspec 'BMHandler' do |ss|
     ss.source_files  = "Source/BMHandler/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMHandler/*.h"
     ss.requires_arc  = true
   end
 
-  #本木自定义CustomUI
+  #自定义CustomUI
   s.subspec 'BMCustomUI' do |ss|
     ss.source_files  = "Source/BMCustomUI/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMCustomUI/**/*.h"
     ss.requires_arc  = true
   end
 
-  #本木自定义组件
+  #自定义组件
   s.subspec 'BMComponent' do |ss|
     ss.source_files  = "Source/BMComponent/**/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMComponent/**/*.h"
@@ -119,7 +119,7 @@ Pod::Spec.new do |s|
     ss.dependency 'YYText', '1.0.7'
   end
 
-  #本木自定义组件
+  #自定义组件
   s.subspec 'BMModel' do |ss|
     ss.source_files  = "Source/BMModel/*.{c,h,m,mm,S}"
     ss.public_header_files = "Source/BMModel/*.h"

@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BMModuleProtocol.h"
+#import <WeexSDK.h>
 
-@interface BMAuthorLoginModule : NSObject <WXModuleProtocol, BMModuleProtocol>
+@interface BMAuthorLoginModule : NSObject <WXModuleProtocol>
 
 @end

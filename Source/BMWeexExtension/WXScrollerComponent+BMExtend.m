@@ -91,7 +91,7 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
     NSNumber *showRefresh = objc_getAssociatedObject(self, "bm_showRefresh");
     if (showRefresh && [showRefresh boolValue]) {
         BMDotGifHeader *header = [BMDotGifHeader headerWithRefreshingBlock:^{
-            [self refresh];
+            [self bmRefresh];
         }];
 
         header.lastUpdatedTimeLabel.hidden = YES;
@@ -108,13 +108,13 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
 - (void)checkNeedShowLoadMore:(UIView *)view
 {
     UIScrollView *scrollView = (UIScrollView *)view;
-    
+
     CGSize size = [[UIScreen mainScreen] currentMode].size;
-    
+
     NSNumber *showLoadMore = objc_getAssociatedObject(self, "bm_showLoadMore");
     if (showLoadMore && [showLoadMore boolValue]) {
         MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-            [self loadMore];
+            [self bmLoadMore];
         }];
         NSString *loadingMoreTitle = objc_getAssociatedObject(self, "bm_loadingMoreTitle");
         if (loadingMoreTitle) {
@@ -128,12 +128,12 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
 /**
  出发刷新方法
  */
-- (void)refresh
+- (void)bmRefresh
 {
     [self fireEvent:@"refresh" params:nil];
 }
 
-- (void)loadMore
+- (void)bmLoadMore
 {
     [self fireEvent:@"loadMore" params:nil];
 }

@@ -3,7 +3,7 @@
 //  JingYitong
 //
 //  Created by XHY on 15/8/13.
-//  Copyright (c) 2015年 京医通. All rights reserved.
+//  Copyright (c) 2015年 XHY. All rights reserved.
 //
 
 #import "NSTimer+Addition.h"

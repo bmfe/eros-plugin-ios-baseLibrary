@@ -7,7 +7,7 @@
 //
 
 #import <WeexSDK/WeexSDK.h>
-#import <WXWebComponent.h>
+#import <WeexSDK/WXWebComponent.h>
 
 @interface WXWebComponent (BMExtend)
 

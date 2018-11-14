@@ -87,7 +87,7 @@
             imv.userInteractionEnabled = YES;
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(50, K_SCREEN_HEIGHT - bottomSpace, K_SCREEN_WIDTH - 100, 45);
-            [btn setTitle:@"进入京医通" forState:UIControlStateNormal];
+            [btn setTitle:@"进入XHY" forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont boldSystemFontOfSize:16];
             [btn setTitleColor:K_WHITE_COLOR forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageWithColor:K_BUTTON_COLOR size:btn.size] forState:UIControlStateNormal];

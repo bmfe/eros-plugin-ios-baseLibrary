@@ -3,7 +3,7 @@
 //  JingYitong
 //
 //  Created by XHY on 15/7/15.
-//  Copyright (c) 2015年 京医通. All rights reserved.
+//  Copyright (c) 2015年 XHY. All rights reserved.
 //
 
 #ifndef JingYitong_CommonMacro_h
@@ -118,11 +118,6 @@ _Pragma("clang diagnostic pop")
 /** 获取屏幕物理高度 */
 #define K_SCREEN_HEIGHT             [[UIScreen mainScreen]bounds].size.height
 #define K_SCREEN_WIDTH              [[UIScreen mainScreen]bounds].size.width
-#define K_STATUSBAR_HEIGHT (isIphoneX ? 44 : 20)
-#define K_NAVBAR_HEIGHT 44
-#define K_TOPBAR_HEIGHT (K_NAVBAR_HEIGHT + K_STATUSBAR_HEIGHT)
-#define K_TABBAR_HEIGHT (isIphoneX ? 83 : 49)
-#define K_TOUCHBAR_HEIGHT (isIphoneX ? 34 : 0)
 
 /** 屏幕尺寸 */
 #define isRetina  [[UIScreen mainScreen] scale] == 2
@@ -130,8 +125,15 @@ _Pragma("clang diagnostic pop")
 #define isIphone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 #define isIphone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? (CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) || CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size)) : NO)
 #define isIphone6Plus ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? (CGSizeEqualToSize(CGSizeMake(1125, 2001), [[UIScreen mainScreen] currentMode].size) || CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size)) : NO)
-#define isIphoneX (@available(iOS 11.0, *) ?[[[UIApplication sharedApplication] delegate] window].safeAreaInsets.bottom > 0.0 :NO )
+#define isIphoneX ([UIScreen mainScreen].bounds.size.height == 812.0 || [UIScreen mainScreen].bounds.size.height == 896.0)
 #define isIpad ([[UIDevice currentDevice].model rangeOfString:@"iPad"].location != NSNotFound)
+
+/** Navbar、statusBar、touchBar */
+#define K_STATUSBAR_HEIGHT (isIphoneX ? 44 : 20)
+#define K_NAVBAR_HEIGHT 44
+#define K_TOPBAR_HEIGHT (K_NAVBAR_HEIGHT + K_STATUSBAR_HEIGHT)
+#define K_TABBAR_HEIGHT (isIphoneX ? 83 : 49)
+#define K_TOUCHBAR_HEIGHT (isIphoneX ? 34 : 0)
 
 /** 当前设备版本号 */
 #define K_SYSTEM_VERSION      [[[UIDevice currentDevice] systemVersion] floatValue]

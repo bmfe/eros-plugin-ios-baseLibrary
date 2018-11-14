@@ -1,7 +1,7 @@
 # coding: utf-8
 Pod::Spec.new do |s|
   s.name         = "ErosPluginBaseLibrary"
-  s.version      = "1.3.2"
+  s.version      = "1.3.3"
   s.summary      = "WeexEros iOS App base library"
   s.description  = <<-DESC
                    WeexEros iOS App base library
@@ -84,8 +84,8 @@ Pod::Spec.new do |s|
     ss.resources = 'Source/BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle'
     ss.requires_arc  = true
     ss.dependency "Realm",'3.1.0'
-    ss.dependency "BindingX",'1.0.1'
-    ss.dependency 'TZImagePickerController', '1.9.8'
+    ss.dependency "BindingX",'1.0.3'
+    ss.dependency 'TZImagePickerController', '3.1.2'
   end
 
   #Weex BMManager

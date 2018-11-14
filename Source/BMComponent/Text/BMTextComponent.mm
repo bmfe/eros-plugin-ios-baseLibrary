@@ -1,12 +1,12 @@
 //
-//  BMRichTextComponent.m
-//  Pods
+//  BMTextComponent.m
+//  BM-JYT
 //
-//  Created by XHY on 2017/4/12.
+//  Created by XHY on 2017/3/24.
 //  Copyright © 2017年 XHY. All rights reserved.
 //
 
-#import "BMRichTextComponent.h"
+#import "BMTextComponent.h"
 #import <WeexSDK/WXSDKInstance_private.h>
 #import <WeexSDK/WXComponent_internal.h>
 #import <WeexSDK/WXLayer.h>
@@ -14,39 +14,33 @@
 #import <WeexSDK/WXRuleManager.h>
 #import <WeexSDK/WXDefine.h>
 #import <pthread/pthread.h>
-#import "BMSpanComponent.h"
-#import "YYText.h"
+#import <WeexSDK/WXComponent+Layout.h>
 
-@interface BMRichTextComponent()
-
-@property (nonatomic, copy) NSMutableAttributedString *currentAttributedString;
-@property (nonatomic, copy) NSString *currentFullText;
-
-@end
-
-@implementation BMRichTextComponent
+@implementation BMTextComponent
 {
     UIEdgeInsets _border;
     UIEdgeInsets _padding;
     NSTextStorage *_textStorage;
     CGFloat _textStorageWidth;
     
+    NSString *_text;
+    UIColor *_color;
+    NSString *_fontFamily;
+    CGFloat _fontSize;
+    CGFloat _fontWeight;
+    WXTextStyle _fontStyle;
     NSUInteger _lines;
     NSTextAlignment _textAlign;
-    CGFloat _fontSize;
-    UIColor *_color;
+    WXTextDecoration _textDecoration;
     NSString *_textOverflow;
     CGFloat _lineHeight;
     
     
     pthread_mutex_t _textStorageMutex;
     pthread_mutexattr_t _textStorageMutexAttr;
-    
-    NSInteger _subcomponentCount;
 }
 
 static BOOL _isUsingTextStorageLock = NO;
-
 + (void)useTextStorageLock:(BOOL)isUsingTextStorageLock
 {
     _isUsingTextStorageLock = isUsingTextStorageLock;
@@ -203,39 +197,39 @@ if (needLayout) {\
 - (void)fillCSSStyles:(NSDictionary *)styles
 {
     WX_STYLE_FILL_TEXT(color, color, UIColor, NO)
+    WX_STYLE_FILL_TEXT(fontFamily, fontFamily, NSString, YES)
     WX_STYLE_FILL_TEXT_PIXEL(fontSize, fontSize, YES)
+    WX_STYLE_FILL_TEXT(fontWeight, fontWeight, WXTextWeight, YES)
+    WX_STYLE_FILL_TEXT(fontStyle, fontStyle, WXTextStyle, YES)
     WX_STYLE_FILL_TEXT(lines, lines, NSUInteger, YES)
     WX_STYLE_FILL_TEXT(textAlign, textAlign, NSTextAlignment, NO)
+    WX_STYLE_FILL_TEXT(textDecoration, textDecoration, WXTextDecoration, YES)
     WX_STYLE_FILL_TEXT(textOverflow, textOverflow, NSString, NO)
     WX_STYLE_FILL_TEXT_PIXEL(lineHeight, lineHeight, YES)
     
-    if (!_lineHeight) _lineHeight = 18;
+    if (_lineHeight == 0) _lineHeight = _fontSize + 8;
     
-    UIEdgeInsets padding = {
-        WXFloorPixelValue(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP]),
-        WXFloorPixelValue(self.cssNode->style.padding[CSS_LEFT] + self.cssNode->style.border[CSS_LEFT]),
-        WXFloorPixelValue(self.cssNode->style.padding[CSS_BOTTOM] + self.cssNode->style.border[CSS_BOTTOM]),
-        WXFloorPixelValue(self.cssNode->style.padding[CSS_RIGHT] + self.cssNode->style.border[CSS_RIGHT])
+    UIEdgeInsets flex_padding = {
+        WXFloorPixelValue(self.flexCssNode->getPaddingTop()+ self.flexCssNode->getBorderWidthTop()),
+        WXFloorPixelValue(self.flexCssNode->getPaddingLeft() + self.flexCssNode->getBorderWidthLeft()),
+        WXFloorPixelValue(self.flexCssNode->getPaddingBottom() + self.flexCssNode->getBorderWidthBottom()),
+        WXFloorPixelValue(self.flexCssNode->getPaddingRight() + self.flexCssNode->getBorderWidthRight())
     };
     
-    if (!UIEdgeInsetsEqualToEdgeInsets(padding, _padding)) {
-        _padding = padding;
+    if (!UIEdgeInsetsEqualToEdgeInsets(flex_padding, _padding)) {
+        _padding = flex_padding;
         [self setNeedsRepaint];
     }
 }
 
 - (void)fillAttributes:(NSDictionary *)attributes
 {
-//    id text = attributes[@"value"];
-//    if (text) {
-//        _text = [WXConvert NSString:text];
-//        [self setNeedsRepaint];
-//        [self setNeedsLayout];
-//    }
-    
-//    if (attributes[@"subcomponentCount"]) {
-//        _subcomponentCount = [WXConvert NSInteger:attributes[@"subcomponentCount"]];
-//    }
+    id text = attributes[@"value"];
+    if (text) {
+        _text = [WXConvert NSString:text];
+        [self setNeedsRepaint];
+        [self setNeedsLayout];
+    }
 }
 
 - (void)setNeedsRepaint
@@ -251,45 +245,31 @@ if (needLayout) {\
 
 - (void)repaint
 {
-    YYLabel *lbl = (YYLabel *)self.view;
+    UILabel *lbl = (UILabel *)self.view;
     lbl.numberOfLines = _lines;
+    lbl.attributedText = [self buildAttributeString];
+    lbl.lineBreakMode = NSLineBreakByClipping;
     if (_textOverflow && [_textOverflow length] > 0) {
         if ([_textOverflow isEqualToString:@"ellipsis"])
             lbl.lineBreakMode = NSLineBreakByTruncatingTail;
     }
-    
-    if (_color) {
-        lbl.textColor = _color;
-    }
-    
-    if (_textAlign) {
-        lbl.textAlignment = _textAlign;
-    }
-    
-    lbl.attributedText = self.currentAttributedString;
+    lbl.textColor = _color;
 }
 
 - (CGSize)getComputedSizeWithConstrainedWidth:(CGFloat)width
 {
-    if (!self.currentAttributedString) {
-        return CGSizeZero;
-    }
-    
     CGFloat linesHeight = _lines * _lineHeight;
-//    CGRect rect4Text = [self.currentAttributedString  boundingRectWithSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+    CGRect rect4Text = [[self buildAttributeString] boundingRectWithSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
-    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:CGSizeMake(width - (_padding.left + _padding.right), MAXFLOAT) text:self.currentAttributedString];
-    CGSize size4Text = layout.textBoundingSize;
-    
-    if (size4Text.height < linesHeight) {
-        size4Text.height = linesHeight;
+    if (rect4Text.size.height < linesHeight) {
+        rect4Text.size.height = linesHeight;
     }
     
     if (_lines != 0) {
-        size4Text.height = linesHeight;
+        rect4Text.size.height = linesHeight;
     }
     
-    CGSize computedSize = CGSizeMake(width, size4Text.height);
+    CGSize computedSize = CGSizeMake(width, rect4Text.size.height);
     
     return computedSize;
 }
@@ -304,29 +284,16 @@ if (needLayout) {\
 
 - (void)viewDidLoad
 {
-//    [self repaint];
-    
-//    [self setNeedsRepaint];
-//    [self setNeedsDisplay];
-//    [self setNeedsDisplay];
-    
-}
-
-- (void)layoutDidFinish
-{
-    [super setNeedsLayout];
+    [self repaint];
+    [self setNeedsRepaint];
+    [self setNeedsDisplay];
 }
 
 - (UIView *)loadView
 {
-    YYLabel *lbl = [YYLabel new];
+    UILabel *lbl = [[UILabel alloc] init];
     lbl.userInteractionEnabled = YES;
     return lbl;
-}
-
-- (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index
-{
-    [super insertSubview:subcomponent atIndex:index];
 }
 
 - (CGSize (^)(CGSize))measureBlock
@@ -334,27 +301,23 @@ if (needLayout) {\
     __weak typeof(self) weakSelf = self;
     return ^CGSize (CGSize constrainedSize) {
         
-        if (!self.currentAttributedString) {
-            return CGSizeZero;
-        }
-        
         CGSize computedSize = [weakSelf getComputedSizeWithConstrainedWidth:constrainedSize.width];
         
         //TODO:more elegant way to use max and min constrained size
-        if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_WIDTH])) {
-            computedSize.width = MAX(computedSize.width, weakSelf.cssNode->style.minDimensions[CSS_WIDTH]);
+        if (!isnan(weakSelf.flexCssNode->getMinWidth())) {
+            computedSize.width = MAX(computedSize.width, weakSelf.flexCssNode->getMinWidth());
         }
         
-        if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_WIDTH])) {
-            computedSize.width = MIN(computedSize.width, weakSelf.cssNode->style.maxDimensions[CSS_WIDTH]);
+        if (!isnan(weakSelf.flexCssNode->getMaxWidth())) {
+            computedSize.width = MIN(computedSize.width, weakSelf.flexCssNode->getMaxWidth());
         }
         
-        if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_HEIGHT])) {
-            computedSize.height = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
+        if (!isnan(weakSelf.flexCssNode->getMinHeight())) {
+            computedSize.height = MAX(computedSize.height, weakSelf.flexCssNode->getMinHeight());
         }
         
-        if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT])) {
-            computedSize.height = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
+        if (!isnan(weakSelf.flexCssNode->getMaxHeight())) {
+            computedSize.height = MIN(computedSize.height, weakSelf.flexCssNode->getMaxHeight());
         }
         
         WXPerformBlockOnMainThread(^{
@@ -369,40 +332,43 @@ if (needLayout) {\
 }
 
 #pragma mark Text Building
-
-- (NSAttributedString *)buildAttributeStringWithSpan:(BMSpanComponent *)span
+- (NSString *)text
 {
-    NSString *string = span.text ?: @"";
+    return _text;
+}
+
+- (NSAttributedString *)buildAttributeString
+{
+    NSString *string = [self text] ?: @"";
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     
     // set textColor
-    span.textColor = span.textColor?:_color;
-    if(span.textColor) {
-        [attributedString addAttribute:NSForegroundColorAttributeName value:span.textColor range:NSMakeRange(0, string.length)];
+    if(_color) {
+        [attributedString addAttribute:NSForegroundColorAttributeName value:_color range:NSMakeRange(0, string.length)];
     }
     
-    if (span.fontFamily) {
-        NSString * keyPath = [NSString stringWithFormat:@"%@.tempSrc", span.fontFamily];
+    if (_fontFamily) {
+        NSString * keyPath = [NSString stringWithFormat:@"%@.tempSrc", _fontFamily];
         NSString * fontSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
-        keyPath = [NSString stringWithFormat:@"%@.localSrc", span.fontFamily];
+        keyPath = [NSString stringWithFormat:@"%@.localSrc", _fontFamily];
         NSString * fontLocalSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
+        //custom localSrc is cached
+        if (!fontLocalSrc && fontSrc) {
+            // if use custom font, when the custom font download finish, refresh text.
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repaintText:) name:WX_ICONFONT_DOWNLOAD_NOTIFICATION object:nil];
+        }
     }
     
     // set font
-    CGFloat curfontSize = _fontSize;
-    if (span.fontSize) {
-        curfontSize = [WXConvert WXPixelType:[NSString stringWithFormat:@"%f",[self getChangeToFontSizeWithDefaultSize:span.fontSize]] scaleFactor:self.weexInstance.pixelScaleFactor];
-    }
-    
-    UIFont *font = [WXUtility fontWithSize:curfontSize textWeight:span.fontWeight textStyle:span.fontStyle fontFamily:span.fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     if (font) {
         [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
     }
     
-    if(span.textDecoration == WXTextDecorationUnderline){
+    if(_textDecoration == WXTextDecorationUnderline){
         [attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, string.length)];
-    } else if(span.textDecoration == WXTextDecorationLineThrough){
+    } else if(_textDecoration == WXTextDecorationLineThrough){
         [attributedString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, string.length)];
     }
     
@@ -418,35 +384,36 @@ if (needLayout) {\
     }
     
     
+    
     if (_lineHeight || _textAlign) {
         [attributedString addAttribute:NSParagraphStyleAttributeName
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
     }
-//    if ([self adjustLineHeight]) {
-//        if (_lineHeight > font.lineHeight) {
-//            [attributedString addAttribute:NSBaselineOffsetAttributeName
-//                                     value:@((_lineHeight - font.lineHeight)/ 2)
-//                                     range:(NSRange){0, attributedString.length}];
-//        }
-//    }
-    
-    /** 点击事件 */
-    __weak typeof(span) weakSpan = span;
-    if (span.clickEvent) {
-        [attributedString yy_setTextHighlightRange:NSMakeRange(0, string.length)
-                                             color:span.textColor
-                                   backgroundColor:nil
-                                         tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-                                            
-                                             WXLogInfo(@"富文本点击文字：%@",string);
-                                             
-                                             [weakSpan fireEvent:@"click" params:nil];
-                                             
-                                         }];
+    if ([self adjustLineHeight]) {
+        if (_lineHeight > font.lineHeight) {
+            [attributedString addAttribute:NSBaselineOffsetAttributeName
+                                     value:@((_lineHeight - font.lineHeight)/ 2)
+                                     range:(NSRange){0, attributedString.length}];
+        }
     }
     
     return attributedString;
+}
+
+- (void)repaintText:(NSNotification *)notification
+{
+    if (![_fontFamily isEqualToString:notification.userInfo[@"fontFamily"]]) {
+        return;
+    }
+    [self setNeedsRepaint];
+    WXPerformBlockOnComponentThread(^{
+        [self.weexInstance.componentManager startComponentTasks];
+        WXPerformBlockOnMainThread(^{
+            [self setNeedsLayout];
+            [self setNeedsDisplay];
+        });
+    });
 }
 
 - (BOOL)adjustLineHeight
@@ -465,10 +432,6 @@ if (needLayout) {\
     
     [self fillCSSStyles:styles];
     
-    self.currentFullText = nil;
-    
-    [self updateRichText];
-    
 }
 
 - (void)updateAttributes:(NSDictionary *)attributes
@@ -481,51 +444,6 @@ if (needLayout) {\
     [super _updateAttributesOnComponentThread:attributes];
     
     [self fillAttributes:attributes];
-}
-
-/** 更新 富文本 */
-- (void)updateRichText
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
-        NSString *fullText = @"";
-        NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] init];
-        
-        /** 遍历所有子组件，拿到所有bmspan组件，构建完整的富文本 */
-        for (WXComponent *subcomponent in self.subcomponents) {
-            
-            BMSpanComponent *span = [self findSpanComponent:subcomponent];
-            if (!span) continue;
-            fullText = [fullText stringByAppendingString:span.text];
-            [attStr appendAttributedString:[self buildAttributeStringWithSpan:span]];
-        }
-        
-        self.currentFullText = fullText;
-        self.currentAttributedString = attStr;
-        
-        WXPerformBlockOnMainThread(^{
-            [self repaint];
-            [self setNeedsRepaint];
-            [self setNeedsLayout];
-            [self setNeedsDisplay];
-        });
-        
-    });
-}
-
-/** 递归遍历子组件拿返回 bmspan 组件 */
-- (BMSpanComponent *)findSpanComponent:(WXComponent *)component
-{
-    if (component) {
-        if ([component isKindOfClass:[BMSpanComponent class]]) {
-            return (BMSpanComponent *)component;
-        }
-        
-        for (WXComponent *subComponent in component.subcomponents) {
-            return [self findSpanComponent:subComponent];
-        }
-    }
-    return nil;
 }
 
 @end

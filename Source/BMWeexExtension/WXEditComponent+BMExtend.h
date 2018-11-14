@@ -7,7 +7,7 @@
 //
 
 #import <WeexSDK/WeexSDK.h>
-#import <WXEditComponent.h>
+#import <WeexSDK/WXEditComponent.h>
 
 @interface WXEditComponent (BMExtend)
 

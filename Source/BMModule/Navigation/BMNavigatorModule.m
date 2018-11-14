@@ -7,10 +7,10 @@
 //
 
 #import "BMNavigatorModule.h"
-#import <WXConvert.h>
-#import <WXImgLoaderProtocol.h>
-#import <WXHandlerFactory.h>
-#import <WXUtility.h>
+#import <WeexSDK/WXConvert.h>
+#import <WeexSDK/WXImgLoaderProtocol.h>
+#import <WeexSDK/WXHandlerFactory.h>
+#import <WeexSDK/WXUtility.h>
 
 typedef NS_ENUM(NSUInteger,BMNavigationItemPosition) {
     BMNavigationItemPositionRight = 1,      /* 右边位置 */

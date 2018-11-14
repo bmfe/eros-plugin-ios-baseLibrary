@@ -3,7 +3,7 @@
 //  JingYitong
 //
 //  Created by XHY on 16/9/29.
-//  Copyright © 2016年 京医通. All rights reserved.
+//  Copyright © 2016年 XHY. All rights reserved.
 //
 
 #import "HYAlertViewManager.h"

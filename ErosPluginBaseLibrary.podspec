@@ -1,7 +1,7 @@
 # coding: utf-8
 Pod::Spec.new do |s|
   s.name         = "ErosPluginBaseLibrary"
-  s.version      = "1.3.3"
+  s.version      = "1.3.4"
   s.summary      = "WeexEros iOS App base library"
   s.description  = <<-DESC
                    WeexEros iOS App base library

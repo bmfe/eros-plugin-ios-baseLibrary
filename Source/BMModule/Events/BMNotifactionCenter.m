@@ -28,7 +28,7 @@ const static NSString * instanceIDKey = @"instanceId";
 
 @implementation BMNotifactionCenter
 
-+(instancetype)defaultCenter
++ (instancetype)defaultCenter
 {
     static BMNotifactionCenter *_instance = nil;
     static dispatch_once_t onceToken;
@@ -38,7 +38,7 @@ const static NSString * instanceIDKey = @"instanceId";
     return _instance;
 }
 
--(instancetype)init
+- (instancetype)init
 {
     if (self = [super init]) {
         eventsMaps = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -46,7 +46,8 @@ const static NSString * instanceIDKey = @"instanceId";
     }
     return self;
 }
--(void)on:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
+
+- (void)on:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
 {
     if (nil == callback) {
         return;
@@ -58,7 +59,6 @@ const static NSString * instanceIDKey = @"instanceId";
          id callbacks = [eventsMaps objectForKey:eventName];
         
         if (nil == callbacks) {
-
             callbacks = [[NSMutableArray alloc] initWithCapacity:0];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEvent:) name:eventName object:nil];
         }
@@ -80,8 +80,7 @@ const static NSString * instanceIDKey = @"instanceId";
     }
 }
 
-
--(void)once:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
+- (void)once:(NSString*)event callback:(WXModuleKeepAliveCallback)callback instance:(WXSDKInstance *)instance
 {
     if (nil == callback) {
         return;
@@ -114,40 +113,34 @@ const static NSString * instanceIDKey = @"instanceId";
     }
 }
 
-
--(void)off:(NSString*)event callback:(WXModuleCallback)callback
+- (void)off:(NSString*)event callback:(WXModuleCallback)callback
 {
     if (event.length > 0) {
-        id callbacks = [eventsMaps objectForKey:event];
-        
+        NSString * eventName = [NSString stringWithFormat:@"%@_%@",bmNotifaction,event];
+        id callbacks = [eventsMaps objectForKey:eventName];
         if([callbacks isKindOfClass:[NSArray class]]){
-            NSString * eventName = [NSString stringWithFormat:@"%@_%@",bmNotifaction,event];
             [eventsMaps removeObjectForKey:eventName];
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self name:eventName object:nil];
         }
     }
 }
 
 
--(void)emit:(NSString*)event info:(id)info
+- (void)emit:(NSString*)event info:(id)info
 {
     NSString * eventName = [NSString stringWithFormat:@"%@_%@",bmNotifaction,event];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:eventName object:nil userInfo:info];
 }
 
--(void)offAll
+- (void)offAll
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
     [eventsMaps removeAllObjects];
 }
 
 
 #pragma mark  注册事件
-
--(void)onEvent:(NSNotification*)notification
+- (void)onEvent:(NSNotification*)notification
 {
     NSString * name = notification.name;
     NSDictionary * userinfo = notification.userInfo;
@@ -157,7 +150,6 @@ const static NSString * instanceIDKey = @"instanceId";
     if ([callbacks isKindOfClass:[NSArray class]]) {
         
         NSMutableArray * tmpCallbacks = [[NSMutableArray alloc] initWithArray:callbacks];
-        
         
         for (id callbackInfo in (NSArray*)callbacks) {
             if ([callbackInfo isKindOfClass:[NSDictionary class]]) {
@@ -172,12 +164,10 @@ const static NSString * instanceIDKey = @"instanceId";
                                 [tmpCallbacks removeObject:callbackInfo];
                                 keep = NO;
                             }
-                            
                             callback(userinfo,keep);
                         }
-                    }
-                    else{
-                         //移除callbackInfo
+                    } else {
+                        //移除callbackInfo
                         [tmpCallbacks removeObject:callbackInfo];
                     }
                 }
@@ -187,7 +177,8 @@ const static NSString * instanceIDKey = @"instanceId";
         [eventsMaps setObject:tmpCallbacks forKey:name];
     }
 }
--(void)destroyObserver:(NSString *)instanceId
+
+- (void)destroyObserver:(NSString *)instanceId
 {
     if (YES == [instanceArrays containsObject:instanceId]) {
         [instanceArrays removeObject:instanceId];

@@ -115,9 +115,6 @@
     [[YTKNetworkConfig sharedConfig] setBaseUrl:platformInfo.url.request];
     [[YTKNetworkConfig sharedConfig] setCdnUrl:platformInfo.url.image];
     
-    /** 应用最新js资源文件 */
-    [[BMResourceManager sharedInstance] compareVersion];
-    
     /** 初始化数据库 */
     [[BMDB DB] configDB];
     
@@ -127,6 +124,11 @@
     /* 监听截屏事件 */
 //    [[BMScreenshotEventManager shareInstance] monitorScreenshotEvent];
     
+}
+
+/** 应用最新js资源文件 */
++ (void)compareVersion {
+    [[BMResourceManager sharedInstance] compareVersion];
 }
 
 + (void)configProgressHUD
@@ -197,11 +199,11 @@
     
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelLog];
+    [WXLog setLogLevel:WeexLogLevelLog];
     [[BMDebugManager shareInstance] show];
 #else
     [WXDebugTool setDebug:NO];
-    [WXLog setLogLevel:WXLogLevelOff];
+    [WXLog setLogLevel:WeexLogLevelOff];
 #endif
 }
 

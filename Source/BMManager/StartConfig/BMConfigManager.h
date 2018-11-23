@@ -21,6 +21,9 @@
 /** app启动时候配置一些参数 */
 + (void)configDefaultData;
 
+/** 应用最新js资源文件 */
++ (void)compareVersion;
+
 /** 其他app掉起app回调方法 */
 - (BOOL)applicationOpenURL:(NSURL *)url;
 

@@ -30,6 +30,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     
+    /* 初始化数据 */
+    [BMConfigManager configDefaultData];
+    
     if (_isLoad == NO) {
         [self startApp];
     }
@@ -114,8 +117,7 @@
 {
     _isLoad = YES;
     
-    /* 初始化数据 */
-    [BMConfigManager configDefaultData];
+    [BMConfigManager compareVersion];
     
     /** 加载页面 */
     self.window.rootViewController = [[BMMediatorManager shareInstance] loadHomeViewController];

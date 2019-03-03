@@ -23,7 +23,7 @@
 #import "WXDemoViewController.h"
 #import "WXDebugTool.h"
 
-#import <WXDevtool/TBWXDevTool/WXDevTool.h>
+#import <WXDevtool/WXDevTool.h>
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface WXScannerVC ()

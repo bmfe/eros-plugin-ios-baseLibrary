@@ -15,7 +15,7 @@
 #import "BMResourceManager.h"
 #import "Masonry.h"
 #import "BMNavigationController.h"
-#import <WXDevtool/TBWXDevTool/WXDevTool.h>
+#import <WXDevtool/WXDevTool.h>
 #import "WXScannerVC.h"
 #import "BMDebugManager.h"
 

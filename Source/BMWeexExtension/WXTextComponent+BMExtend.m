@@ -79,7 +79,11 @@ const void * _fontSizeScale = "bm_fontSizeScale";
                              @"fontSize": [NSNumber numberWithFloat:changeFontSize],
                              @"lineHeight": [NSNumber numberWithFloat:changeLineHeight]
                              };
-    [self _updateStylesOnComponentThread:styles resetStyles:[NSMutableArray array] isUpdateStyles:YES];
+    @weakify(self);
+    WXPerformBlockOnComponentThread(^{
+        @strongify(self);
+        [self _updateStylesOnComponentThread:styles resetStyles:[NSMutableArray array] isUpdateStyles:YES];
+    });
 }
 /* 60001 ⬆️ */
 

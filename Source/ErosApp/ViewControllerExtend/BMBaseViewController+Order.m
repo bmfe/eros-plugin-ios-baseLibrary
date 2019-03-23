@@ -31,8 +31,14 @@
 /* 设置状态栏样式 */
 - (void)bmSetStatusBarStyle
 {
-    
-    if (!self.routerModel.statusBarStyle) return;
+    if (!self.routerModel.statusBarStyle) {
+        if ([BMConfigManager.shareInstance.platform.page.statusBarStyle isEqualToString:@"LightContent"]) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+        } else {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+        }
+        return;
+    }
     
     /* 设置状态栏 字体颜色 */
     if ([self.routerModel.statusBarStyle isEqualToString:@"Default"]) {

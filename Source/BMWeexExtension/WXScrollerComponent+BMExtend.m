@@ -162,4 +162,16 @@ WX_EXPORT_METHOD(@selector(loadMoreEnd));
     [scrollView.mj_footer endRefreshing];
 }
 
+- (void)bmScroller_updateAttributes:(NSDictionary *)attributes {
+    [self bmScroller_updateAttributes: attributes];
+    
+    BOOL isShowLoadMore = [attributes[@"showLoadMore"] boolValue];
+    if (!isShowLoadMore) {
+        UIScrollView *scrollView = (UIScrollView *)self.view;
+        if (scrollView.mj_footer) {
+            scrollView.mj_footer.hidden = YES;
+        }
+    }
+}
+
 @end

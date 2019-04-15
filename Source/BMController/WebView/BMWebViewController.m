@@ -16,6 +16,7 @@
 #import "UIWebView+BMExtend.h"
 #import "BMUserInfoModel.h"
 #import "BMNative.h"
+#import "UIColor+Util.h"
 
 @interface BMWebViewController () <UIWebViewDelegate, JSExport>
 {
@@ -58,13 +59,20 @@
 
 - (void)subInit
 {
-    CGFloat height = K_SCREEN_HEIGHT - 64;
+    CGFloat height = K_SCREEN_HEIGHT - K_STATUSBAR_HEIGHT - K_NAVBAR_HEIGHT;
     if (!self.routerInfo.navShow) {
         height = K_SCREEN_HEIGHT;
     }
+
+    // 减去 Indicator 高度
+    height -= K_TOUCHBAR_HEIGHT;
+
     self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
-    self.webView.backgroundColor = K_BACKGROUND_COLOR;
+    self.webView.backgroundColor = self.routerInfo.backgroundColor? [UIColor colorWithHexString:self.routerInfo.backgroundColor]: K_BACKGROUND_COLOR;
+    self.webView.scrollView.bounces = NO;
     self.webView.delegate = self;
+
+    self.view.backgroundColor = self.routerInfo.backgroundColor? [UIColor colorWithHexString:self.routerInfo.backgroundColor]: K_BACKGROUND_COLOR;
 
     self.urlStr = self.routerInfo.url;
     [self reloadURL];

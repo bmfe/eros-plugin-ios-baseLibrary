@@ -201,36 +201,4 @@ const char *  _attrKey = "_attr";
         }
 }
 
-- (void)bmEdit_keyboardWasShown:(NSNotification*)notification
-{
-    if(![self.view isFirstResponder]) {
-        return;
-    }
-    CGRect begin = [[[notification userInfo] objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
-    
-    CGRect end = [[[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    
-    CGSize keyboardSize = keyboardSize = end.size;
-    [self setValue:[NSValue valueWithCGSize:keyboardSize] forKey:@"keyboardSize"];
-    UIView * rootView = self.weexInstance.rootView;
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGRect keyboardRect = (CGRect){
-        .origin.x = 0,
-        .origin.y = CGRectGetMaxY(screenRect) - keyboardSize.height - 54,
-        .size = keyboardSize
-    };
-    
-    CGRect inputFrame = [self.view.superview convertRect:self.view.frame toView:rootView];
-    if (keyboardRect.origin.y - inputFrame.size.height <= inputFrame.origin.y) {
-        if ([self respondsToSelector:@selector(setViewMovedUp:)]) {
-            [self setViewMovedUp:YES];
-        }
-        self.weexInstance.isRootViewFrozen = YES;
-    }
-    
-    if ([[self valueForKey:@"keyboardEvent"] boolValue]) {
-        [self fireEvent:@"keyboard" params:@{ @"isShow": @YES }];
-    }
-}
-
 @end

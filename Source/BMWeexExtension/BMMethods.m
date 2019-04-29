@@ -88,7 +88,6 @@
     [self bm_swizzle:[WXEditComponent class] Method:@selector(setAutofocus:) withMethod:@selector(bmEdit_setAutofocus:)];
     [self bm_swizzle:[WXEditComponent class] Method:@selector(initWithRef:type:styles:attributes:events:weexInstance:) withMethod:@selector(bmEdit_initWithRef:type:styles:attributes:events:weexInstance:)];
     [self bm_swizzle:[WXEditComponent class] Method:@selector(viewDidLoad) withMethod:@selector(bmEdit_viewDidLoad)];
-    [self bm_swizzle:[WXEditComponent class] Method:@selector(keyboardWasShown:) withMethod:@selector(bmEdit_keyboardWasShown:)];
 }
 
 + (void)exchangeWeexTextComponent

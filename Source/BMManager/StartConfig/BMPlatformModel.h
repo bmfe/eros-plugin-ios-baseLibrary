@@ -13,6 +13,7 @@
 @property (nonatomic, copy) NSString *mediatorPage;     /**< 中介者页面js路径 */
 @property (nonatomic, copy) NSString *navBarColor;      /**< 导航栏默认颜色 */
 @property (nonatomic, copy) NSString *navItemColor;     /**< 导航栏item颜色 */
+@property (nonatomic, copy) NSString *statusBarStyle;   /**< 状态栏文字颜色 */
 @end
 
 @interface BMPlatformModelUrl : NSObject

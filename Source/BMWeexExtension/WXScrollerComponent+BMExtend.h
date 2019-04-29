@@ -21,4 +21,6 @@
 
 - (void)bmScroller_viewDidLoad;
 
+- (void)bmScroller_updateAttributes:(NSDictionary *)attributes;
+
 @end

@@ -100,6 +100,7 @@
     [self bm_swizzle:[WXScrollerComponent class] Method:@selector(initWithRef:type:styles:attributes:events:weexInstance:) withMethod:@selector(bmScroller_initWithRef:type:styles:attributes:events:weexInstance:)];
     [self bm_swizzle:[WXScrollerComponent class] Method:@selector(scrollViewDidScroll:) withMethod:@selector(bmScroller_scrollViewDidScroll:)];
     [self bm_swizzle:[WXScrollerComponent class] Method:@selector(loadView) withMethod:@selector(bmScroller_loadView)];
+    [self bm_swizzle:[WXScrollerComponent class] Method:@selector(updateAttributes:) withMethod:@selector(bmScroller_updateAttributes:)];
     
     /** 替换 WXListComponent 的 loadView 方法 */
     Method originalM4 = class_getInstanceMethod([WXListComponent class], @selector(loadView));

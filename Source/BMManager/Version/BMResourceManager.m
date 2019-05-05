@@ -49,7 +49,8 @@ typedef NS_ENUM(NSUInteger, BMResourceVersion) {
 typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
     BMResourceCheckUpdateSuccess= 0,  //查询成功
     BMResourceCheckUpdateFail = 4001,
-    BMResourceCheckUpdateLasted = 4000
+    BMResourceCheckUpdateLasted = 4000,
+    BMResourceCheckUpdateNotFound = 401 // jsVersion 不存在
 };
 
 
@@ -483,6 +484,12 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         }else if ([resCode intValue] == BMResourceCheckUpdateLasted){
             
             // 已是最新版本
+        }else if ([resCode intValue] == BMResourceCheckUpdateNotFound && data) {
+            
+            // jsVersion 不存在
+            // 后台注释说明这种情况可能包被篡改
+            // 实践中遇到的问题的是执行了 eros pack 操作会把之前所有的包删除，不处理这种情况就会导致无法热更新
+            [self downloadRemoteJSResource:data];
         }
         else{
             

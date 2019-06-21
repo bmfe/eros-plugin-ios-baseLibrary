@@ -7,10 +7,7 @@
  */
 
 #import "WXImgLoaderDefaultImpl.h"
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <SDWebImage/UIImage+GIF.h>
-#import <SDWebImage/NSData+ImageContentType.h>
-#import <SDWebImage/SDImageCache.h>
+#import <SDWebImage.h>
 
 #define MIN_IMAGE_WIDTH 36
 #define MIN_IMAGE_HEIGHT 36
@@ -71,8 +68,8 @@
             UIImage *img = nil;
             NSString *imgPath = [NSString stringWithFormat:@"%@/%@%@",K_JS_PAGES_PATH,imgUrl.host,imgUrl.path];
             NSData *imgData = [NSData dataWithContentsOfFile:imgPath];
-            if ([[NSData sd_contentTypeForImageData:imgData] isEqualToString:@"image/gif"]) {
-                img = [UIImage sd_animatedGIFWithData:imgData];
+            if ([NSData sd_imageFormatForImageData:imgData] == SDImageFormatGIF) {
+                img = [SDAnimatedImage imageWithData:imgData];
             } else {
                 img = [UIImage imageWithContentsOfFile:imgPath];
             }
@@ -113,15 +110,13 @@
         return nil;
     }
     
-    [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url]
-                                                    options:SDWebImageRetryFailed | SDWebImageAllowInvalidSSLCertificates
-                                                   progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                                       
-                                                   } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                                       if (completedBlock) {
-                                                           completedBlock(image,error,finished);
-                                                       }
-                                                   }];
+    [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:url] options:SDWebImageRetryFailed | SDWebImageAllowInvalidSSLCertificates progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        
+    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
+        if (completedBlock) {
+            completedBlock(image,error,finished);
+        }
+    }];
     
     return nil;
 }

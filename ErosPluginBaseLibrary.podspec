@@ -1,7 +1,7 @@
 # coding: utf-8
 Pod::Spec.new do |s|
   s.name         = "ErosPluginBaseLibrary"
-  s.version      = "1.3.5"
+  s.version      = "1.3.6"
   s.summary      = "WeexEros iOS App base library"
   s.description  = <<-DESC
                    WeexEros iOS App base library
@@ -19,12 +19,12 @@ Pod::Spec.new do |s|
   s.dependency 'YYText', '1.0.7'
   s.dependency 'Masonry', '1.1.0'
   s.dependency 'YYModel', '1.0.4'
-  s.dependency 'SSZipArchive', '1.6.2'
-  s.dependency 'YTKNetwork', '2.0.3'
-  s.dependency 'SocketRocket', '0.4.2'
-  s.dependency 'SDWebImage', '3.7.6'
-  s.dependency 'MJRefresh', '3.1.12'
-  s.dependency 'CTMediator', '13'
+  s.dependency 'SSZipArchive', '2.2.2'
+  s.dependency 'YTKNetwork', '2.0.4'
+  s.dependency 'SocketRocket', '0.5.1'
+  s.dependency 'SDWebImage', '5.0.6'
+  s.dependency 'MJRefresh', '3.2.0'
+  s.dependency 'CTMediator', '25'
 
   #Device信息非ARC
   s.subspec 'BMDevice' do |ss|
@@ -83,9 +83,9 @@ Pod::Spec.new do |s|
     ss.public_header_files = "Source/BMModule/**/*.h"
     ss.resources = 'Source/BMModule/Modal/SVProgressHUD/SVProgressHUD.bundle'
     ss.requires_arc  = true
-    ss.dependency "Realm",'3.1.0'
+    ss.dependency "Realm",'3.16.2'
     ss.dependency "BindingX",'1.0.3'
-    ss.dependency 'TZImagePickerController', '3.1.2'
+    ss.dependency 'TZImagePickerController', '3.2.1'
   end
 
   #Weex BMManager
@@ -115,7 +115,7 @@ Pod::Spec.new do |s|
     ss.public_header_files = "Source/BMComponent/**/*.h"
     ss.requires_arc  = true
     ss.resources = 'Source/BMComponent/Calendar/Resources/*.png','Source/BMComponent/Chart/Resources/*'
-    ss.dependency 'FSCalendar','2.7.8'
+    ss.dependency 'FSCalendar','2.8.0'
     ss.dependency 'YYText', '1.0.7'
   end
 

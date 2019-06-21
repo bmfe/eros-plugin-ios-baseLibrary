@@ -196,17 +196,14 @@ WX_EXPORT_METHOD(@selector(scanImage::))
         return;
     }
     
-    [imageView sd_setImageWithURL:[NSURL URLWithString:url]
-                 placeholderImage:nil
-                          options:SDWebImageRetryFailed | SDWebImageAllowInvalidSSLCertificates
-                         progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                             if (progressHandler)
-                             {
-                                 progressHandler(receivedSize,expectedSize);
-                             }
-                         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                             
-                         }];
+    [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageAllowInvalidSSLCertificates progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        if (progressHandler)
+        {
+            progressHandler(receivedSize,expectedSize);
+        }
+    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        
+    }];
 }
 
 - (UIView *)thumbViewForPageAtIndex:(NSInteger)index {

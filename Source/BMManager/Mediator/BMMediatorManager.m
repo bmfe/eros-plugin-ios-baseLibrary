@@ -92,6 +92,9 @@
     else if ([routerModel.type isEqualToString:K_ANIMATE_PRESENT])
     {
         BMNavigationController *navc = [[BMNavigationController alloc] initWithRootViewController:controller];
+        if (@available(iOS 13.0, *)) {
+            navc.modalPresentationStyle = UIModalPresentationFullScreen;
+         }
         [self presentViewController:navc weexInstance:weexInstance];
     }
     else if ([routerModel.type isEqualToString:K_ANIMATE_TRANSLATION])

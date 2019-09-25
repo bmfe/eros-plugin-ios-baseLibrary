@@ -74,6 +74,12 @@
     controller.routerModel = routerModel;
     controller.hidesBottomBarWhenPushed = YES;
     
+    if (routerModel.isNeedRootVC) {
+        routerModel.type = K_ANIMATE_PRESENT;
+        [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:controller animated:YES completion:nil];
+        return ;
+    }
+    
     if (weexInstance == self.jsMediator.instance) {
         weexInstance = self.currentWXInstance;
     }
@@ -86,6 +92,9 @@
     else if ([routerModel.type isEqualToString:K_ANIMATE_PRESENT])
     {
         BMNavigationController *navc = [[BMNavigationController alloc] initWithRootViewController:controller];
+        if (@available(iOS 13.0, *)) {
+            navc.modalPresentationStyle = UIModalPresentationFullScreen;
+         }
         [self presentViewController:navc weexInstance:weexInstance];
     }
     else if ([routerModel.type isEqualToString:K_ANIMATE_TRANSLATION])
@@ -207,6 +216,15 @@
 
 - (void)backVcWithRouterModel:(BMRouterModel *)routerModel weexInstance:(WXSDKInstance *)weexInstance
 {
+    if ([weexInstance.viewController  isKindOfClass:[BMBaseViewController class]]) {
+        BMBaseViewController *vc = (BMBaseViewController *)weexInstance.viewController;
+        
+        if (vc.routerModel.isNeedRootVC) {
+            [vc dismissViewControllerAnimated:YES completion:nil];
+            return ;
+        }
+    }
+    
     if ([routerModel.type isEqualToString:K_ANIMATE_PRESENT] ||
         [routerModel.type isEqualToString:K_ANIMATE_TRANSLATION]) {
         [weexInstance.viewController dismissViewControllerAnimated:YES completion:nil];

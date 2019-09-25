@@ -35,14 +35,22 @@
         if ([BMConfigManager.shareInstance.platform.page.statusBarStyle isEqualToString:@"LightContent"]) {
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
         } else {
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+            if (@available(iOS 13.0, *)) {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDarkContent animated:NO];
+            } else {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+            }
         }
         return;
     }
     
     /* 设置状态栏 字体颜色 */
     if ([self.routerModel.statusBarStyle isEqualToString:@"Default"]) {
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+        if (@available(iOS 13.0, *)) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDarkContent animated:NO];
+        }else {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+        }
         
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];

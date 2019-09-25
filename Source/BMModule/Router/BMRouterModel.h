@@ -28,6 +28,7 @@
 @property (nonatomic, copy) NSString *navTitle;                 /**< 导航栏title */
 @property (nonatomic, copy) NSString *statusBarStyle;           /**< Default:黑色 LightContent:白色 */
 @property (nonatomic, copy) NSString *backgroundColor;          /**< 原生页面背景颜色 */
+@property (nonatomic, assign) BOOL isNeedRootVC;                /**< 是否需要在 RootViewController 上进行 present */
 
 @property (nonatomic,copy) NSString * pageName;                 /**< 页面名 可以用作Router 更易读 */
 @property (nonatomic, assign) BOOL isTabBarItem;                /**< 是否是TabBar中的页面 */
